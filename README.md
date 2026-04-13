@@ -1,276 +1,233 @@
-# Lantern Agent
+<div align="center">
 
-> Autonomous DEX Trading Agent on X Layer | OKX Build X Hackathon -- X Layer Arena
+# 🏮 Lantern Agent
+
+**Autonomous DEX Trading Agent on X Layer**
+
+[![X Layer](https://img.shields.io/badge/Chain-X%20Layer%20(196)-000000?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiPjxyZWN0IHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg==)](https://www.okx.com/xlayer)
+[![OKX Skills](https://img.shields.io/badge/OKX%20Skills-7%20Integrated-00C853?style=for-the-badge)](https://web3.okx.com/zh-hans/xlayer/build-x-hackathon)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Monorepo-3178C6?style=for-the-badge&logo=typescript&logoColor=white)]()
+[![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)]()
+
+*OKX Build X Hackathon · X Layer Arena Track*
+
+> **"Agent 不再是辅助，而是构建、交易、竞争的主体。"**
+
+[Live Dashboard](#) · [Architecture](#architecture) · [OKX Integration](#okx-skill-integration) · [Quick Start](#quick-start)
+
+</div>
 
 ---
 
-## 1. What We Built
+## What is Lantern Agent?
 
-Lantern Agent 是一个运行在 **X Layer（Chain ID 196）** 上的**全自主 DEX 交易代理**。它不是一个聊天机器人，也不是一个需要人类确认的交易助手 -- 它**本身就是交易员**。
-
-从信号发现到链上成交结算，**零人工干预**。
-
-### 核心能力
-
-- **趋势发现** -- 通过 OKX Onchain OS 实时抓取热门代币与聪明钱信号
-- **风险评估** -- 蜜罐检测、持仓者分析、安全扫描，过滤高风险标的
-- **智能决策** -- 基于 Kelly Criterion 的仓位管理，信号驱动的自动开仓/平仓
-- **高效执行** -- 通过 OKX DEX 聚合器接入 500+ 流动性源，最优路径成交
-- **硬性风控** -- 服务层代码级强制：回撤熔断、止损、敞口上限，不靠提示词
-- **全链透明** -- Next.js 实时仪表盘，每一笔决策、每一次交易、每一个风控事件均可追溯
-
-### 自主循环
-
-Agent 以 **60 秒为一个循环**，持续运行以下五阶段：
+Lantern Agent 是一个**全自主 DEX 交易代理**——不是聊天机器人，不是交易助手，它**本身就是交易员**。
 
 ```
-SYNC --> PULSE --> RESEARCH --> DECISION --> EXECUTION
- 同步       脉冲      研究         决策         执行
+每 60 秒自动执行:  SYNC → PULSE → RESEARCH → DECISION → EXECUTION
+                    同步    脉冲     研究       决策       执行
 ```
 
-每一轮循环覆盖完整链路：从市场数据同步到链上交易执行，无需人工介入。
+| 能力 | 说明 |
+|------|------|
+| 🔍 趋势发现 | OKX 热门代币 + 聪明钱信号 + KOL 追踪 |
+| 🛡️ 风险过滤 | 蜜罐检测 + 持仓者分析 + 合约安全扫描 |
+| 📐 智能定价 | Kelly Criterion 仓位管理，信号驱动 |
+| ⚡ 高效执行 | OKX DEX 聚合器，500+ 流动性源 |
+| 🔒 硬性风控 | 代码级强制：回撤熔断 / 止损 / 敞口上限 |
+| 📊 全链透明 | Next.js 实时仪表盘，每笔交易可追溯 |
 
-### 四层架构
+---
+
+## Architecture
 
 ```
-+-----------------------------------------------------+
-|                   Lantern Agent                      |
-|              Autonomous DEX Trader                   |
-+-----------------------------------------------------+
-|                                                     |
-|  +--- L1: Market Discovery ----------------------+  |
-|  |  okx-dex-token: hot-tokens, price-info        |  |
-|  |  okx-dex-signal: smart money, KOL tracker     |  |
-|  |  okx-security: honeypot scan, risk check      |  |
-|  +------------------------+----------------------+  |
-|                           v                         |
-|  +--- L2: Decision Engine ------------------------+  |
-|  |  Signal Analysis -> Kelly Criterion Sizing    |  |
-|  |  Position Review -> Hold/Reduce/Close         |  |
-|  |  Risk Guards -> Clip/Reject/Halt              |  |
-|  |  okx-dex-market: prices, klines, PnL         |  |
-|  +------------------------+----------------------+  |
-|                           v                         |
-|  +--- L3: Execution -----------------------------+  |
-|  |  okx-dex-swap: execute via 500+ DEX sources   |  |
-|  |  okx-onchain-gateway: simulate, broadcast     |  |
-|  |  okx-agentic-wallet: balance, portfolio       |  |
-|  |  Hard Risk: 20% DD halt, 30% SL, 50% cap     |  |
-|  +------------------------+----------------------+  |
-|                           v                         |
-|  +--- L4: State & Dashboard ---------------------+  |
-|  |  PostgreSQL + Drizzle ORM                     |  |
-|  |  Next.js 16 Real-time Dashboard               |  |
-|  |  Artifact Archive (every run)                 |  |
-|  +-----------------------------------------------+  |
-|                                                     |
-|  60s Loop on X Layer (Zero Gas Fees)                |
-+-----------------------------------------------------+
+┌─────────────────────────────────────────────────────────┐
+│                    🏮 Lantern Agent                      │
+│                                                         │
+│  ┌─ L1: Market Discovery ────────────────────────────┐  │
+│  │  okx-dex-token   → 热门代币发现                     │  │
+│  │  okx-dex-signal  → 聪明钱/KOL/鲸鱼信号             │  │
+│  │  okx-security    → 蜜罐检测 + 风险筛查              │  │
+│  └───────────────────────┬───────────────────────────┘  │
+│                          ▼                              │
+│  ┌─ L2: Decision Engine ─────────────────────────────┐  │
+│  │  Signal Analysis  → Kelly Criterion Sizing        │  │
+│  │  Position Review  → Hold / Reduce / Close         │  │
+│  │  Risk Guards      → Clip / Reject / Halt          │  │
+│  │  okx-dex-market   → 实时价格 + K线趋势             │  │
+│  └───────────────────────┬───────────────────────────┘  │
+│                          ▼                              │
+│  ┌─ L3: Execution ───────────────────────────────────┐  │
+│  │  okx-dex-swap     → 500+ DEX 源聚合交易            │  │
+│  │  okx-gateway      → 交易模拟 + 广播追踪             │  │
+│  │  okx-wallet       → 余额查询 + 组合追踪             │  │
+│  │  Hard Risk: 20% DD | 30% SL | 50% Exposure       │  │
+│  └───────────────────────┬───────────────────────────┘  │
+│                          ▼                              │
+│  ┌─ L4: State & Dashboard ───────────────────────────┐  │
+│  │  PostgreSQL + Drizzle ORM                         │  │
+│  │  Next.js 16 实时仪表盘                              │  │
+│  │  全量归档（每轮决策 + 每笔交易）                      │  │
+│  └───────────────────────────────────────────────────┘  │
+│                                                         │
+│  ⚡ 60s 循环 · X Layer 零 Gas · Heartbeat Swap 持续活跃  │
+└─────────────────────────────────────────────────────────┘
 ```
 
-### 技术栈
+---
 
-| 类别 | 技术选型 |
-| --- | --- |
-| 语言 & 构建 | TypeScript monorepo（pnpm workspaces） |
-| 前端 | Next.js 16, React 19 |
+## Risk Controls
+
+不靠提示词，靠**代码硬规则**：
+
+| 规则 | 阈值 | 触发动作 |
+|------|------|---------|
+| 组合回撤熔断 | 净值回撤 ≥ **20%** | 停止所有新开仓 |
+| 单仓止损 | 浮亏 ≥ **30%** | 自动平仓 |
+| 最大总敞口 | 占资金 ≤ **50%** | 拒绝新开仓 |
+| 单代币敞口 | 占资金 ≤ **30%** | 裁剪订单 |
+| 最大持仓数 | ≤ **10** 个 | 拒绝新开仓 |
+| 最小交易额 | ≥ **$5** | 丢弃小额 |
+
+---
+
+## OKX Skill Integration
+
+深度集成 **7 个 OKX Onchain OS Skills**，覆盖从信号发现到链上结算的完整闭环：
+
+```
+信号发现 ──→ 风险过滤 ──→ 报价获取 ──→ 安全预检 ──→ 交易执行 ──→ 状态追踪
+  token       security      swap         gateway       swap        wallet
+  signal                    quote        simulate      execute     balance
+  market                                 tx-scan                   portfolio
+```
+
+| Layer | Skill | 用途 |
+|-------|-------|------|
+| L1 发现 | `okx-dex-token` | hot-tokens 趋势发现 · price-info 估值 · advanced-info 风险元数据 · holders 鲸鱼检测 |
+| L1 信号 | `okx-dex-signal` | signal list 聚合买入信号 · tracker 鲸鱼/KOL 实时追踪 |
+| L1 安全 | `okx-security` | token-scan 蜜罐检测 · tx-scan 交易预执行安全检查 |
+| L2 数据 | `okx-dex-market` | 实时价格 · K 线趋势分析 · 组合 PnL 追踪 |
+| L3 交易 | `okx-dex-swap` | swap execute 聚合交易 · quote 报价 |
+| L3 网关 | `okx-onchain-gateway` | 交易模拟 · Gas 估算 · 广播追踪 |
+| L3 钱包 | `okx-agentic-wallet` | 余额查询 · 组合追踪 |
+
+**集成方式**: 全部通过 `onchainos` CLI 子进程调用，返回结构化 JSON 直接注入决策管线。
+
+### 可扩展路径
+
+当前 7/14 Skill 已集成。预留 5 个扩展 Pipeline：
+
+| Pipeline | 新增 Skill | 价值 |
+|----------|-----------|------|
+| Meme 狙击 | `okx-dex-trenches` | pump.fun 新币 + 开发者跑路检测 |
+| 实时信号 | `okx-dex-ws` | WebSocket 替代轮询，毫秒级响应 |
+| 闲置生息 | `okx-defi-invest` + `okx-defi-portfolio` | 不交易时 USDC 自动赚利息 |
+| 跟单大户 | `okx-dex-signal` (leaderboard) | 复制 Top 20 交易者策略 |
+| 跨链套利 | 多链 `okx-dex-swap` | 利用跨链价差 |
+
+---
+
+## Live Trading Results
+
+> 🔄 *实盘交易数据将在 Agent 运行后更新到此处*
+
+<!-- 
+运行实盘后取消注释并填入数据：
+
+| 指标 | 数值 |
+|------|------|
+| 总交易笔数 | XX |
+| 链上交易哈希 | [查看 Explorer](https://www.okx.com/web3/explorer/xlayer/address/0xb266dd8d835e3388d0eaf0bf7efff3bb732dfed6) |
+| 累计盈亏 | +$XX.XX |
+| 胜率 | XX% |
+| 运行时长 | XX 小时 |
+
+### 交易截图
+
+![Dashboard](./docs/dashboard.png)
+![Trades](./docs/trades.png)
+-->
+
+---
+
+## Tech Stack
+
+| 类别 | 技术 |
+|------|------|
+| 语言 | TypeScript monorepo (pnpm workspaces) |
+| 前端 | Next.js 16 · React 19 |
 | 后端 | Fastify 5 |
-| 数据库 | PostgreSQL + Drizzle ORM |
-| 任务队列 | BullMQ + Redis |
-| 链交互 | ethers.js |
-| 链环境 | X Layer（Chain ID 196） |
+| 数据库 | PostgreSQL 17 · Drizzle ORM |
+| 队列 | BullMQ · Redis 8 |
+| 链交互 | onchainos CLI · ethers.js |
+| 部署 | Vercel (Dashboard) · Docker Compose (Services) |
 
 ---
 
-## 2. Value Proposition
-
-> 黑客松主题：**Agent 不再是辅助，而是构建、交易、竞争的主体**
-
-### 真正的自主性
-
-Lantern Agent **不是**一个建议你买什么的聊天机器人。它**就是**交易员本身。从市场扫描、信号分析、风险评估到交易执行，全链路零人工干预。这不是 "Agent 辅助交易"，这是 "Agent 即交易者"。
-
-### 生产级风控
-
-风控不靠提示词建议，靠**服务层代码硬规则**：
-
-| 风控规则 | 阈值 | 说明 |
-| --- | --- | --- |
-| 组合回撤熔断 | **20%** | 净值相对高水位回撤达到阈值，立即停止所有新开仓 |
-| 单仓止损 | **30%** | 浮亏达到阈值自动平仓 |
-| 最大总敞口 | **50%** | 总资金暴露上限 |
-| 最大持仓数 | **10** | 分散风险，避免过度集中 |
-
-这些规则在代码层强制执行，Agent 无法绕过。
-
-### 全链透明
-
-每一次决策过程、每一笔链上交易、每一个风控触发事件都被归档并展示在公开仪表盘上。任何人都可以实时查看 Agent 的运行状态、持仓详情和历史表现。
-
-### X Layer 原生优势
-
-X Layer 的**零 Gas 费**特性使得高频交易循环成为可能。60 秒一轮的循环在其他 L1/L2 上成本会非常高，但在 X Layer 上可以持续、高频地运行。
-
-### 聪明钱 Alpha
-
-组合利用 OKX 聪明钱信号 + KOL 追踪 + 巨鲸检测，在市场共识形成之前发现 alpha。不是追涨杀跌，而是跟踪真正有信息优势的地址。
-
----
-
-## 3. OKX Skill Integration
-
-Lantern Agent 深度集成了 **7 个 OKX Onchain OS Skills**，覆盖全部四层架构。
-
-### L1 Market Discovery -- 市场发现层
-
-**`okx-dex-token`**
-- `hot-tokens`：获取 X Layer 热门代币排行，发现趋势标的
-- `price-info`：实时代币估值数据
-- `advanced-info`：代币风险元数据（合约审计状态、开发者信息等）
-- `holders`：持仓者分布分析，识别巨鲸集中度
-
-**`okx-dex-signal`**
-- `signal list`：聚合聪明钱买入信号，多维度交叉验证
-- `tracker activities`：巨鲸/KOL 链上交易实时追踪
-
-**`okx-security`**
-- `token-scan`：蜜罐检测、合约风险筛查，在交易前过滤高风险代币
-
-### L2 Decision Engine -- 决策引擎层
-
-**`okx-dex-market`**
-- 实时价格数据：用于持仓估值和 PnL 计算
-- K 线数据：趋势分析，辅助 Kelly Criterion 参数校准
-- 组合 PnL 追踪：实时监控整体收益表现
-
-### L3 Execution -- 执行层
-
-**`okx-dex-swap`**
-- `swap execute`：通过 500+ DEX 流动性源执行交易，自动最优路径
-- `quote`：交易前获取报价，评估滑点和成交价格
-
-**`okx-onchain-gateway`**
-- Gas 估算：优化交易成本
-- 交易模拟：执行前安全验证（pre-execution safety check）
-- 广播追踪：交易上链状态监控
-
-**`okx-agentic-wallet`**
-- 钱包余额查询：实时资产状态
-- 组合追踪：跨代币持仓总览
-
-### 集成方式
-
-所有 OKX Skills 通过 `onchainos` CLI 以子进程方式调用，遵循项目原有的 CLI Bridge 架构。每次 CLI 调用返回结构化 JSON，直接注入 Agent 的决策管线：
-
-```
-Agent Loop -> onchainos CLI call -> JSON response -> Decision Pipeline
-```
-
-这种设计确保了：
-- **统一接口**：所有 OKX 数据源走同一调用路径
-- **结构化数据**：JSON 输出直接可解析，无需额外处理
-- **故障隔离**：单个 Skill 调用失败不影响整体循环
-
-### 链上活跃度
-
-Agent 以 60 秒为周期持续运行，每轮循环执行交易 + 心跳 swap，最大化链上活动量（目标："Most Active Agent" 特别奖）。
-
----
-
-## Architecture Overview
-
-### 数据流
-
-```
-Market Data (OKX Onchain OS)
-         |
-         v
-  +-- SYNC Phase ---+
-  |  Balance check   |
-  |  Position sync   |
-  +---------+--------+
-            |
-            v
-  +-- PULSE Phase --+
-  |  Hot tokens      |
-  |  Smart money     |
-  |  Security scan   |
-  +---------+--------+
-            |
-            v
-  +-- RESEARCH -----+
-  |  Price analysis  |
-  |  Trend signals   |
-  |  Risk scoring    |
-  +---------+--------+
-            |
-            v
-  +-- DECISION -----+
-  |  Kelly Criterion |
-  |  Position review |
-  |  Risk guards     |
-  +---------+--------+
-            |
-            v
-  +-- EXECUTION ----+
-  |  OKX DEX Swap   |
-  |  Simulate first  |
-  |  Broadcast tx    |
-  |  Archive result  |
-  +------------------+
-            |
-            v
-     60s later, repeat
-```
-
-### Monorepo 结构
+## Project Structure
 
 ```
 lantern-agent/
-+-- apps/
-|   +-- web/                    # Next.js 16 实时仪表盘
-+-- services/
-|   +-- orchestrator/           # 调度、Pulse、决策运行时、风控
-|   +-- executor/               # DEX 交易执行、仓位同步、队列 Worker
-+-- packages/
-|   +-- contracts/              # Zod schema: 共享数据契约
-|   +-- db/                     # Drizzle schema、迁移、查询
-|   +-- terminal-ui/            # 终端输出工具
-+-- scripts/                    # CLI 入口脚本
-+-- docker-compose.yml          # 本地 Postgres + Redis
-+-- package.json                # 根 scripts + workspace 配置
+├── apps/web/                  # Next.js 16 实时仪表盘
+├── services/
+│   ├── orchestrator/          # L1+L2: 市场发现 + 决策引擎
+│   └── executor/              # L3: 交易执行 + 仓位同步
+├── packages/
+│   ├── contracts/             # Zod 共享类型
+│   ├── db/                    # Drizzle 数据库层
+│   └── terminal-ui/           # 终端输出
+├── scripts/                   # CLI 入口
+└── docker-compose.yml         # 本地 Postgres + Redis
 ```
 
 ---
 
 ## Quick Start
 
-### 构建验证
-
 ```bash
-git clone <repo-url>
+# 克隆 & 安装
+git clone https://github.com/YOUR_USER/lantern-agent.git
 cd lantern-agent
 pnpm install
+
+# 构建
 pnpm build
-```
 
-### 完整本地运行
-
-```bash
+# 配置
 cp .env.example .env
-# 配置必要的环境变量（OKX API 凭据、钱包私钥等）
-pnpm install
-docker compose up -d postgres redis
-pnpm db:migrate
-pnpm dev
-```
+# 编辑 .env 填入 OKX API 凭据
 
-默认端口：Web `3000` / Orchestrator `4001` / Executor `4002`
+# 本地基础设施
+docker compose up -d
+
+# Paper 模式测试
+pnpm agent:paper
+
+# 实盘交易
+pnpm agent:live
+
+# 启动仪表盘
+pnpm dev  # → http://localhost:3000
+```
 
 ---
 
-## Team
+## Documents
 
-**Lantern Agent** -- Built for OKX Build X Hackathon, X Layer Arena Track.
+| 文档 | 说明 |
+|------|------|
+| [OKX Skill 融合分析](./OKX-SKILL-INTEGRATION.md) | 技术层面的替换映射和 API 调用流 |
+| [全 Skill 组合策略](./OKX-SKILL-COMBINATIONS.md) | 14 个 Skill 完整能力 + 7 大组合 Pipeline |
+| [上线行动计划](./LAUNCH.md) | 实盘交易 + 部署 + 展示步骤 |
 
-> "Agent 不再是辅助，而是构建、交易、竞争的主体。"
+---
+
+<div align="center">
+
+**Built for OKX Build X Hackathon · X Layer Arena**
+
+*Agent 不再是辅助，而是构建、交易、竞争的主体。*
+
+</div>
