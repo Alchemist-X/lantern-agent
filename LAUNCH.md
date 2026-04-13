@@ -14,6 +14,17 @@
 - [ ] OKX API 凭据已准备（Project ID / API Key / Secret Key / Passphrase）
 - [ ] PostgreSQL + Redis 已启动
 
+### 已完成 ✅
+
+- [x] 代码开发（4 层架构全部完成，build 通过）
+- [x] GitHub 推送: **https://github.com/Alchemist-X/lantern-agent**
+- [x] README 优化（Badge + 架构图 + OKX Skill 集成说明）
+- [x] CLAUDE.md 项目规范
+- [x] .env.example 环境变量模板
+- [x] package.json 脚本清理（删除旧 Polymarket 脚本）
+- [x] OKX Skill 融合文档 (OKX-SKILL-INTEGRATION.md)
+- [x] 全 Skill 组合策略文档 (OKX-SKILL-COMBINATIONS.md)
+
 ### Step 1: 启动基础设施（PostgreSQL + Redis）
 
 ```bash
@@ -264,25 +275,14 @@ ls runtime-artifacts/
 
 ### 方案 A: Vercel 部署（推荐，最快）
 
-#### Step 1: 初始化 Git 仓库并推送到 GitHub
+#### Step 1: GitHub 推送 ✅ 已完成
 
+仓库地址: **https://github.com/Alchemist-X/lantern-agent**
+
+如需更新代码：
 ```bash
 cd /Users/Aincrad/Desktop/Cook_Proj/hackathon-united/OKX-hackathon-external
-
-# 初始化 git（如果还没有）
-git init
-git add -A
-git commit -m "feat: lantern-agent hackathon submission"
-
-# 创建 GitHub 仓库并推送
-gh repo create lantern-agent --public --source=. --push
-```
-
-如果仓库已存在：
-
-```bash
-git remote add origin https://github.com/你的用户名/lantern-agent.git
-git push -u origin main
+git add -A && git commit -m "update" && git push
 ```
 
 #### Step 2: 安装 Vercel CLI 并部署

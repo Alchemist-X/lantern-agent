@@ -13,7 +13,7 @@
 
 > **"Agent 不再是辅助，而是构建、交易、竞争的主体。"**
 
-[Live Dashboard](#) · [Architecture](#architecture) · [OKX Integration](#okx-skill-integration) · [Quick Start](#quick-start)
+[GitHub](https://github.com/Alchemist-X/lantern-agent) · [Architecture](#architecture) · [OKX Integration](#okx-skill-integration) · [Quick Start](#quick-start)
 
 </div>
 
@@ -188,7 +188,7 @@ lantern-agent/
 
 ```bash
 # 克隆 & 安装
-git clone https://github.com/YOUR_USER/lantern-agent.git
+git clone https://github.com/Alchemist-X/lantern-agent.git
 cd lantern-agent
 pnpm install
 
