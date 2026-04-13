@@ -1,0 +1,23 @@
+{
+  "name": "@lantern/web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "prebuild": "pnpm --dir ../.. --filter @lantern/contracts build && pnpm --dir ../.. --filter @lantern/db build",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@lantern/contracts": "workspace:*",
+    "@lantern/db": "workspace:*",
+    "next": "16.1.6",
+    "react": "19.2.0",
+    "react-dom": "19.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3"
+  }
+}

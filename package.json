@@ -1,0 +1,36 @@
+{
+  "name": "lantern-agent",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@10.28.1",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "build": "pnpm -r build",
+    "dev": "concurrently -n web,orchestrator,executor -c auto \"pnpm --filter @lantern/web dev\" \"pnpm --filter @lantern/orchestrator dev\" \"pnpm --filter @lantern/executor dev\"",
+    "typecheck": "pnpm -r typecheck",
+    "test": "vitest run",
+    "agent:live": "pnpm --filter @lantern/contracts build && pnpm --filter @lantern/terminal-ui build && tsx scripts/agent-live.ts",
+    "agent:paper": "pnpm --filter @lantern/contracts build && pnpm --filter @lantern/terminal-ui build && tsx scripts/agent-paper.ts",
+    "agent:test": "pnpm --filter @lantern/contracts build && pnpm --filter @lantern/db build && pnpm --filter @lantern/terminal-ui build && tsx scripts/live-test.ts",
+    "db:generate": "pnpm --filter @lantern/db drizzle-kit generate",
+    "db:migrate": "pnpm --filter @lantern/db drizzle-kit migrate",
+    "db:seed": "pnpm --filter @lantern/db seed"
+  },
+  "dependencies": {
+    "@lantern/contracts": "workspace:*",
+    "@lantern/db": "workspace:*",
+    "@lantern/terminal-ui": "workspace:*",
+    "bullmq": "5.71.0",
+    "drizzle-orm": "0.45.1",
+    "ioredis": "5.10.0"
+  },
+  "devDependencies": {
+    "@types/node": "25.5.0",
+    "concurrently": "9.2.1",
+    "tsx": "4.20.6",
+    "typescript": "5.9.3",
+    "vitest": "3.2.4"
+  }
+}

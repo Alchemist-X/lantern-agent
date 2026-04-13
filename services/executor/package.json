@@ -1,0 +1,51 @@
+{
+  "name": "@lantern/executor",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./config": {
+      "types": "./src/config.ts",
+      "import": "./dist/config.js",
+      "default": "./dist/config.js"
+    },
+    "./polymarket": {
+      "types": "./src/lib/polymarket.ts",
+      "import": "./dist/lib/polymarket.js",
+      "default": "./dist/lib/polymarket.js"
+    },
+    "./risk": {
+      "types": "./src/risk.ts",
+      "import": "./dist/risk.js",
+      "default": "./dist/risk.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/services/executor/src/index.js",
+    "preops:check": "pnpm --filter @lantern/contracts build && pnpm --filter @lantern/db build && pnpm --filter @lantern/terminal-ui build",
+    "preops:trade": "pnpm --filter @lantern/contracts build && pnpm --filter @lantern/db build && pnpm --filter @lantern/terminal-ui build",
+    "ops:check": "tsx src/ops/live-check.ts",
+    "ops:trade": "tsx src/ops/live-check.ts --trade"
+  },
+  "dependencies": {
+    "@lantern/contracts": "workspace:*",
+    "@lantern/db": "workspace:*",
+    "@lantern/terminal-ui": "workspace:*",
+    "@polymarket/clob-client": "5.8.0",
+    "bullmq": "5.71.0",
+    "drizzle-orm": "0.45.1",
+    "dotenv": "17.2.3",
+    "ethers": "5.7.2",
+    "fastify": "5.8.2",
+    "ioredis": "5.10.0"
+  }
+}

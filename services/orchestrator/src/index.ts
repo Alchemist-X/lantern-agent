@@ -1,0 +1,83 @@
+import { Queue } from "bullmq";
+import Fastify from "fastify";
+import cron from "node-cron";
+import { QUEUES, JOBS } from "@lantern/contracts";
+
+import { loadConfig } from "./config.js";
+import { runAgentCycle } from "./jobs/agent-cycle.js";
+import { runBacktestJob } from "./jobs/backtest.js";
+import { runResolutionSweep } from "./jobs/resolution.js";
+import { getOverview } from "@lantern/db";
+import { createAgentRuntime } from "./runtime/runtime-factory.js";
+import { registerAdminRoutes } from "./routes/admin.js";
+import {
+  createPrettyServiceLogger,
+  shouldUsePrettyServiceLogger
+} from "@lantern/terminal-ui";
+
+const config = loadConfig();
+const connection = {
+  url: config.redisUrl,
+  maxRetriesPerRequest: null
+};
+const executionQueue = new Queue(QUEUES.execution, { connection });
+const runtime = createAgentRuntime(config);
+const app = Fastify(shouldUsePrettyServiceLogger()
+  ? {
+      loggerInstance: createPrettyServiceLogger({ serviceName: "orchestrator" }) as any
+    }
+  : {
+      logger: true
+    });
+
+app.get("/health", async () => ({
+  ok: true,
+  overview: await getOverview()
+}));
+
+await registerAdminRoutes(app, {
+  config,
+  executionQueue,
+  runtime
+});
+
+setInterval(() => {
+  void runAgentCycle({
+    runtime,
+    executionQueue,
+    config
+  }).catch((error) => {
+    app.log.error({ error }, "scheduled agent cycle failed");
+  });
+}, config.agentPollIntervalSeconds * 1000);
+
+cron.schedule(config.backtestCron, () => {
+  void runBacktestJob().catch((error) => {
+    app.log.error({ error }, "backtest job failed");
+  });
+});
+
+setInterval(() => {
+  void executionQueue.add(JOBS.syncPortfolio, {}, {
+    jobId: "sync-portfolio",
+    removeOnComplete: true,
+    removeOnFail: false
+  }).catch((error) => {
+    app.log.error({ error }, "sync job enqueue failed");
+  });
+}, config.syncIntervalSeconds * 1000);
+
+setInterval(() => {
+  void runResolutionSweep({
+    config,
+    intervalMinutes: config.resolutionBaseIntervalMinutes
+  }).catch((error) => {
+    app.log.error({ error }, "resolution sweep failed");
+  });
+}, config.resolutionBaseIntervalMinutes * 60 * 1000);
+
+await app.listen({
+  port: config.port,
+  host: "0.0.0.0"
+});
+app.log.info({ port: config.port }, "orchestrator listening");
