@@ -218,9 +218,9 @@ pnpm dev  # → http://localhost:3000
 
 | 文档 | 说明 |
 |------|------|
-| [OKX Skill 融合分析](./OKX-SKILL-INTEGRATION.md) | 技术层面的替换映射和 API 调用流 |
-| [全 Skill 组合策略](./OKX-SKILL-COMBINATIONS.md) | 14 个 Skill 完整能力 + 7 大组合 Pipeline |
-| [上线行动计划](./LAUNCH.md) | 实盘交易 + 部署 + 展示步骤 |
+| [OKX Skill 融合分析](./hackathon-core/OKX-SKILL-INTEGRATION.md) | 技术层面的替换映射和 API 调用流 |
+| [全 Skill 组合策略](./hackathon-core/OKX-SKILL-COMBINATIONS.md) | 14 个 Skill 完整能力 + 7 大组合 Pipeline |
+| [上线行动计划](./hackathon-core/LAUNCH.md) | 实盘交易 + 部署 + 展示步骤 |
 
 ---
 
