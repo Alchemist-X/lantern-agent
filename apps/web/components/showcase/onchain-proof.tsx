@@ -25,32 +25,26 @@ export function ShowcaseOnchainProof() {
         决策公开 · X Layer 链上透明
       </h2>
       <p style={{ textAlign: "center", color: "#8B949E", fontSize: 15, marginBottom: 40 }}>
-        Agent 的每次思考都以 JSON 写入 X Layer, 任何人都能验证
+        Agent 的历史行为和决策依据都上链公开
       </p>
 
-      {/* Core message */}
+      {/* Core message - one liner */}
       <div style={{
-        background: "radial-gradient(ellipse 400px 250px at 50% 30%, rgba(255,145,0,0.06) 0%, transparent 100%)",
+        background: "radial-gradient(ellipse 400px 200px at 50% 50%, rgba(255,145,0,0.06) 0%, transparent 100%)",
         border: "1px solid #FF910030",
         borderRadius: 16,
-        padding: "32px 28px",
+        padding: "28px 28px",
         marginBottom: 28,
         textAlign: "center",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: 14,
       }}>
-        <LanternSVG size={48} />
-        <div style={{ fontSize: 22, fontWeight: 700, color: "#FFF6E2", marginTop: 16, marginBottom: 8, fontFamily: "Cinzel, serif" }}>
-          为什么在 X Layer 上？
-        </div>
-        <p style={{ fontSize: 17, color: "#E0E0E0", lineHeight: 1.8, maxWidth: 600, margin: "0 auto" }}>
-          Agent 每 60 秒将决策日志以 JSON 写入 X Layer。
-          <br />
-          因为<span style={{ color: "#FF9100", fontWeight: 700 }}>零 Gas 费</span>，
-          这种高频写入在其他链上成本不可持续，
-          <br />
-          但在 X Layer 上<span style={{ color: "#2a9d8f", fontWeight: 700 }}>完全免费</span>。
-        </p>
-        <p style={{ fontSize: 15, color: "#8B949E", marginTop: 16 }}>
-          这是<span style={{ color: "#EFC851" }}>链上 AI 审计</span>——只有零 Gas 链才能支撑的应用模式
+        <LanternSVG size={40} />
+        <div style={{ width: 80, height: 1, background: "#FF910040" }} />
+        <p style={{ fontSize: 17, color: "#E0E0E0", lineHeight: 1.6, margin: 0 }}>
+          &ldquo;Agent 的历史行为和决策依据都上链公开&rdquo;
         </p>
       </div>
 
