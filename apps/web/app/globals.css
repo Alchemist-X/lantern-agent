@@ -1,7 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
 :root {
   --font-sans: "Avenir Next", "Segoe UI", sans-serif;
   --font-display: "Iowan Old Style", "Palatino Linotype", "Times New Roman", serif;
-  --font-mono: "SFMono-Regular", "IBM Plex Mono", "Roboto Mono", monospace;
+  --font-mono: "JetBrains Mono", "SFMono-Regular", "IBM Plex Mono", "Roboto Mono", monospace;
   --paper: #f2ede4;
   --paper-deep: #e3d8c7;
   --panel: rgba(252, 249, 243, 0.82);
@@ -4536,4 +4538,12 @@ body:has(.bal-preview-flow) .dash-topbar {
   .dash-activity-time {
     align-self: flex-end;
   }
+}
+
+/* Probability Page */
+.probability-page {
+  font-family: var(--font-mono);
+  background: #0a0a0a;
+  color: #e0e0e0;
+  min-height: 100vh;
 }

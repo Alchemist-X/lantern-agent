@@ -111,6 +111,9 @@ export default function ProbabilityPage() {
     .filter((c) => c.recommendation === "BUY")
     .sort((a, b) => b.signalStrength - a.signalStrength);
   const skips = trace.candidates.filter((c) => c.recommendation !== "BUY");
+  const signalsDetected = trace.candidates.filter(
+    (c) => c.signalStrength > 0,
+  ).length;
 
   // Convert recommendation trace to waterfall format
   const waterfallResult = rec
@@ -156,25 +159,143 @@ export default function ProbabilityPage() {
     : null;
 
   return (
-    <div
-      style={{
-        maxWidth: 960,
-        margin: "0 auto",
-        padding: "24px 16px",
-        fontFamily: "monospace",
-      }}
-    >
-      {/* Header */}
-      <div style={{ marginBottom: 24 }}>
-        <h1 style={{ fontSize: 22, fontWeight: 700, marginBottom: 4 }}>
-          Lantern Agent \u2014 Live Analysis
+    <div className="probability-page">
+      {/* Hero Section */}
+      <div
+        style={{
+          background:
+            "linear-gradient(180deg, #0f0f0f 0%, #141414 50%, #0a0a0a 100%)",
+          borderBottom: "1px solid #1a1a1a",
+          padding: "48px 16px 40px",
+          textAlign: "center",
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        {/* Subtle radial glow behind the lantern */}
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: 400,
+            height: 300,
+            background:
+              "radial-gradient(ellipse at center, rgba(255,100,50,0.06) 0%, transparent 70%)",
+            pointerEvents: "none",
+          }}
+        />
+
+        <div style={{ fontSize: 56, marginBottom: 12, lineHeight: 1 }}>
+          {"\u{1F3EE}"}
+        </div>
+        <h1
+          style={{
+            fontSize: 36,
+            fontWeight: 700,
+            margin: "0 0 6px",
+            letterSpacing: "-0.02em",
+            color: "#f0f0f0",
+          }}
+        >
+          Lantern Agent
         </h1>
-        <div style={{ color: "#666", fontSize: 13 }}>
-          {trace.scan.chain} \u00B7 {trace.scan.candidatesFound} tokens scanned
-          \u00B7 {trace.scan.honeypots} honeypots filtered \u00B7{" "}
-          {new Date(trace.timestamp).toLocaleString()}
+        <p
+          style={{
+            fontSize: 15,
+            color: "#777",
+            margin: "0 0 32px",
+            letterSpacing: "0.04em",
+            textTransform: "uppercase",
+          }}
+        >
+          Autonomous DEX Trading Intelligence
+        </p>
+
+        {/* Stat Boxes */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: 16,
+            flexWrap: "wrap",
+            marginBottom: 28,
+          }}
+        >
+          {[
+            {
+              label: "Tokens Scanned",
+              value: String(trace.scan.candidatesFound),
+            },
+            { label: "Signals Detected", value: String(signalsDetected) },
+            { label: "BUY Recommendations", value: String(buys.length) },
+          ].map((stat) => (
+            <div
+              key={stat.label}
+              style={{
+                background: "rgba(255,255,255,0.03)",
+                border: "1px solid #222",
+                borderRadius: 10,
+                padding: "16px 28px",
+                minWidth: 180,
+              }}
+            >
+              <div
+                style={{
+                  fontSize: 28,
+                  fontWeight: 700,
+                  color: "#fff",
+                  marginBottom: 4,
+                }}
+              >
+                {stat.value}
+              </div>
+              <div
+                style={{
+                  fontSize: 11,
+                  color: "#666",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.06em",
+                }}
+              >
+                {stat.label}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div
+          style={{
+            fontSize: 11,
+            color: "#444",
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+          }}
+        >
+          X Layer {"\u00B7"} OKX Onchain OS {"\u00B7"} Bayesian Engine
         </div>
       </div>
+
+      {/* Main content area */}
+      <div
+        style={{
+          maxWidth: 960,
+          margin: "0 auto",
+          padding: "24px 16px",
+        }}
+      >
+        {/* Header */}
+        <div style={{ marginBottom: 24 }}>
+          <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 4, margin: 0 }}>
+            Live Analysis
+          </h2>
+          <div style={{ color: "#666", fontSize: 13, marginTop: 4 }}>
+            {trace.scan.chain} {"\u00B7"} {trace.scan.candidatesFound} tokens
+            scanned {"\u00B7"} {trace.scan.honeypots} honeypots filtered{" "}
+            {"\u00B7"} {new Date(trace.timestamp).toLocaleString()}
+          </div>
+        </div>
 
       {/* Execution Status Banner */}
       <div
@@ -252,17 +373,30 @@ export default function ProbabilityPage() {
             <tbody>
               {[...buys, ...skips].map((c, i) => {
                 const isBuy = c.recommendation === "BUY";
+                const rowBg = i % 2 === 0 ? "#0f0f0f" : "#0a0a0a";
+                const scorePct = Math.min(c.signalStrength * 100, 100);
+                const scoreColor =
+                  c.signalStrength > 0.6
+                    ? "#00C853"
+                    : c.signalStrength > 0.5
+                      ? "#FFB300"
+                      : "#555";
                 return (
                   <tr
                     key={c.address || i}
                     style={{
                       borderBottom: "1px solid #1a1a1a",
-                      opacity: isBuy ? 1 : 0.5,
+                      borderLeft: isBuy
+                        ? "2px solid #00E676"
+                        : "2px solid transparent",
+                      opacity: isBuy ? 1 : 0.4,
+                      background: rowBg,
+                      transition: "opacity 0.2s ease",
                     }}
                   >
                     <td
                       style={{
-                        padding: "8px 4px",
+                        padding: "8px 4px 8px 8px",
                         fontWeight: isBuy ? 700 : 400,
                       }}
                     >
@@ -277,17 +411,43 @@ export default function ProbabilityPage() {
                       style={{
                         textAlign: "right",
                         padding: "8px 4px",
-                        color:
-                          c.signalStrength > 0.6
-                            ? "#00C853"
-                            : c.signalStrength > 0.5
-                              ? "#FFB300"
-                              : "#666",
                       }}
                     >
-                      {c.signalStrength > 0
-                        ? `${(c.signalStrength * 100).toFixed(1)}%`
-                        : "\u2014"}
+                      {c.signalStrength > 0 ? (
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "flex-end",
+                            gap: 6,
+                          }}
+                        >
+                          <div
+                            style={{
+                              width: 48,
+                              height: 6,
+                              background: "#1a1a1a",
+                              borderRadius: 3,
+                              overflow: "hidden",
+                            }}
+                          >
+                            <div
+                              style={{
+                                width: `${String(scorePct)}%`,
+                                height: "100%",
+                                background: scoreColor,
+                                borderRadius: 3,
+                                transition: "width 0.4s ease",
+                              }}
+                            />
+                          </div>
+                          <span style={{ color: scoreColor, minWidth: 42, textAlign: "right" }}>
+                            {(c.signalStrength * 100).toFixed(1)}%
+                          </span>
+                        </div>
+                      ) : (
+                        <span style={{ color: "#444" }}>{"\u2014"}</span>
+                      )}
                     </td>
                     <td
                       style={{
@@ -405,18 +565,20 @@ export default function ProbabilityPage() {
         </div>
       )}
 
-      {/* Footer */}
-      <div
-        style={{
-          color: "#333",
-          fontSize: 11,
-          marginTop: 32,
-          paddingTop: 16,
-          borderTop: "1px solid #1a1a1a",
-        }}
-      >
-        Lantern Agent \u00B7 Bayesian Probability Engine \u00B7 OKX Onchain OS
-        \u00D7 X Layer (196) \u00B7 Auto-refreshes every 30s
+        {/* Footer */}
+        <div
+          style={{
+            color: "#333",
+            fontSize: 11,
+            marginTop: 32,
+            paddingTop: 16,
+            borderTop: "1px solid #1a1a1a",
+          }}
+        >
+          Lantern Agent {"\u00B7"} Bayesian Probability Engine {"\u00B7"} OKX
+          Onchain OS {"\u00D7"} X Layer (196) {"\u00B7"} Auto-refreshes every
+          30s
+        </div>
       </div>
     </div>
   );
