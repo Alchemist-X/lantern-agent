@@ -37,6 +37,23 @@ function pct(n: number): string {
   return `${(n * 100).toFixed(1)}%`;
 }
 
+/** Approximate standard normal CDF (Abramowitz & Stegun). */
+function normalCdf(x: number): number {
+  const a1 = 0.254829592;
+  const a2 = -0.284496736;
+  const a3 = 1.421413741;
+  const a4 = -1.453152027;
+  const a5 = 1.061405429;
+  const p = 0.3275911;
+  const sign = x < 0 ? -1 : 1;
+  const absX = Math.abs(x);
+  const t = 1.0 / (1.0 + p * absX);
+  const y =
+    1.0 -
+    ((((a5 * t + a4) * t + a3) * t + a2) * t + a1) * t * Math.exp(-absX * absX / 2);
+  return 0.5 * (1.0 + sign * y);
+}
+
 function usd(n: number): string {
   return `$${n.toLocaleString("en-US", { maximumFractionDigits: 2 })}`;
 }
@@ -176,6 +193,202 @@ async function scanMarket(): Promise<TokenCandidate[]> {
 
   console.log(`[3/3] Merged ${candidates.length} candidates\n`);
   return candidates;
+}
+
+// --- PHASE 1.5: POLYMARKET SCAN ---
+
+interface PolyMarket {
+  title: string;
+  slug: string;
+  endDate: string;
+  volume: number;
+  liquidity: number;
+  outcomes: Array<{
+    label: string;
+    price: number; // 0-1, this IS the market probability
+  }>;
+  tokenAddress?: string; // If it's a crypto price market
+  strikePrice?: number; // e.g., 76000 for "BTC above $76K"
+  targetToken?: string; // e.g., "BTC"
+  onchainsEdge?: {
+    ourProbability: number;
+    marketProbability: number;
+    edge: number;
+    signals: string[];
+  };
+}
+
+async function scanPolymarkets(): Promise<PolyMarket[]> {
+  console.log("\n══════════════════════════════════════");
+  console.log("  PHASE 1.5: POLYMARKET — Edge Scan");
+  console.log("══════════════════════════════════════\n");
+
+  // Fetch active crypto markets from Gamma API
+  console.log("[1/3] Fetching Polymarket crypto markets...");
+  let events: any[] = [];
+  try {
+    const res = await fetch(
+      "https://gamma-api.polymarket.com/events?active=true&closed=false&tag=crypto&limit=20",
+      { signal: AbortSignal.timeout(15000) },
+    );
+    if (res.ok) {
+      events = await res.json();
+    }
+  } catch {
+    console.log("  ⚠ Failed to fetch Polymarket events\n");
+  }
+  console.log(`  Found ${events.length} active crypto events\n`);
+
+  const markets: PolyMarket[] = [];
+
+  for (const event of events) {
+    if (!event.markets || !Array.isArray(event.markets)) continue;
+
+    for (const market of event.markets) {
+      const title: string = market.question || event.title || "";
+      // Try to identify crypto price markets
+      const btcMatch = title.match(
+        /Bitcoin.*(?:above|hit|price).*\$?([\d,]+)/i,
+      );
+      const ethMatch = title.match(
+        /Ethereum.*(?:above|hit|price).*\$?([\d,]+)/i,
+      );
+      const solMatch = title.match(
+        /Solana.*(?:above|hit|price).*\$?([\d,]+)/i,
+      );
+
+      let targetToken: string | undefined;
+      let strikePrice: number | undefined;
+
+      if (btcMatch) {
+        targetToken = "BTC";
+        strikePrice = parseInt(btcMatch[1]!.replace(/,/g, ""), 10);
+      } else if (ethMatch) {
+        targetToken = "ETH";
+        strikePrice = parseInt(ethMatch[1]!.replace(/,/g, ""), 10);
+      } else if (solMatch) {
+        targetToken = "SOL";
+        strikePrice = parseInt(solMatch[1]!.replace(/,/g, ""), 10);
+      }
+
+      const outcomePrices = (
+        market.outcomePrices ? JSON.parse(market.outcomePrices) : []
+      ).map((p: string) => parseFloat(p));
+
+      markets.push({
+        title,
+        slug: market.conditionId || market.slug || "",
+        endDate: market.endDate || event.endDate || "",
+        volume: parseFloat(market.volume || "0"),
+        liquidity: parseFloat(market.liquidity || "0"),
+        outcomes:
+          outcomePrices.length >= 2
+            ? [
+                { label: "Yes", price: outcomePrices[0] || 0 },
+                { label: "No", price: outcomePrices[1] || 0 },
+              ]
+            : [],
+        targetToken,
+        strikePrice,
+      });
+    }
+  }
+
+  // For crypto price markets, use onchainos to estimate real probability
+  console.log("[2/3] Computing on-chain edge for price markets...");
+
+  const priceMarkets = markets.filter((m) => m.targetToken && m.strikePrice);
+
+  for (const m of priceMarkets.slice(0, 10)) {
+    // Get current price from onchainos
+    // Use well-known token addresses
+    const tokenAddresses: Record<string, string> = {
+      BTC: "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599", // WBTC on Ethereum
+      ETH: "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      SOL: "0xd31a59c85ae9d8edefec411d448f90841571b89c", // SOL on Ethereum
+    };
+
+    const addr = tokenAddresses[m.targetToken!];
+    if (!addr) continue;
+
+    const priceResult = (await run([
+      "market",
+      "price",
+      "--address",
+      addr,
+      "--chain",
+      "1",
+    ])) as { ok: boolean; data: any[] } | null;
+    const currentPrice =
+      priceResult?.ok && priceResult.data?.[0]
+        ? parseFloat(priceResult.data[0].price || "0")
+        : 0;
+
+    if (currentPrice <= 0 || !m.strikePrice) continue;
+
+    // Simple probability estimate: how far is current price from strike?
+    // Use a simplified model (distance + momentum)
+    const distance = (m.strikePrice - currentPrice) / currentPrice;
+
+    // Calculate hours to expiry
+    const endMs = new Date(m.endDate).getTime();
+    const hoursToExpiry = Math.max(1, (endMs - Date.now()) / (1000 * 3600));
+
+    // Very rough probability using distance and time
+    // For "above" markets: closer to strike + more time = higher prob
+    const normalizedDistance =
+      distance / (0.01 * Math.sqrt(hoursToExpiry / 24)); // scale by sqrt(time)
+    const baseProb = 1 - normalCdf(normalizedDistance * 2); // simplified
+
+    const marketProb = m.outcomes[0]?.price ?? 0.5;
+    const edge = baseProb - marketProb;
+
+    m.onchainsEdge = {
+      ourProbability: baseProb,
+      marketProbability: marketProb,
+      edge,
+      signals: [
+        `Current ${m.targetToken} price: $${currentPrice.toLocaleString()}`,
+        `Strike: $${m.strikePrice.toLocaleString()} (${distance > 0 ? "+" : ""}${(distance * 100).toFixed(1)}% away)`,
+        `Time to expiry: ${hoursToExpiry.toFixed(0)}h`,
+      ],
+    };
+  }
+
+  // Print results
+  const withEdge = markets.filter((m) => m.onchainsEdge);
+  console.log(`\n[3/3] Found ${withEdge.length} markets with on-chain edge data\n`);
+
+  if (withEdge.length > 0) {
+    console.log(
+      "┌──────────────────────────────────────────┬────────┬────────┬────────┐",
+    );
+    console.log(
+      "│ Market                                   │ Poly   │ Ours   │ Edge   │",
+    );
+    console.log(
+      "├──────────────────────────────────────────┼────────┼────────┼────────┤",
+    );
+    for (const m of withEdge.sort(
+      (a, b) => Math.abs(b.onchainsEdge!.edge) - Math.abs(a.onchainsEdge!.edge),
+    )) {
+      const title = m.title.slice(0, 40).padEnd(40);
+      const poly = pct(m.onchainsEdge!.marketProbability).padStart(6);
+      const ours = pct(m.onchainsEdge!.ourProbability).padStart(6);
+      const edge = m.onchainsEdge!.edge;
+      const edgeStr =
+        `${edge > 0 ? "+" : ""}${(edge * 100).toFixed(1)}%`.padStart(6);
+      const edgeColor = Math.abs(edge) > 0.05 ? "★" : " ";
+      console.log(
+        `│ ${title} │ ${poly} │ ${ours} │ ${edgeStr}${edgeColor}│`,
+      );
+    }
+    console.log(
+      "└──────────────────────────────────────────┴────────┴────────┴────────┘\n",
+    );
+  }
+
+  return markets;
 }
 
 // --- PHASE 2: ANALYZE ---
@@ -524,12 +737,13 @@ async function executeRecommendation(candidates: TokenCandidate[]): Promise<{
 
 function outputTrace(
   candidates: TokenCandidate[],
+  polymarkets: PolyMarket[],
   executionResult: {
     executed: boolean;
     txHash?: string;
     error?: string;
     recommendation: TokenCandidate | null;
-  }
+  },
 ) {
   console.log("======================================");
   console.log("  PHASE 5: OUTPUT -- Reasoning Trace");
@@ -589,6 +803,22 @@ function outputTrace(
       skipReason: c.skipReason,
       probabilityTrace: c.probabilityTrace,
     })),
+    polymarkets: {
+      totalMarkets: polymarkets.length,
+      withEdge: polymarkets
+        .filter((m) => m.onchainsEdge)
+        .map((m) => ({
+          title: m.title,
+          slug: m.slug,
+          endDate: m.endDate,
+          volume: m.volume,
+          liquidity: m.liquidity,
+          targetToken: m.targetToken,
+          strikePrice: m.strikePrice,
+          outcomes: m.outcomes,
+          edge: m.onchainsEdge,
+        })),
+    },
     recommendation: best
       ? {
           symbol: best.symbol,
@@ -624,6 +854,9 @@ async function main() {
   // Phase 1: Scan
   const candidates = await scanMarket();
 
+  // Phase 1.5: Polymarket edge scan
+  const polymarkets = await scanPolymarkets();
+
   // Phase 2: Analyze
   const analyzed = await analyzeCandidates(candidates);
 
@@ -634,16 +867,23 @@ async function main() {
   const execResult = await executeRecommendation(decided);
 
   // Phase 5: Output
-  outputTrace(decided, execResult);
+  outputTrace(decided, polymarkets, execResult);
 
   const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
   console.log("======================================");
   console.log(`  Cycle complete in ${elapsed}s`);
+  const polyEdgeCount = polymarkets.filter((m) => m.onchainsEdge).length;
+  const polyHighEdge = polymarkets.filter(
+    (m) => m.onchainsEdge && Math.abs(m.onchainsEdge.edge) > 0.05,
+  ).length;
   console.log(
-    `  Candidates: ${candidates.length} scanned -> ${decided.filter((c) => c.recommendation === "BUY").length} recommended`
+    `  Candidates: ${candidates.length} scanned -> ${decided.filter((c) => c.recommendation === "BUY").length} recommended`,
   );
   console.log(
-    `  Executed: ${execResult.executed ? `Yes (${execResult.txHash})` : `No (${execResult.error || "no recommendation"})`}`
+    `  Polymarket: ${polymarkets.length} markets, ${polyEdgeCount} with edge data, ${polyHighEdge} high-edge`,
+  );
+  console.log(
+    `  Executed: ${execResult.executed ? `Yes (${execResult.txHash})` : `No (${execResult.error || "no recommendation"})`}`,
   );
   console.log("======================================\n");
 }
