@@ -1,620 +1,563 @@
-# Lantern Agent — 黑客松展示页面设计规范
+# Lantern Agent — 黑客松展示页面设计规范 v2
 
-## 这个页面是什么
-
-评委点开链接后看到的**唯一页面**。它不是仪表板，不是文档，是一个**可交互的 Pitch Deck**。
-
-目标：3 分钟内让评委完成以下认知旅程：
-
-```
-"这是什么？" → "它怎么工作？" → "它真的能跑？" → "这比别人强在哪？"
-```
-
-页面是一个长滚动的单页面 (Single Page)，用户从上往下滚动就是在"听你讲故事"。
+> 融合 Slay the Spire 视觉语言 + 灯笼隐喻，构建可交互的单页 Pitch
 
 ---
 
 ## 设计哲学
 
-### 灯笼隐喻
+### 双重隐喻
 
-灯笼在黑暗中照亮方向——Agent 在混乱的市场中找到方向。
+**灯笼 🏮** — 在黑暗市场中照亮方向（品牌层）
+**Slay the Spire 卡牌** — 每个 OKX Skill 是一张"牌"，交易是"出牌"（交互层）
 
-视觉语言：
-- 暗色背景 = 黑暗的市场（不确定性）
-- 绿色光点/线条 = Agent 发现的信号（确定性）
-- 橙色灯笼光晕 = 品牌锚点（温暖、信任）
-- 数据从暗到亮的渐变 = 从噪音到信号的转化过程
+融合方式：
+- 暗色背景 = StS 的地牢氛围 + 灯笼照亮的有限视野
+- OKX Skill = 手牌（每张有能量值、信号方向、类型标记）
+- 风控规则 = 遗物（被动生效，触发时发光）
+- 钱包余额 = HP 条（红色，低于阈值闪烁）
+- 止损阈值 = 格挡条（蓝色，代表保护层）
+- 推理过程 = 回合制战斗流程（信号收集 → 聚合 → 决策 → 出牌）
 
-### 三条设计原则
+### 三条原则
 
-1. **讲故事，不堆数据** — 每个区块回答一个问题，不是展示一堆图表
-2. **展示思考过程** — Agent 的推理步骤比最终结论重要 10 倍
-3. **Less is more** — 每屏只说一件事，一件事说透
+1. **叙事驱动** — 页面是一个故事："问题 → 解法 → 推理 → 证明"，不是功能列表
+2. **推理透明** — 展示 Agent 的每一步思考，比最终结论重要 10 倍
+3. **卡牌即交互** — 每个 OKX Skill 可视化为一张可 hover 查看详情的卡牌
 
 ---
 
 ## 色彩系统
 
+参考 StS 暗色调 + Hourglass 金色体系，叠加灯笼橙作为 Lantern 品牌色。
+
 ```
-背景:
-  画布       #050505
-  区块       #0a0a0a
-  卡片       #0f0f0f
-  浮层       #151515
-  分割线     #1a1a1a
+背景层级 (StS Dungeon):
+  L0 · 深渊       #0D1117   (页面底层)
+  L1 · 地牢       #161B22   (区块背景)
+  L2 · 卡牌背景   #1C2128   (卡片、面板)
+  L3 · 边界       #30363D   (分割线、边框)
 
-语义:
-  信号绿     #00E676    (正面、BUY、Edge、成功)
-  灯笼橙     #FF9100    (品牌、🏮、重点标注)
-  警告黄     #FFD740    (中等风险)
-  危险红     #FF5252    (负面、风险、蜜罐)
+品牌色:
+  灯笼橙          #FF9100   (品牌锚点、标题装饰、hover 高亮)
+  灯笼金          #EFC851   (StS 关键词高亮、重点数据)
 
-文字:
-  高亮白     #FFFFFF
-  正文       #E0E0E0
-  次要       #888888
-  微弱       #444444
-  禁用       #2a2a2a
+语义色 (StS 映射):
+  信号绿 (Buff)    #2a9d8f   (买入、正面信号、安全、通过)
+  危险红 (Energy)  #e63946   (卖出、负面信号、蜜罐、危险)
+  警告琥珀         #f4a261   (中等风险、待确认)
+  格挡蓝           #5fa8d3   (保护、止损阈值、数据类 Skill)
+
+文字 (StS 奶油色系):
+  高亮             #FFF6E2   (标题、关键数字 — StS cream)
+  正文             #E0E0E0   (主要内容)
+  次要             #8B949E   (说明、标签)
+  禁用             #484F58   (SKIP、不可操作)
 
 光效:
-  灯笼光晕   radial-gradient(ellipse, #FF910010 0%, transparent 70%)
-  信号脉冲   radial-gradient(circle, #00E67615 0%, transparent 50%)
-  卡片辉光   box-shadow: 0 0 30px #00E67608
+  灯笼光晕         radial-gradient(ellipse, #FF910012 0%, transparent 70%)
+  金色辉光 (StS)    box-shadow: 0 0 12px rgba(239,200,81,0.3)
+  绿色脉冲          box-shadow: 0 0 20px rgba(42,157,143,0.25)
+  红色警告          box-shadow: 0 0 20px rgba(230,57,70,0.25)
 ```
 
 ### 字体
 
 ```
-主字体:     JetBrains Mono (等宽) — 数据、代码、概率
-辅助字体:   Inter (无衬线) — 说明文字、标题
+标题字体:   Cinzel (衬线, 400/600/700/800) — 奇幻/策略感, StS 风格
+正文字体:   Inter (无衬线) — 清晰可读
+数据字体:   JetBrains Mono (等宽, 700) — 精确对齐
 
-Display:  48px / 1.0  weight 700  (首屏大标题)
-H1:       32px / 1.1  weight 700  (区块标题)
-H2:       20px / 1.2  weight 600  (子标题)
-Body:     15px / 1.6  weight 400  (正文)
-Data:     14px / 1.4  weight 500  (数据标签)
-Caption:  12px / 1.4  weight 400  (脚注)
-Tiny:     11px / 1.3  weight 400  (方法论)
+Display:  56px / 1.0  Cinzel 700  letter-spacing 8px  (Hero 标题)
+H1:       36px / 1.1  Cinzel 700  (区块标题)
+H2:       22px / 1.2  Cinzel 600  (子标题)
+Body:     15px / 1.6  Inter 400   (正文)
+Data:     14px / 1.4  JetBrains Mono 700  (数据值)
+Label:    12px / 1.3  Inter 500   uppercase  letter-spacing 2px  (标签)
+Tiny:     11px / 1.3  Inter 400   (脚注)
+```
+
+### 纹理
+
+```css
+/* StS 参考: 所有背景叠加微弱噪点纹理 */
+.textured {
+  background-image: url("data:image/svg+xml,..."); /* 2x2 noise pattern */
+  background-blend-mode: overlay;
+  opacity: 0.03;
+}
 ```
 
 ---
 
-## 页面结构：7 个区块 = 7 个问题
+## 核心视觉组件
+
+### 组件 1: OKX Skill Card（StS 卡牌）
+
+每个 OKX Skill 渲染为一张 StS 风格的卡牌。
 
 ```
-┌─────────────────────────────────────────────┐
-│  S1 · HERO                                  │  ← "这是什么？"
-│  身份认知 + 一句话定位                        │
-├─────────────────────────────────────────────┤
-│  S2 · PROBLEM                               │  ← "为什么需要它？"
-│  市场痛点 + Agent 的价值主张                  │
-├─────────────────────────────────────────────┤
-│  S3 · HOW IT WORKS                          │  ← "它怎么工作？"
-│  4 层架构 + 60s 循环可视化                    │
-├─────────────────────────────────────────────┤
-│  S4 · OKX INTEGRATION                       │  ← "用了哪些 OKX 能力？"
-│  7 个 Skill 的数据流可视化                    │
-├─────────────────────────────────────────────┤
-│  S5 · LIVE DEMO                             │  ← "它真的能跑？"
-│  实时推理瀑布图 + 候选代币 + Edge             │
-├─────────────────────────────────────────────┤
-│  S6 · RISK CONTROLS                         │  ← "安全吗？"
-│  硬风控规则可视化                             │
-├─────────────────────────────────────────────┤
-│  S7 · FOOTER                                │  ← "在哪看代码？"
-│  GitHub + Tech Stack + 团队                  │
-└─────────────────────────────────────────────┘
+┌──── 金色边框 2px, radius 12px ────┐
+│                                    │
+│  [能量球]  SKILL NAME              │
+│  ● +0.73   okx-dex-token          │
+│                                    │
+│  ┌──────────────────────────────┐  │
+│  │                              │  │
+│  │     (Skill 功能图示区)        │  │
+│  │     40% 高度                  │  │
+│  │                              │  │
+│  └──────────────────────────────┘  │
+│                                    │
+│  [Signal] 类型标签                  │
+│                                    │
+│  Fetches hot tokens on X Layer     │
+│  and ranks by momentum +           │
+│  smart money activity.             │
+│                                    │
+│  ═══════════════▲═══════════════   │
+│  -1.0    0.0    +0.73    +1.0     │
+│  (信号条: 红←灰→绿)                │
+│                                    │
+└────────────────────────────────────┘
 ```
 
-每个区块占约一屏（100vh 或接近），滚动自然过渡。
+**能量球** (左上角):
+- 40×40px 圆形
+- 颜色由信号方向决定: 绿色(bullish) / 红色(bearish) / 灰色(neutral)
+- `radial-gradient` + `box-shadow` 模拟发光
+- 数字: ±X.XX, JetBrains Mono 700, 14px
+
+**类型标签** (StS 卡牌类型):
+- **Signal** (红色底) — 直接产出交易信号的 Skill (token, signal, swap)
+- **Data** (绿色底) — 提供防御性/参考数据的 Skill (market, security, wallet)
+- **Power** (蓝色底) — 持续运行的监控 Skill (gateway)
+
+**信号条** (底部):
+- 水平条, 100% 宽, 8px 高
+- 左端红(-1.0) → 中间灰(0.0) → 右端绿(+1.0)
+- 三角形标记当前信号值
+- 填充色根据值渐变
+
+**卡牌 Hover 效果**:
+- `transform: translateY(-8px)`
+- `box-shadow` 增强
+- 边框从 `#EFC85140` 变为 `#EFC851`
+- 信号条动画填充
+
+**卡牌数据映射**:
+
+| Skill | 类型 | 能量球含义 |
+|-------|------|-----------|
+| okx-dex-token | Signal | 热门代币动量分 |
+| okx-dex-signal | Signal | 聪明钱共识强度 |
+| okx-security | Data | 安全通过率 (1.0=全部安全) |
+| okx-dex-market | Data | 价格趋势方向 |
+| okx-dex-swap | Signal | 最近执行成功率 |
+| okx-onchain-gateway | Power | 网关响应状态 |
+| okx-agentic-wallet | Data | 余额充足度 |
+
+### 组件 2: Portfolio HP 条
+
+```
+❤️ Portfolio Value
+██████████████████░░░░░░░░░░  $85.20 / $100.00  (85.2%)
+                              ▲ 止损线 @ 70%
+
+🛡️ Drawdown Protection
+████████░░░░░░░░░░░░░░░░░░░░  当前回撤 8% / 阈值 20%
+```
+
+**HP 条** (红底):
+- 背景 `#e6394620`, 填充 `#2a9d8f`
+- 低于 70%: 填充变黄 `#f4a261`
+- 低于 50%: 填充变红 `#e63946` + 闪烁动画
+
+**格挡条** (蓝底):
+- 背景 `#5fa8d320`, 填充 `#5fa8d3`
+- 表示止损保护的"缓冲区"
+
+### 组件 3: Relic 图标（风控规则）
+
+```
+[🛡️20%] [🛡️30%] [🛡️50%] [🛡️30%] [🛡️10] [🛡️$5]
+ DD      SL     Exp    Token   Pos   Min
+ ✅       ✅      ✅      ✅      ✅     ⚠️
+```
+
+- 每个 Relic: 48×48px 盾牌图标
+- 通过: 绿色辉光 `box-shadow: 0 0 8px #2a9d8f`
+- 触发: 红色辉光 + shake 动画
+- Hover: 显示完整规则名 + 当前值
+
+### 组件 4: 贝叶斯瀑布图（推理过程）
+
+这是页面的**核心视觉**——不变，但用 StS 色彩和字体重新风格化。
+
+每步是一个"回合"：
+```
+Round 1 · Price Momentum                    +8.5%
+  24h change: +14.0% (LR 1.30×)
+  ══════════════════════░░░░░░░░░░ 58.5%    ← 绿色条
+
+Round 2 · Buy/Sell Ratio                    +4.2%
+  42 buys / 9 sells = 82% buy pressure
+  ════════════════════════░░░░░░░░ 62.7%
+
+Round 3 · Smart Money Consensus             +3.1%
+  3 wallets buying $765 total
+  ══════════════════════════░░░░░░ 65.8%
+
+Round 4 · Diamond Hands                     +1.9%
+  Only 30% sold (conviction holding)
+  ════════════════════════════░░░░ 67.7%
+
+══════════════════════════════════════════
+FINAL · 67.7% → BUY ★
+```
+
+- "Round N" 用 Cinzel 600, `#EFC851` (金色)
+- Signal 名用 Inter 600, 白色
+- Delta 用 JetBrains Mono 700, 绿/红
+- 描述用 Inter 400, `#8B949E`
+- 进度条: 6px 高, 底色 `#30363D`, 填充 `#2a9d8f`(绿) 或 `#e63946`(红)
+- FINAL 行: 加金色边框, 数字用 `#EFC851`, "BUY ★" 用 `#2a9d8f`
 
 ---
 
-## S1 · HERO — "这是什么？"
+## 页面结构: 7 个 Section
 
-### 功能
-3 秒建立认知：项目名 + 一句话 + 核心数据 + 黑客松标识。
-
-### 布局（100vh 满屏）
+### S1 · HERO
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│                                                     │
+│                    #0D1117 深渊背景                   │
+│              + 微弱星点粒子 (CSS only)                │
 │                                                     │
 │                  (灯笼橙光晕)                        │
-│                      🏮                              │
+│                     🏮                               │
 │                                                     │
-│             L A N T E R N                           │
-│               A G E N T                             │
+│              L A N T E R N                          │
+│                A G E N T                            │
 │                                                     │
-│   Autonomous DEX Trading Intelligence               │
-│   on X Layer                                        │
+│     链上信号驱动的自主 DEX 交易 Agent                  │
 │                                                     │
+│     ┌─────────┐  ┌─────────┐  ┌─────────┐          │
+│     │  100    │  │    6    │  │   3 ★   │          │
+│     │ Tokens  │  │ Signals │  │  BUY    │          │
+│     │ Scanned │  │  Found  │  │  Picks  │          │
+│     └─────────┘  └─────────┘  └─────────┘          │
 │                                                     │
-│     ┌───────┐    ┌───────┐    ┌───────┐             │
-│     │  100  │    │   6   │    │  3 ★  │             │
-│     │Tokens │    │Signals│    │ BUY   │             │
-│     │Scanned│    │Found  │    │Picks  │             │
-│     └───────┘    └───────┘    └───────┘             │
+│    X Layer · OKX Onchain OS · Bayesian Engine       │
 │                                                     │
-│     X Layer · OKX Onchain OS · Bayesian Engine      │
+│    ────── OKX Build X Hackathon · X Layer Arena ──  │
 │                                                     │
-│                    ↓ Scroll                          │
-│                                                     │
-│  ─── OKX Build X Hackathon · X Layer Arena ───      │
+│                      ↓                              │
 │                                                     │
 └─────────────────────────────────────────────────────┘
 ```
 
-### 设计要点
+- 标题: Cinzel 56px, weight 700, `#FFF6E2`, letter-spacing 8px
+- 副标题: Inter 14px, `#8B949E`, letter-spacing 3px
+- 三统计卡: 背景 `#1C2128`, 边框 `#30363D`, 数字 JetBrains Mono 32px
+- BUY 卡片: 数字 `#2a9d8f`, 边框 `#2a9d8f40`
+- 数字入场: 从 0 计数滚动到目标值, 800ms easeOut
+- 背景: 微弱星点（CSS `radial-gradient` 散点, 不是 canvas 粒子）
 
-**标题处理**:
-- "LANTERN" 和 "AGENT" 分两行
-- 48px, weight 700, letter-spacing 12px, 全大写
-- 颜色: 纯白 #FFFFFF
-- 不用渐变色，不用描边，干净的白字在深黑上最有力量
+### S2 · PROBLEM（羊皮纸区块）
 
-**灯笼**:
-- 64px emoji（或 SVG）
-- 下方 `radial-gradient(ellipse 200px 150px at center, #FF910012 0%, transparent 100%)`
-- 静态光晕，不动画。灯笼是稳定的存在，不是闪烁的广告。
-
-**副标题**:
-- "Autonomous DEX Trading Intelligence on X Layer"
-- 14px, Inter, weight 400, `#888`, letter-spacing 3px
-
-**三统计卡**:
-- 水平排列，居中，gap 20px
-- 每个: 130px × 90px, `#0f0f0f`, border `#1a1a1a`, radius 12px
-- 数字: 32px, JetBrains Mono, weight 700, 白色
-- 标签: 11px, Inter, weight 500, `#666`, 全大写
-- BUY 卡片: 数字用 `#00E676`, 边框 `#00E67625`
-- **数字入场**: 从 0 滚动到目标值，800ms easeOut（用 requestAnimationFrame）
-
-**↓ Scroll 提示**:
-- "↓" 字符，20px, `#333`
-- 缓慢上下浮动动画 (translateY 0 → 6px → 0, 2s loop, ease-in-out)
-- 这是 Hero 区唯一允许循环的动画
-
-**底部黑客松标识**:
-- "OKX Build X Hackathon · X Layer Arena"
-- 12px, `#333`, 底部绝对定位
-- 左右两侧各一条细线 `────`
-
-**背景**:
-```css
-background:
-  radial-gradient(ellipse 800px 500px at 50% 40%, #0f0f0f 0%, #050505 100%);
-```
-
----
-
-## S2 · PROBLEM — "为什么需要它？"
-
-### 功能
-建立紧迫感：市场有什么问题，Agent 怎么解决。
-
-### 布局
+参考 Hourglass 的 parchment 对比设计。
 
 ```
 ┌─────────────────────────────────────────────────────┐
+│                  #1C2128 暗卡牌色背景                 │
 │                                                     │
 │  THE PROBLEM                                        │
 │                                                     │
-│  "市场上 99% 的交易 Agent 都是聊天机器人——             │
-│   它们建议你买什么，然后等你点确认。                    │
-│   这不是自主，这是带了 AI 皮肤的按钮。"                │
+│  "99% 的交易 Agent 是带了 AI 皮肤的按钮"              │
 │                                                     │
-│  ┌──────────────┐         ┌──────────────┐          │
-│  │  Others       │         │  Lantern     │          │
-│  │               │         │              │          │
-│  │  Human asks   │         │  Agent scans │          │
-│  │  ↓            │         │  ↓           │          │
-│  │  AI suggests  │         │  Agent       │          │
-│  │  ↓            │         │  decides     │          │
-│  │  Human clicks │         │  ↓           │          │
-│  │  ↓            │         │  Agent       │          │
-│  │  Trade        │         │  executes    │          │
-│  │  executes     │         │  ↓           │          │
-│  │               │         │  Agent       │          │
-│  │  (4 steps,    │         │  monitors    │          │
-│  │   human in    │         │              │          │
-│  │   the loop)   │         │  (0 human    │          │
-│  │               │         │   steps)     │          │
-│  └──────────────┘         └──────────────┘          │
-│       灰色，暗淡                绿色，发光              │
+│  ┌── 灰边框，暗淡 ──┐    ┌── 金边框，发光 ──┐       │
+│  │                  │    │                  │       │
+│  │  其他 Agent       │    │  Lantern Agent   │       │
+│  │                  │    │                  │       │
+│  │  人问 AI         │    │  Agent 扫描       │       │
+│  │  ↓              │    │  ↓               │       │
+│  │  AI 建议        │    │  Agent 分析       │       │
+│  │  ↓              │    │  ↓               │       │
+│  │  人确认         │    │  Agent 决策       │       │
+│  │  ↓              │    │  ↓               │       │
+│  │  执行           │    │  Agent 执行       │       │
+│  │                  │    │  ↓               │       │
+│  │  (4 步,          │    │  Agent 监控       │       │
+│  │   人在回路)      │    │                  │       │
+│  │                  │    │  (0 人工步骤)     │       │
+│  └──────────────────┘    └──────────────────┘       │
+│       #484F58 文字            #E0E0E0 文字           │
+│       #30363D 边框            #EFC85140 边框          │
 │                                                     │
-│  Agent 不再是辅助，而是构建、交易、竞争的主体。          │
+│  "Agent 不再是辅助，而是构建、交易、竞争的主体。"       │
+│                        — OKX Build X Hackathon       │
 │                                                     │
 └─────────────────────────────────────────────────────┘
 ```
 
-### 设计要点
+- 左卡: 灰色系, opacity 0.6, 每步之间灰色虚线
+- 右卡: 金色边框, 每步之间**绿色实线**（自动化流程）
+- 底部引言: Cinzel 20px, `#FFF6E2`, 居中, 下方 Inter 12px 来源
 
-**引言**: 
-- 用引号包裹，16px, Inter, `#ccc`, italic
-- 关键词加粗白色
-
-**对比两列**:
-- 左列 "Others": 背景 `#080808`, 边框 `#151515`, 文字 `#555` — 暗淡、无生气
-- 右列 "Lantern": 背景 `#0a0f0a`, 边框 `#00E67625`, 文字 `#E0E0E0` — 有能量
-- 右列每个步骤之间有绿色竖线连接（代表自动化流程）
-- 右列没有 "Human" 字样——这就是区别
-
-**底部 Quote**:
-- 黑客松主题原话: "Agent 不再是辅助，而是构建、交易、竞争的主体。"
-- 18px, weight 600, 白色, 居中
-- 下方小字注明出处: "— OKX Build X Hackathon"
-
----
-
-## S3 · HOW IT WORKS — "它怎么工作？"
-
-### 功能
-展示 4 层架构，但不是静态图片——是有数据流动感的动态展示。
-
-### 布局
+### S3 · HOW IT WORKS（循环图 + 4 层架构）
 
 ```
 ┌─────────────────────────────────────────────────────┐
 │                                                     │
 │  HOW IT WORKS                                       │
-│  Every 60 seconds, Lantern runs a full cycle.       │
+│  Every 60 seconds, one full cycle.                  │
 │                                                     │
-│  ┌─────────────────────────────────────────────┐    │
+│     [SCAN] ──→ [ANALYZE] ──→ [DECIDE] ──→ [EXECUTE]│
+│       ↑                                        │    │
+│       └──────────── 60s ───────────────────────┘    │
+│                                                     │
+│     ● 绿色光点沿路径移动（4s 一圈）                   │
+│                                                     │
+│  ┌─── L1 ───┐ ┌─── L2 ───┐ ┌─── L3 ───┐ ┌── L4 ──┐│
+│  │  Market  │ │ Decision │ │ Execute  │ │ State  ││
+│  │ Discover │→│  Engine  │→│   DEX    │→│  & UI  ││
+│  │          │ │          │ │          │ │        ││
+│  │ ◈token  │ │ ◈Kelly   │ │ ◈swap   │ │◈Postgres││
+│  │ ◈signal │ │ ◈Review  │ │ ◈gateway│ │◈Next.js ││
+│  │ ◈security│ │ ◈Guards  │ │ ◈wallet │ │◈Archive ││
+│  └──────────┘ └──────────┘ └──────────┘ └────────┘│
+│                                                     │
+│  ⚡ X Layer · Zero Gas · 500+ DEX · 60s Loop        │
+│                                                     │
+└─────────────────────────────────────────────────────┘
+```
+
+- 4 节点: 圆角矩形, 当前活跃节点 `#2a9d8f` 边框 + 辉光
+- 绿色光点: 8px 圆, `#2a9d8f`, 沿 SVG path 移动, 4s 一圈
+- 4 层卡片: 背景 `#1C2128`, Skill 名用小 badge (`#161B22` 底, `#30363D` 边)
+- 箭头: `#30363D`, → 符号
+
+### S4 · OKX SKILL CARDS（核心展示）
+
+7 张 StS 风格卡牌, 手牌式展开。
+
+```
+┌─────────────────────────────────────────────────────┐
+│                                                     │
+│  OKX ONCHAIN OS · YOUR HAND                        │
+│  7 Skills · 60 Commands · Full Trading Pipeline     │
+│                                                     │
+│       ┌────┐ ┌────┐ ┌────┐ ┌────┐                  │
+│       │dex │ │dex │ │    │ │dex │                  │
+│       │token│ │signal│ │sec │ │market│               │
+│       │    │ │    │ │urity│ │    │                  │
+│       │ ●  │ │ ●  │ │ ●  │ │ ●  │                  │
+│       │+0.7│ │+0.4│ │+1.0│ │+0.3│                  │
+│       └────┘ └────┘ └────┘ └────┘                  │
+│         ┌────┐ ┌────┐ ┌────┐                        │
+│         │dex │ │gate│ │wall│                        │
+│         │swap│ │way │ │et  │                        │
+│         │    │ │    │ │    │                        │
+│         │ ●  │ │ ●  │ │ ●  │                        │
+│         │+0.8│ │+1.0│ │OK │                        │
+│         └────┘ └────┘ └────┘                        │
+│                                                     │
+│  ════════════════════════════════  7/14 integrated   │
+│  ███████░░░░░░░                   50% Skill coverage│
+│                                                     │
+│  + 5 expansion pipelines available                  │
+│                                                     │
+└─────────────────────────────────────────────────────┘
+```
+
+- 卡牌: 180×260px, 上方 4 张 + 下方 3 张, 手牌式微弧排列
+- Hover 一张: 该卡片放大 120%, translateY(-20px), 其他卡片略微分开
+- 底部进度条: 14 格, 7 格填充 `#2a9d8f`, 7 格空 `#30363D`
+- 入场动画: 卡牌从下方"抽出" (translateY 40px → 0), 每张间隔 150ms
+
+### S5 · LIVE DEMO（实时推理）
+
+从 `/api/demo-trace` 拉取真实数据, 展示 Agent 最后一次循环的完整输出。
+
+```
+┌─────────────────────────────────────────────────────┐
+│                                                     │
+│  LIVE ANALYSIS · BATTLE LOG                         │
+│  Real output from last agent cycle                  │
+│                                                     │
+│  ┌─ Encounter (代币推荐卡) ────────────────────┐    │
+│  │  [XDOG]                          ★ 67.7%   │    │
+│  │  $0.00415 · +14.0% · $496K liq             │    │
+│  │  3🐋 $765 · 35K holders · Risk 1/5          │    │
+│  └─────────────────────────────────────────────┘    │
+│                                                     │
+│  ┌─ Combat Log (推理瀑布) ─────────────────────┐    │
+│  │  Round 1 · Price Momentum        +8.5%     │    │
+│  │  Round 2 · Buy/Sell Ratio        +4.2%     │    │
+│  │  Round 3 · Smart Money           +3.1%     │    │
+│  │  Round 4 · Diamond Hands         +1.9%     │    │
+│  │  ──────────────────────────────────────     │    │
+│  │  VICTORY · 67.7% → BUY ★                   │    │
+│  └─────────────────────────────────────────────┘    │
+│                                                     │
+│  ┌─ Candidates (候选代币) ─────────────────────┐    │
+│  │  [XDOG★67] [DOGSH★67] [AI★67]              │    │
+│  │  [NIUMA 56] [BAO 56] ░░░░░░░░ ×9 skipped   │    │
+│  └─────────────────────────────────────────────┘    │
+│                                                     │
+│  ┌─ Relic Check (风控验证) ────────────────────┐    │
+│  │  [🛡️✅] [🛡️✅] [🛡️✅] [🛡️✅] [🛡️✅] [🛡️⚠️]   │    │
+│  └─────────────────────────────────────────────┘    │
+│                                                     │
+│  ┌─ HP & Block ───────────────────────────────┐    │
+│  │  ❤️ ██████████████████░░░░  $85 / $100      │    │
+│  │  🛡️ ████████░░░░░░░░░░░░  DD 8% / 20%      │    │
+│  └─────────────────────────────────────────────┘    │
+│                                                     │
+│  Data refreshes every 30s                           │
+│                                                     │
+└─────────────────────────────────────────────────────┘
+```
+
+- Encounter Card: StS Boss 遭遇卡样式, 金色边框
+- Combat Log: 瀑布图，每步 300ms 展开动画
+- Candidates: mini 卡牌式，BUY 绿框 SKIP 灰暗
+- Relic Check: 6 个盾牌图标，通过=绿光 触发=红光+shake
+- HP/Block: 红/蓝进度条
+
+### S6 · POLYMARKET EDGE（预测市场对比）
+
+```
+┌─────────────────────────────────────────────────────┐
+│                                                     │
+│  POLYMARKET EDGE SCANNER                            │
+│  On-chain data vs market consensus                  │
+│                                                     │
+│  ┌─ Edge Card ─────────────────────────────────┐    │
 │  │                                             │    │
-│  │     SCAN ──→ ANALYZE ──→ DECIDE ──→ EXECUTE │    │
-│  │      ↑                                 │    │    │
-│  │      └─────────── 60s ─────────────────┘    │    │
+│  │  BTC > $76K on Apr 15?                      │    │
+│  │                                             │    │
+│  │     Polymarket          Lantern             │    │
+│  │       58.0%              72.3%              │    │
+│  │     (灰, 32px)         (绿, 32px)           │    │
+│  │                                             │    │
+│  │  ═══════════════════▲═══════════════════    │    │
+│  │  0%     Poly──┤  Edge  ├──Lantern    100%  │    │
+│  │                                             │    │
+│  │  Edge: +14.3%  ★ STRONG                     │    │
+│  │  (金色, 28px, JetBrains Mono)               │    │
+│  │                                             │    │
+│  │  📈 BTC at $74,800 (1.6% from strike)       │    │
+│  │  📈 3 smart money wallets accumulating       │    │
+│  │  📈 Volume +65% with price increase          │    │
 │  │                                             │    │
 │  └─────────────────────────────────────────────┘    │
 │                                                     │
-│  ┌── L1 ──┐  ┌── L2 ──┐  ┌── L3 ──┐  ┌── L4 ──┐  │
-│  │ Market │  │Decision│  │Execute │  │ State  │  │
-│  │Discover│→ │ Engine │→ │  DEX   │→ │  & UI  │  │
-│  │        │  │        │  │        │  │        │  │
-│  │token   │  │Kelly   │  │swap    │  │Postgres│  │
-│  │signal  │  │Review  │  │gateway │  │Next.js │  │
-│  │security│  │Guards  │  │wallet  │  │Archive │  │
-│  └────────┘  └────────┘  └────────┘  └────────┘  │
-│                                                     │
-│  ⚡ X Layer · Zero Gas Fees · 500+ DEX Sources      │
-│                                                     │
 └─────────────────────────────────────────────────────┘
 ```
 
-### 设计要点
+- 双数字对比: Poly `#8B949E` 灰 vs Lantern `#2a9d8f` 绿
+- Edge 条: 水平渐变, 两个竖线标记, 中间区域高亮
+- Edge 值: `#EFC851` 金色, 28px, JetBrains Mono 700
+- 信号列表: emoji + 描述, Inter 14px
 
-**循环图**:
-- 4 个节点: SCAN / ANALYZE / DECIDE / EXECUTE
-- 水平排列，箭头连接
-- 底部弧线回到 SCAN，标注 "60s"
-- 当前活跃节点高亮绿色，其他灰色
-- **动画**: 一个绿色光点沿箭头路径移动，每 4 秒走完一圈（代表 Agent 循环）
-- 这是唯一允许持续循环的动画——因为它代表 Agent "一直在运行"
-
-**4 层卡片**:
-- 水平排列，等宽，gap 12px
-- 每个卡片: 标题 + 3 个 OKX skill 标签
-- 标题: 16px, weight 700
-- Skill 标签: 小 badge，11px, `#0f0f0f` 底色, `#333` 边框
-- 层与层之间: → 箭头连接
-
-**底部标签**:
-- "⚡ X Layer · Zero Gas Fees · 500+ DEX Sources"
-- 14px, `#00E676`, weight 500
-- ⚡ 代替 emoji
-
----
-
-## S4 · OKX INTEGRATION — "用了哪些 OKX 能力？"
-
-### 功能
-明确展示 7 个 OKX Skill 的集成。这是评审的**硬指标**。
-
-### 布局
+### S7 · FOOTER
 
 ```
 ┌─────────────────────────────────────────────────────┐
 │                                                     │
-│  OKX ONCHAIN OS INTEGRATION                        │
-│  7 Skills · Full Trading Pipeline                   │
+│     [GitHub ↗]    [Dashboard ↗]    [Docs ↗]         │
 │                                                     │
-│  ┌─ Data Flow ──────────────────────────────────┐   │
-│  │                                               │   │
-│  │  token ─┐                                    │   │
-│  │  signal ─┤→ FILTER → SCORE → DECIDE → swap   │   │
-│  │  market ─┤    ↑                         ↓    │   │
-│  │          │ security              gateway     │   │
-│  │          │                         ↓        │   │
-│  │          └──────────────────── wallet ──→ ✓  │   │
-│  │                                               │   │
-│  └───────────────────────────────────────────────┘   │
+│     TypeScript · Next.js 16 · Fastify 5             │
+│     PostgreSQL · BullMQ · ethers.js                 │
 │                                                     │
-│  ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐       │
-│  │  dex   │ │  dex   │ │        │ │  dex   │       │
-│  │  token │ │ signal │ │security│ │ market │       │
-│  │        │ │        │ │        │ │        │       │
-│  │13 cmds │ │5 cmds  │ │5 cmds  │ │9 cmds  │       │
-│  │热门发现 │ │聪明钱   │ │蜜罐检测│ │价格K线  │       │
-│  └────────┘ └────────┘ └────────┘ └────────┘       │
-│  ┌────────┐ ┌────────┐ ┌────────┐                   │
-│  │  dex   │ │onchain │ │agentic │                   │
-│  │  swap  │ │gateway │ │ wallet │                   │
-│  │        │ │        │ │        │                   │
-│  │6 cmds  │ │6 cmds  │ │16 cmds │                   │
-│  │聚合交易 │ │模拟广播 │ │余额签名 │                   │
-│  └────────┘ └────────┘ └────────┘                   │
+│     Built for OKX Build X Hackathon                 │
+│     X Layer Arena · April 2026                      │
 │                                                     │
-│  7 / 14 Skills integrated · 60 commands available   │
+│                    🏮                                │
 │                                                     │
 └─────────────────────────────────────────────────────┘
 ```
 
-### 设计要点
+---
 
-**数据流图**:
-- 用 CSS 绘制的流程图（不是 ASCII，是真的线条和节点）
-- 每个 skill 名是一个节点（小圆角矩形）
-- 节点之间有连线，表示数据流向
-- **动画**: 数据点（小绿色圆点）沿连线从左到右流动
+## 动画规范
 
-**Skill 卡片**:
-- 7 个卡片，4+3 排列
-- 每个卡片: skill 名 + 命令数量 + 一句话中文用途
-- 背景 `#0f0f0f`, hover 时边框变绿
-- **已集成的标记**: 左上角一个绿色小圆点（8px）
-- 命令数: 大字, 20px, `#00E676`
+### 入场动画 (Intersection Observer)
 
-**底部统计**:
-- "7 / 14 Skills integrated · 60 commands available"
-- 用一个进度条: 14 格，7 格绿色填充，7 格灰色空心
-- 表达"已做了一半，还有扩展空间"
+| 区块 | 动画 | 时长 |
+|------|------|------|
+| S1 Hero | 灯笼+标题 fadeIn → 统计卡 fadeIn+数字计数 → 标签 fadeIn | 0-1.5s |
+| S2 Problem | 引言 fadeIn → 左卡 slideRight → 右卡 slideLeft (300ms delay) | 0.3-1s |
+| S3 Architecture | 循环图 fadeIn → 光点开始移动 → 4层卡片依次 fadeIn | 0.3-1.5s |
+| S4 OKX Cards | 7张卡牌从底部"抽出" (stagger 150ms) | 0.3-1.4s |
+| S5 Live Demo | Encounter fadeIn → 瀑布图 300ms/步展开 → 候选 fadeIn → Relics fadeIn | 0.3-3s |
+| S6 Edge | Edge Card fadeIn → 数字计数 → 条形图增长 | 0.3-1.5s |
+| S7 Footer | 整体 fadeIn | 0.3s |
+
+### 持续动画 (仅允许 2 个)
+
+1. **循环光点** (S3): 绿色圆点沿 SCAN→ANALYZE→DECIDE→EXECUTE 路径移动, 4s/圈
+2. **滚动提示** (S1): ↓ 字符上下浮动, 2s/圈, 用户滚动后消失
+
+### 不允许的动画
+
+- 粒子系统（性能）
+- 3D 变换（兼容性）
+- 无限循环的脉冲/闪烁（焦虑感）
+- 自动播放 video/audio
+- Parallax 滚动（眩晕）
 
 ---
 
-## S5 · LIVE DEMO — "它真的能跑？"
+## 技术实现
 
-### 功能
-这是页面的**高潮**——展示 Agent 的真实输出。不是 mock，是 `pnpm agent:demo` 的实际结果。
+### 文件结构
 
-### 布局
-
-```
-┌─────────────────────────────────────────────────────┐
-│                                                     │
-│  LIVE ANALYSIS                                      │
-│  Real output from Lantern Agent's last cycle        │
-│                                                     │
-│  ┌─ Top Recommendation ────────────────────────┐    │
-│  │  XDOG  $0.00415  ★ 67.7%  HIGH CONFIDENCE  │    │
-│  │  3🐋 $765 · Liquidity $496K · 35K holders   │    │
-│  └─────────────────────────────────────────────┘    │
-│                                                     │
-│  ┌─ Bayesian Reasoning ───────────────────────┐     │
-│  │                                             │     │
-│  │  50%  uninformed prior                      │     │
-│  │   ├─ 📈 Price Momentum    +8.5%  → 58.5%  │     │
-│  │   ├─ 📈 Buy/Sell Ratio   +4.2%  → 62.7%  │     │
-│  │   ├─ 📈 Smart Money      +3.1%  → 65.8%  │     │
-│  │   ├─ 📈 Diamond Hands    +1.9%  → 67.7%  │     │
-│  │   ▼                                        │     │
-│  │  67.7%  → BUY ★                            │     │
-│  │                                             │     │
-│  └─────────────────────────────────────────────┘     │
-│                                                     │
-│  ┌─ All Candidates ───────────────────────────┐     │
-│  │  [XDOG ★67%] [DOGSH ★67%] [AI ★67%]       │     │
-│  │  [NIUMA 56%] [BAOBAO 56%] [TOKEN 56%]     │     │
-│  │  [skip] [skip] [skip] [skip] ...           │     │
-│  └─────────────────────────────────────────────┘     │
-│                                                     │
-│  ┌─ Polymarket Edge ──────────────────────────┐     │
-│  │    Poly: 58.0%    vs    Lantern: 72.3%     │     │
-│  │    Edge: +14.3%   ★ STRONG                 │     │
-│  └─────────────────────────────────────────────┘     │
-│                                                     │
-│  Data refreshes every 30s · Run: pnpm agent:demo    │
-│                                                     │
-└─────────────────────────────────────────────────────┘
-```
-
-### 设计要点
-
-这个区块复用之前设计的组件，但嵌入到展示页面的叙事中。
-
-**关键**: 上方加一行说明 "Real output from Lantern Agent's last cycle"，强调这不是 mock 数据。
-
-**瀑布图动画**: 和前面设计规范一致——300ms 逐步展开，进度条增长，最终结果闪光。
-
-**候选卡片**: 紧凑版——不需要完整信息，只显示代币名 + 概率 + BUY/SKIP 状态。一行排开。
-
-**Edge 对比**: 两个大数字 (Poly 灰 vs Lantern 绿) + Edge 条形图。
-
----
-
-## S6 · RISK CONTROLS — "安全吗？"
-
-### 功能
-打消评委的顾虑："一个自动交易的 Agent 会不会亏光？"
-
-### 布局
-
-```
-┌─────────────────────────────────────────────────────┐
-│                                                     │
-│  RISK CONTROLS                                      │
-│  Hard rules. Code-enforced. Agent cannot bypass.    │
-│                                                     │
-│  ┌─────────────────────────────────────────────┐    │
-│  │                                             │    │
-│  │  ■■■■■■■■■■■■■■■■■■■■░░░░░░░░░░  50%       │    │
-│  │  Maximum Total Exposure                     │    │
-│  │                                             │    │
-│  │  ■■■■■■░░░░░░░░░░░░░░░░░░░░░░░░  20%       │    │
-│  │  Drawdown Halt Trigger                      │    │
-│  │                                             │    │
-│  │  ■■■■■■■■■░░░░░░░░░░░░░░░░░░░░░  30%       │    │
-│  │  Per-Position Stop Loss                     │    │
-│  │                                             │    │
-│  │  ■■■■■■■■■■■■■■■■■■░░  10 positions max    │    │
-│  │  Position Limit                             │    │
-│  │                                             │    │
-│  └─────────────────────────────────────────────┘    │
-│                                                     │
-│  "These are not suggestions to the AI.              │
-│   They are service-layer constraints                │
-│   enforced at the code level.                       │
-│   The Agent cannot override them."                  │
-│                                                     │
-└─────────────────────────────────────────────────────┘
-```
-
-### 设计要点
-
-**风控条**:
-- 每条规则是一个水平进度条
-- 条的填充量 = 阈值占比（50%、20%、30%）
-- 颜色: 已填充部分用**红色渐变**（从 `#FF525230` 到 `#FF5252`）— 表示"这是危险区域的边界"
-- 空白部分: `#1a1a1a`
-
-**底部声明**:
-- 引号包裹的 4 行声明
-- 16px, Inter, `#ccc`
-- "service-layer constraints" 和 "enforced at the code level" 加粗白色
-- 不用 emoji，不用感叹号——冷静、可信赖的语气
-
----
-
-## S7 · FOOTER — "在哪看代码？"
-
-### 布局
-
-```
-┌─────────────────────────────────────────────────────┐
-│                                                     │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐          │
-│  │  GitHub   │  │  Live    │  │  Docs    │          │
-│  │  ↗       │  │  Dashboard│  │  ↗      │          │
-│  └──────────┘  └──────────┘  └──────────┘          │
-│                                                     │
-│  Tech: TypeScript · Next.js 16 · Fastify 5          │
-│        PostgreSQL · BullMQ · ethers.js              │
-│                                                     │
-│  Built for OKX Build X Hackathon                    │
-│  X Layer Arena Track · April 2026                   │
-│                                                     │
-│         🏮                                           │
-│                                                     │
-└─────────────────────────────────────────────────────┘
-```
-
-三个链接按钮 + 技术栈列表 + 黑客松标识 + 底部灯笼。
-
----
-
-## 全局动画时间线
-
-```
-滚动位置    事件
-────────    ────────────────────────
-0%          S1 Hero 可见
-            - 灯笼 + 标题淡入 (0-500ms)
-            - 统计卡数字滚动 (600-1400ms)
-            - ↓ 提示浮动开始
-
-~15%        S2 Problem 进入视口
-            - 引言淡入
-            - 左右对比列依次出现 (左先，右后 300ms)
-
-~30%        S3 How It Works 进入视口
-            - 循环图出现
-            - 绿色光点开始沿路径移动（持续）
-            - 4 层卡片依次淡入 (每个 200ms)
-
-~45%        S4 OKX Integration 进入视口
-            - 数据流图出现，数据点开始流动
-            - 7 个 Skill 卡片依次弹入
-
-~60%        S5 Live Demo 进入视口
-            - Top Recommendation 卡片滑入
-            - 瀑布图 300ms 逐步展开（核心动画）
-            - 候选卡片网格整体淡入
-            - Edge 对比卡片淡入
-
-~80%        S6 Risk Controls 进入视口
-            - 风控条从 0% 增长到目标值 (600ms)
-            - 声明文字淡入
-
-~95%        S7 Footer 进入视口
-            - 链接按钮和标识淡入
-```
-
-**实现**: 用 Intersection Observer API，每个区块在首次进入视口时触发一次动画，不重复播放。
-
----
-
-## 交互细节
-
-### 导航
-- **无顶部导航栏** — 这是一个线性叙事，不需要跳转
-- **可选**: 右侧放一列小圆点（类似 fullpage.js 的导航点），标注当前区块
-
-### Hover
-- Skill 卡片 hover: 边框绿色 + 轻微上浮 2px
-- 候选代币卡片 hover: 显示完整信号列表
-- 链接按钮 hover: 背景从 `#0f0f0f` 变为 `#1a1a1a`
-
-### 响应式
-- Desktop: 最大宽度 1000px 居中
-- Tablet: 卡片从 4 列变 2 列
-- Mobile: 单列，Hero 统计卡竖排
-
----
-
-## 技术实现路径
-
-整个展示页面是一个 Next.js 页面: `/app/showcase/page.tsx`
-
-**不需要的**:
-- 不需要路由（单页面）
-- 不需要状态管理库（useState 足够）
-- 不需要动画库（CSS @keyframes + Intersection Observer）
-- 不需要图表库（纯 CSS 进度条 + 自绘瀑布图）
-
-**需要的**:
-- `"use client"` (Intersection Observer 需要)
-- `fetch("/api/demo-trace")` 获取实时数据
-- CSS @keyframes 定义在 `<style>` 标签中
-- `IntersectionObserver` 触发入场动画
-
-**文件结构**:
 ```
 apps/web/
-  app/showcase/page.tsx          ← 展示页面（单文件，所有区块）
-  components/
-    showcase-hero.tsx            ← S1 Hero
-    showcase-problem.tsx         ← S2 Problem
-    showcase-architecture.tsx    ← S3 How It Works
-    showcase-okx-skills.tsx      ← S4 OKX Integration
-    showcase-live-demo.tsx       ← S5 Live Demo (复用 probability-waterfall)
-    showcase-risk.tsx            ← S6 Risk Controls
-    showcase-footer.tsx          ← S7 Footer
-    use-in-view.ts              ← Intersection Observer hook
+  app/showcase/page.tsx           ← 主页面，组合所有 Section
+  components/showcase/
+    hero.tsx                      ← S1
+    problem.tsx                   ← S2
+    architecture.tsx              ← S3
+    skill-cards.tsx               ← S4 (7 张 OKX Skill 卡牌)
+    skill-card.tsx                ← 单张卡牌组件
+    live-demo.tsx                 ← S5 (复用 probability-waterfall)
+    polymarket-edge.tsx           ← S6
+    footer.tsx                    ← S7
+    hp-bar.tsx                    ← HP + Block 条
+    relic-check.tsx               ← 风控遗物图标
+    use-in-view.ts               ← Intersection Observer hook
+    use-count-up.ts              ← 数字计数动画 hook
+    showcase.css                  ← 所有 @keyframes + 全局样式
 ```
+
+### 依赖
+
+- **零外部依赖**: 不用 framer-motion, 不用 chart.js, 不用 fullpage.js
+- CSS @keyframes + Intersection Observer + requestAnimationFrame
+- Google Fonts: Cinzel + Inter + JetBrains Mono
+
+### 数据源
+
+- S1 统计数据: 来自 `/api/demo-trace` (实时)
+- S5 推理数据: 来自 `/api/demo-trace` (实时)
+- S6 Edge 数据: 来自 `/api/demo-trace` (实时)
+- 其他区块: 静态内容
 
 ---
 
 ## 不做的事
 
-1. **不用 fullpage.js / scroll-snap** — 限制自由滚动会让评委烦躁
-2. **不用 video 背景** — 加载慢，分散注意力
-3. **不用 3D / WebGL** — 过度设计，增加复杂度
-4. **不用 carousel / slider** — 评委没时间点下一页
-5. **不用 modal / popup** — 打断阅读流
-6. **不自动播放声音** — 没什么好说的
-7. **不放团队照片** — 这是 Agent 的展示，不是人的
-8. **不在 Hero 区放"开始使用"按钮** — 这不是 SaaS，是展示
-9. **不用超过 3 层嵌套的动画** — 一个区块最多 2 层动画（区块入场 + 内部元素动画）
-10. **不做 dark/light 切换** — 只有暗色，这是设计决策不是功能缺失
+1. 不用 fullpage.js / scroll-snap
+2. 不用 video 背景
+3. 不用 3D / WebGL / Canvas 粒子
+4. 不用 carousel / slider / tabs 切换
+5. 不用 modal / popup
+6. 不做 dark/light 切换
+7. emoji 限制: 🏮 📈 📉 🛡️ ❤️ ⚡ ★，不超过这 7 种
+8. 不用 gradient 文字
+9. 不用 border-radius > 16px
+10. 不放团队照片
