@@ -1,0 +1,629 @@
+{
+  "timestamp": "2026-04-14T13:03:01.945Z",
+  "cycle": "demo",
+  "scan": {
+    "chain": "X Layer (196)",
+    "candidatesFound": 15,
+    "honeypots": 0
+  },
+  "candidates": [
+    {
+      "symbol": "FDOG",
+      "address": "0x5839244eab49314bccc0fa76e3a081cb1a461111",
+      "price": 0.0002854114699034016,
+      "change24h": -10.53,
+      "liquidity": 91444.4364870344,
+      "marketCap": 284220.9141171643,
+      "holders": 10872,
+      "riskLevel": 1,
+      "smartMoneyBuying": true,
+      "signalWalletCount": 3,
+      "signalStrength": 0.5708154506437767,
+      "recommendation": "BUY",
+      "probabilityTrace": [
+        {
+          "name": "price_momentum",
+          "direction": "bearish",
+          "likelihoodRatio": 0.7,
+          "description": "24h price change: -1053.0%",
+          "probBefore": 0.5,
+          "probAfter": 0.4117647058823529
+        },
+        {
+          "name": "smart_money_consensus",
+          "direction": "bullish",
+          "likelihoodRatio": 1.9,
+          "description": "3 smart money wallets buying, $404.31 total",
+          "probBefore": 0.4117647058823529,
+          "probAfter": 0.5708154506437767
+        }
+      ]
+    },
+    {
+      "symbol": "DOGSHIT",
+      "address": "0x70bf3e2b75d8832d7f790a87fffc1fa9d63dc5bb",
+      "price": 0.0000775703484253271,
+      "change24h": 1.73,
+      "liquidity": 996316.7457927857,
+      "marketCap": 4276725.320195656,
+      "holders": 32561,
+      "riskLevel": 2,
+      "smartMoneyBuying": false,
+      "signalWalletCount": 0,
+      "signalStrength": 0.6420901932712957,
+      "recommendation": "BUY",
+      "probabilityTrace": [
+        {
+          "name": "price_momentum",
+          "direction": "bullish",
+          "likelihoodRatio": 1.3,
+          "description": "24h price change: 173.0%",
+          "probBefore": 0.5,
+          "probAfter": 0.5652173913043479
+        },
+        {
+          "name": "buy_sell_ratio",
+          "direction": "bullish",
+          "likelihoodRatio": 1.2,
+          "description": "Buy/Sell: 13/7 (65% buys)",
+          "probBefore": 0.5652173913043479,
+          "probAfter": 0.6093750000000001
+        },
+        {
+          "name": "positive_inflow",
+          "direction": "bullish",
+          "likelihoodRatio": 1.15,
+          "description": "Positive inflow: $126,050.25 volume with price increase",
+          "probBefore": 0.6093750000000001,
+          "probAfter": 0.6420901932712957
+        }
+      ]
+    },
+    {
+      "symbol": "XDOG",
+      "address": "0x0cc24c51bf89c00c5affbfcf5e856c25ecbdb48e",
+      "price": 0.004512228839232782,
+      "change24h": 5.83,
+      "liquidity": 525082.2306713879,
+      "marketCap": 4502198.985601207,
+      "holders": 35595,
+      "riskLevel": 1,
+      "smartMoneyBuying": true,
+      "signalWalletCount": 3,
+      "signalStrength": 0.7869007916635591,
+      "recommendation": "BUY",
+      "probabilityTrace": [
+        {
+          "name": "price_momentum",
+          "direction": "bullish",
+          "likelihoodRatio": 1.3,
+          "description": "24h price change: 583.0%",
+          "probBefore": 0.5,
+          "probAfter": 0.5652173913043479
+        },
+        {
+          "name": "smart_money_consensus",
+          "direction": "bullish",
+          "likelihoodRatio": 1.9,
+          "description": "3 smart money wallets buying, $765.34 total",
+          "probBefore": 0.5652173913043479,
+          "probAfter": 0.7118155619596542
+        },
+        {
+          "name": "low_sold_ratio",
+          "direction": "bullish",
+          "likelihoodRatio": 1.3,
+          "description": "Only 30% of holders have sold (diamond hands)",
+          "probBefore": 0.7118155619596542,
+          "probAfter": 0.7625267157444788
+        },
+        {
+          "name": "positive_inflow",
+          "direction": "bullish",
+          "likelihoodRatio": 1.15,
+          "description": "Positive inflow: $65,464.83 volume with price increase",
+          "probBefore": 0.7625267157444788,
+          "probAfter": 0.7869007916635591
+        }
+      ]
+    },
+    {
+      "symbol": "SEED",
+      "address": "0x375da15dacce7a2a4f8075b5e39b8c2018057777",
+      "price": 0.0018350341182042022,
+      "change24h": 2.89,
+      "liquidity": 107717.22558017437,
+      "marketCap": 1462756.9906287019,
+      "holders": 6213,
+      "riskLevel": 2,
+      "smartMoneyBuying": false,
+      "signalWalletCount": 0,
+      "signalStrength": 0.6766892984157776,
+      "recommendation": "BUY",
+      "probabilityTrace": [
+        {
+          "name": "price_momentum",
+          "direction": "bullish",
+          "likelihoodRatio": 1.3,
+          "description": "24h price change: 289.0%",
+          "probBefore": 0.5,
+          "probAfter": 0.5652173913043479
+        },
+        {
+          "name": "buy_sell_ratio",
+          "direction": "bullish",
+          "likelihoodRatio": 1.4,
+          "description": "Buy/Sell: 9/1 (90% buys)",
+          "probBefore": 0.5652173913043479,
+          "probAfter": 0.6453900709219859
+        },
+        {
+          "name": "positive_inflow",
+          "direction": "bullish",
+          "likelihoodRatio": 1.15,
+          "description": "Positive inflow: $58,134.43 volume with price increase",
+          "probBefore": 0.6453900709219859,
+          "probAfter": 0.6766892984157776
+        }
+      ]
+    },
+    {
+      "symbol": "欧易人生",
+      "address": "0x00880ec7de7397e4e25ad5fbd69d97db91e90372",
+      "price": 0.0004445214421372278,
+      "change24h": -3.24,
+      "liquidity": 62867.28326232203,
+      "marketCap": 444521.4421372278,
+      "holders": 3141,
+      "riskLevel": 1,
+      "smartMoneyBuying": false,
+      "signalWalletCount": 0,
+      "signalStrength": 0.4117647058823529,
+      "recommendation": "SKIP",
+      "skipReason": "Signal strength 41.2% below threshold (55%)",
+      "probabilityTrace": [
+        {
+          "name": "price_momentum",
+          "direction": "bearish",
+          "likelihoodRatio": 0.7,
+          "description": "24h price change: -324.0%",
+          "probBefore": 0.5,
+          "probAfter": 0.4117647058823529
+        }
+      ]
+    },
+    {
+      "symbol": "OEOE",
+      "address": "0x4c225fb675c0c475b53381463782a7f741d59763",
+      "price": 0.000030581594459116,
+      "change24h": 1.02,
+      "liquidity": 317994.66420686006,
+      "marketCap": 2909138.56367081,
+      "holders": 12640,
+      "riskLevel": 2,
+      "smartMoneyBuying": false,
+      "signalWalletCount": 0,
+      "signalStrength": 0.6453900709219859,
+      "recommendation": "BUY",
+      "probabilityTrace": [
+        {
+          "name": "price_momentum",
+          "direction": "bullish",
+          "likelihoodRatio": 1.3,
+          "description": "24h price change: 102.0%",
+          "probBefore": 0.5,
+          "probAfter": 0.5652173913043479
+        },
+        {
+          "name": "buy_sell_ratio",
+          "direction": "bullish",
+          "likelihoodRatio": 1.4,
+          "description": "Buy/Sell: 39/2 (95% buys)",
+          "probBefore": 0.5652173913043479,
+          "probAfter": 0.6453900709219859
+        }
+      ]
+    },
+    {
+      "symbol": "DOG",
+      "address": "0x903358faf7c6304afbd560e9e29b12ab1b8fddc5",
+      "price": 0.000011076500606491,
+      "change24h": 6.35,
+      "liquidity": 80798.29586496344,
+      "marketCap": 515884.2993195238,
+      "holders": 10276,
+      "riskLevel": 2,
+      "smartMoneyBuying": false,
+      "signalWalletCount": 0,
+      "signalStrength": 0.5991983967935871,
+      "recommendation": "BUY",
+      "probabilityTrace": [
+        {
+          "name": "price_momentum",
+          "direction": "bullish",
+          "likelihoodRatio": 1.3,
+          "description": "24h price change: 635.0%",
+          "probBefore": 0.5,
+          "probAfter": 0.5652173913043479
+        },
+        {
+          "name": "positive_inflow",
+          "direction": "bullish",
+          "likelihoodRatio": 1.15,
+          "description": "Positive inflow: $3,112.53 volume with price increase",
+          "probBefore": 0.5652173913043479,
+          "probAfter": 0.5991983967935871
+        }
+      ]
+    },
+    {
+      "symbol": "NIUMA",
+      "address": "0x87669801a1fad6dad9db70d27ac752f452989667",
+      "price": 0.00088371440452984,
+      "change24h": 1.43,
+      "liquidity": 123227.8811594417,
+      "marketCap": 860070.4060139366,
+      "holders": 88099,
+      "riskLevel": 1,
+      "smartMoneyBuying": false,
+      "signalWalletCount": 0,
+      "signalStrength": 0.6453900709219859,
+      "recommendation": "BUY",
+      "probabilityTrace": [
+        {
+          "name": "price_momentum",
+          "direction": "bullish",
+          "likelihoodRatio": 1.3,
+          "description": "24h price change: 143.0%",
+          "probBefore": 0.5,
+          "probAfter": 0.5652173913043479
+        },
+        {
+          "name": "buy_sell_ratio",
+          "direction": "bullish",
+          "likelihoodRatio": 1.4,
+          "description": "Buy/Sell: 8/0 (100% buys)",
+          "probBefore": 0.5652173913043479,
+          "probAfter": 0.6453900709219859
+        }
+      ]
+    },
+    {
+      "symbol": "X Chat",
+      "address": "0x59ee065af1887a0a283d399d32a02cd098ed8f5e",
+      "price": 0.000002587616007067,
+      "change24h": 0,
+      "liquidity": 5059.904411260972,
+      "marketCap": 2587.616007067,
+      "holders": 6,
+      "riskLevel": 2,
+      "smartMoneyBuying": false,
+      "signalWalletCount": 0,
+      "signalStrength": 0.5,
+      "recommendation": "SKIP",
+      "skipReason": "Signal strength 50.0% below threshold (55%)",
+      "probabilityTrace": []
+    },
+    {
+      "symbol": "BAOBAO",
+      "address": "0x6ab3aaa5dc7b8cbb59f17aa70d33d2d13af11111",
+      "price": 0.000140646907114045,
+      "change24h": -4.27,
+      "liquidity": 32366.490819486175,
+      "marketCap": 140645.4795479382,
+      "holders": 4437,
+      "riskLevel": 1,
+      "smartMoneyBuying": false,
+      "signalWalletCount": 0,
+      "signalStrength": 0.4117647058823529,
+      "recommendation": "SKIP",
+      "skipReason": "Signal strength 41.2% below threshold (55%)",
+      "probabilityTrace": [
+        {
+          "name": "price_momentum",
+          "direction": "bearish",
+          "likelihoodRatio": 0.7,
+          "description": "24h price change: -427.0%",
+          "probBefore": 0.5,
+          "probAfter": 0.4117647058823529
+        }
+      ]
+    },
+    {
+      "symbol": "X Chat",
+      "address": "0x4d55e22b27ef892bfa057a533332fb98eff06dd1",
+      "price": 0.000003553897933185,
+      "change24h": 0,
+      "liquidity": 6034.510922257461,
+      "marketCap": 3553.897933185242,
+      "holders": 18,
+      "riskLevel": 2,
+      "smartMoneyBuying": false,
+      "signalWalletCount": 0,
+      "signalStrength": 0.5,
+      "recommendation": "SKIP",
+      "skipReason": "Signal strength 50.0% below threshold (55%)",
+      "probabilityTrace": []
+    },
+    {
+      "symbol": "XSHIB",
+      "address": "0xe8e8a1df1e26277a2875a0bda912ab9f19843a53",
+      "price": 0.000412373784513545,
+      "change24h": 4.55,
+      "liquidity": 54900.08825290156,
+      "marketCap": 412373.60719281813,
+      "holders": 55839,
+      "riskLevel": 1,
+      "smartMoneyBuying": true,
+      "signalWalletCount": 3,
+      "signalStrength": 0.7731706210588397,
+      "recommendation": "BUY",
+      "probabilityTrace": [
+        {
+          "name": "price_momentum",
+          "direction": "bullish",
+          "likelihoodRatio": 1.3,
+          "description": "24h price change: 455.0%",
+          "probBefore": 0.5,
+          "probAfter": 0.5652173913043479
+        },
+        {
+          "name": "buy_sell_ratio",
+          "direction": "bullish",
+          "likelihoodRatio": 1.2,
+          "description": "Buy/Sell: 70/37 (65% buys)",
+          "probBefore": 0.5652173913043479,
+          "probAfter": 0.6093750000000001
+        },
+        {
+          "name": "smart_money_consensus",
+          "direction": "bullish",
+          "likelihoodRatio": 1.9,
+          "description": "3 smart money wallets buying, $293.88 total",
+          "probBefore": 0.6093750000000001,
+          "probAfter": 0.7477295660948539
+        },
+        {
+          "name": "positive_inflow",
+          "direction": "bullish",
+          "likelihoodRatio": 1.15,
+          "description": "Positive inflow: $3,608.12 volume with price increase",
+          "probBefore": 0.7477295660948539,
+          "probAfter": 0.7731706210588397
+        }
+      ]
+    },
+    {
+      "symbol": "火鸟",
+      "address": "0x1e8b545547f4a2a47230a15d6df17c8e85ca7777",
+      "price": 0.000002850005141621,
+      "change24h": 0,
+      "liquidity": 2231.496706905993,
+      "marketCap": 2850.0051416214633,
+      "holders": 8,
+      "riskLevel": 1,
+      "smartMoneyBuying": false,
+      "signalWalletCount": 0,
+      "signalStrength": 0,
+      "recommendation": "SKIP",
+      "skipReason": "Liquidity too low: $2,231.5",
+      "probabilityTrace": []
+    },
+    {
+      "symbol": "黑泡泡",
+      "address": "0x5b7e9adf206f5930dda45f9bf7f804e0b5d26e7b",
+      "price": 0.000002198074501398,
+      "change24h": 0,
+      "liquidity": 4700.643780000054,
+      "marketCap": 2198.074501398,
+      "holders": 1,
+      "riskLevel": 2,
+      "smartMoneyBuying": false,
+      "signalWalletCount": 0,
+      "signalStrength": 0,
+      "recommendation": "SKIP",
+      "skipReason": "Liquidity too low: $4,700.64",
+      "probabilityTrace": []
+    },
+    {
+      "symbol": "Xchat",
+      "address": "0x19161d0daa6ea47c1a0fe7a184ccdb9e413b7232",
+      "price": 0.000002471897310336,
+      "change24h": 0,
+      "liquidity": 4806.291707652401,
+      "marketCap": 2471.897310336,
+      "holders": 4,
+      "riskLevel": 2,
+      "smartMoneyBuying": false,
+      "signalWalletCount": 0,
+      "signalStrength": 0,
+      "recommendation": "SKIP",
+      "skipReason": "Liquidity too low: $4,806.29",
+      "probabilityTrace": []
+    }
+  ],
+  "polymarkets": {
+    "totalMarkets": 81,
+    "marketsWithEdge": 1,
+    "highEdgeCount": 1,
+    "markets": [
+      {
+        "title": "Will bitcoin hit $1m before GTA VI?",
+        "slug": "0xbb57ccf5853a85487bc3d83d04d669310d28c6c810758953b9d9b91d1aee89d2",
+        "endDate": "2026-07-31T12:00:00Z",
+        "volume": 3979739.2292285645,
+        "targetToken": "BTC",
+        "strikePrice": 1,
+        "marketProb": 0.4875,
+        "ourProb": 1,
+        "edge": 0.5125,
+        "signals": [
+          "Current BTC price: $74,479.629",
+          "Strike: $1 (-100.0% away)",
+          "Time to expiry: 2591h"
+        ]
+      }
+    ]
+  },
+  "onchainosCallLog": [
+    {
+      "command": "onchainos token hot-tokens --chain 196 --ranking-type 4",
+      "timestamp": "2026-04-14T13:02:39.432Z",
+      "success": true,
+      "resultPreview": "{\"ok\":true,\"data\":[{\"bundleHoldPercent\":\"0.000006\",\"chainIndex\":\"196\",\"change\":\"-10.53\",\"cursor\":\"0\",\"devHoldPercent\":\"0\",\"firstTradeTime\":\"1755546714000\",\"holders\":\"10872\",\"inflowUsd\":\"-2196.30332133"
+    },
+    {
+      "command": "onchainos signal list --chain 196 --wallet-type 1,2,3",
+      "timestamp": "2026-04-14T13:02:41.444Z",
+      "success": true,
+      "resultPreview": "{\"ok\":true,\"data\":[{\"amountUsd\":\"404.311371828855064737\",\"chainIndex\":\"196\",\"cursor\":\"1776151825350!@#145995\",\"price\":\"0.000539301922616712\",\"soldRatioPercent\":\"61.81\",\"timestamp\":\"1776151825350\",\"tok"
+    },
+    {
+      "command": "onchainos market price --address 0x2260fac5e5542a773aa44fbcfedf7c193bc2c599 --chain 1",
+      "timestamp": "2026-04-14T13:02:46.188Z",
+      "success": true,
+      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"1\",\"price\":\"74479.62867529633676225030406728648\",\"time\":\"1776171765949\",\"tokenContractAddress\":\"0x2260fac5e5542a773aa44fbcfedf7c193bc2c599\"}]}"
+    },
+    {
+      "command": "onchainos security token-scan --tokens 196:0x5839244eab49314bccc0fa76e3a081cb1a461111,196:0x70bf3e2b75d8832d7f790a87fffc1fa9d63dc5bb,196:0x0cc24c51bf89c00c5affbfcf5e856c25ecbdb48e,196:0x375da15dacce7a2a4f8075b5e39b8c2018057777,196:0x00880ec7de7397e4e25ad5fbd69d97db91e90372,196:0x4c225fb675c0c475b53381463782a7f741d59763,196:0x903358faf7c6304afbd560e9e29b12ab1b8fddc5,196:0x87669801a1fad6dad9db70d27ac752f452989667,196:0x59ee065af1887a0a283d399d32a02cd098ed8f5e,196:0x6ab3aaa5dc7b8cbb59f17aa70d33d2d13af11111,196:0x4d55e22b27ef892bfa057a533332fb98eff06dd1,196:0xe8e8a1df1e26277a2875a0bda912ab9f19843a53,196:0x1e8b545547f4a2a47230a15d6df17c8e85ca7777,196:0x5b7e9adf206f5930dda45f9bf7f804e0b5d26e7b,196:0x19161d0daa6ea47c1a0fe7a184ccdb9e413b7232",
+      "timestamp": "2026-04-14T13:02:48.619Z",
+      "success": true,
+      "resultPreview": "{\"ok\":true,\"data\":[{\"buyTaxes\":\"0.04\",\"chainId\":\"196\",\"isAirdropScam\":false,\"isChainSupported\":true,\"isCounterfeit\":false,\"isDumping\":false,\"isFakeLiquidity\":false,\"isFundLinkage\":false,\"isHasAssetEdi"
+    },
+    {
+      "command": "onchainos token price-info --address 0x5839244eab49314bccc0fa76e3a081cb1a461111 --chain 196",
+      "timestamp": "2026-04-14T13:02:50.398Z",
+      "success": true,
+      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"196\",\"circSupply\":\"999000000.000000000000000000\",\"holders\":\"10872\",\"liquidity\":\"91444.436487034399929902859097477617296890634410013416064\",\"marketCap\":\"285126.0584334"
+    },
+    {
+      "command": "onchainos token price-info --address 0x70bf3e2b75d8832d7f790a87fffc1fa9d63dc5bb --chain 196",
+      "timestamp": "2026-04-14T13:02:52.534Z",
+      "success": true,
+      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"196\",\"circSupply\":\"55133506642.846070000000000000\",\"holders\":\"32561\",\"liquidity\":\"996316.74579278566143600466880773592567737447777075221785\",\"marketCap\":\"4276725.3201"
+    },
+    {
+      "command": "onchainos token price-info --address 0x0cc24c51bf89c00c5affbfcf5e856c25ecbdb48e --chain 196",
+      "timestamp": "2026-04-14T13:02:54.578Z",
+      "success": true,
+      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"196\",\"circSupply\":\"997777184.183486599000000000\",\"holders\":\"35595\",\"liquidity\":\"525082.23067138784670851388196613187798373024870726760067\",\"marketCap\":\"4502198.985601"
+    },
+    {
+      "command": "onchainos token price-info --address 0x375da15dacce7a2a4f8075b5e39b8c2018057777 --chain 196",
+      "timestamp": "2026-04-14T13:02:56.491Z",
+      "success": true,
+      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"196\",\"circSupply\":\"797127953.163172000000000000\",\"holders\":\"6213\",\"liquidity\":\"107717.2255801743702887934231220791011488838360869792\",\"marketCap\":\"1462756.99062870185"
+    },
+    {
+      "command": "onchainos token price-info --address 0x00880ec7de7397e4e25ad5fbd69d97db91e90372 --chain 196",
+      "timestamp": "2026-04-14T13:02:59.871Z",
+      "success": true,
+      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"196\",\"circSupply\":\"1000000000.000000000000000000\",\"holders\":\"3141\",\"liquidity\":\"62867.283262322033260690456368739867845102963567484\",\"marketCap\":\"444521.4421372277826"
+    },
+    {
+      "command": "onchainos wallet balance --chain 196",
+      "timestamp": "2026-04-14T13:03:01.945Z",
+      "success": true,
+      "resultPreview": "{\"ok\":true,\"data\":{\"details\":[{\"tokenAssets\":[]}],\"totalValueUsd\":\"0.00\"}}"
+    }
+  ],
+  "recommendation": {
+    "symbol": "XDOG",
+    "address": "0x0cc24c51bf89c00c5affbfcf5e856c25ecbdb48e",
+    "finalProbability": 0.7869007916635591,
+    "trace": [
+      {
+        "name": "price_momentum",
+        "direction": "bullish",
+        "likelihoodRatio": 1.3,
+        "description": "24h price change: 583.0%",
+        "probBefore": 0.5,
+        "probAfter": 0.5652173913043479
+      },
+      {
+        "name": "smart_money_consensus",
+        "direction": "bullish",
+        "likelihoodRatio": 1.9,
+        "description": "3 smart money wallets buying, $765.34 total",
+        "probBefore": 0.5652173913043479,
+        "probAfter": 0.7118155619596542
+      },
+      {
+        "name": "low_sold_ratio",
+        "direction": "bullish",
+        "likelihoodRatio": 1.3,
+        "description": "Only 30% of holders have sold (diamond hands)",
+        "probBefore": 0.7118155619596542,
+        "probAfter": 0.7625267157444788
+      },
+      {
+        "name": "positive_inflow",
+        "direction": "bullish",
+        "likelihoodRatio": 1.15,
+        "description": "Positive inflow: $65,464.83 volume with price increase",
+        "probBefore": 0.7625267157444788,
+        "probAfter": 0.7869007916635591
+      }
+    ]
+  },
+  "execution": {
+    "executed": false,
+    "error": "Insufficient balance",
+    "recommendation": {
+      "address": "0x0cc24c51bf89c00c5affbfcf5e856c25ecbdb48e",
+      "symbol": "XDOG",
+      "price": 0.004512228839232782,
+      "change24h": 5.83,
+      "volume": 65464.82826170388,
+      "liquidity": 525082.2306713879,
+      "marketCap": 4502198.985601207,
+      "holders": 35595,
+      "riskLevel": 1,
+      "top10HoldPct": 9.4449,
+      "txsBuy": 60,
+      "txsSell": 78,
+      "smartMoneyBuying": true,
+      "signalWalletCount": 3,
+      "signalAmountUsd": 765.3444609437436,
+      "soldRatioPct": 30.07,
+      "isHoneypot": false,
+      "signalStrength": 0.7869007916635591,
+      "probabilityTrace": [
+        {
+          "name": "price_momentum",
+          "direction": "bullish",
+          "likelihoodRatio": 1.3,
+          "description": "24h price change: 583.0%",
+          "probBefore": 0.5,
+          "probAfter": 0.5652173913043479
+        },
+        {
+          "name": "smart_money_consensus",
+          "direction": "bullish",
+          "likelihoodRatio": 1.9,
+          "description": "3 smart money wallets buying, $765.34 total",
+          "probBefore": 0.5652173913043479,
+          "probAfter": 0.7118155619596542
+        },
+        {
+          "name": "low_sold_ratio",
+          "direction": "bullish",
+          "likelihoodRatio": 1.3,
+          "description": "Only 30% of holders have sold (diamond hands)",
+          "probBefore": 0.7118155619596542,
+          "probAfter": 0.7625267157444788
+        },
+        {
+          "name": "positive_inflow",
+          "direction": "bullish",
+          "likelihoodRatio": 1.15,
+          "description": "Positive inflow: $65,464.83 volume with price increase",
+          "probBefore": 0.7625267157444788,
+          "probAfter": 0.7869007916635591
+        }
+      ],
+      "finalProbability": 0.7869007916635591,
+      "recommendation": "BUY"
+    }
+  }
+}
