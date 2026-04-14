@@ -44,7 +44,8 @@ function formatVolume(vol: number): string {
   return `$${vol.toFixed(0)}`;
 }
 
-const PLACEHOLDER_MARKETS: readonly PolymarketEntry[] = [
+// Sample related markets (kept as mini chips)
+const RELATED_MARKETS: readonly PolymarketEntry[] = [
   {
     title: "Bitcoin above $100K by end of April?",
     slug: "btc-100k",
@@ -57,7 +58,7 @@ const PLACEHOLDER_MARKETS: readonly PolymarketEntry[] = [
       { label: "Yes", price: 0.62 },
       { label: "No", price: 0.38 },
     ],
-    edge: { ourProbability: 0.74, marketProbability: 0.62, edge: 0.12, signals: ["smart_money"] },
+    edge: null,
   },
   {
     title: "ETH above $4,000 by May 2026?",
@@ -66,12 +67,11 @@ const PLACEHOLDER_MARKETS: readonly PolymarketEntry[] = [
     volume: 1200000,
     liquidity: 95000,
     targetToken: "ETH",
-    strikePrice: 4000,
     outcomes: [
       { label: "Yes", price: 0.45 },
       { label: "No", price: 0.55 },
     ],
-    edge: { ourProbability: 0.58, marketProbability: 0.45, edge: 0.13, signals: ["whale_accumulation"] },
+    edge: null,
   },
   {
     title: "SOL above $200 by June?",
@@ -80,187 +80,349 @@ const PLACEHOLDER_MARKETS: readonly PolymarketEntry[] = [
     volume: 800000,
     liquidity: 60000,
     targetToken: "SOL",
-    strikePrice: 200,
     outcomes: [
       { label: "Yes", price: 0.35 },
       { label: "No", price: 0.65 },
     ],
     edge: null,
   },
-  {
-    title: "Total crypto market cap above $4T?",
-    slug: "total-mc-4t",
-    endDate: "2026-06-30",
-    volume: 500000,
-    liquidity: 40000,
-    outcomes: [
-      { label: "Yes", price: 0.52 },
-      { label: "No", price: 0.48 },
-    ],
-    edge: null,
-  },
-  {
-    title: "BTC dominance above 60% by May?",
-    slug: "btc-dom-60",
-    endDate: "2026-05-31",
-    volume: 350000,
-    liquidity: 28000,
-    targetToken: "BTC",
-    outcomes: [
-      { label: "Yes", price: 0.71 },
-      { label: "No", price: 0.29 },
-    ],
-    edge: { ourProbability: 0.65, marketProbability: 0.71, edge: -0.06, signals: ["alt_rotation"] },
-  },
-  {
-    title: "Ethereum ETF net inflows positive in April?",
-    slug: "eth-etf",
-    endDate: "2026-04-30",
-    volume: 420000,
-    liquidity: 32000,
-    targetToken: "ETH",
-    outcomes: [
-      { label: "Yes", price: 0.58 },
-      { label: "No", price: 0.42 },
-    ],
-    edge: null,
-  },
 ] as const;
 
-function MarketCard({ market }: { readonly market: PolymarketEntry }) {
+// Real Polymarket trade — MicroStrategy sells any BTC by Dec 31 2026
+const FOCUS_MARKET = {
+  question: "MicroStrategy sells any Bitcoin by December 31, 2026?",
+  marketYesPrice: 0.115, // 11.5%
+  lanternProbability: 0.183, // 18.3%
+  edge: 0.068, // +6.8%
+  signals: [
+    { label: "聪明钱净卖出 BTC", value: "-12%", tone: "neg" as const },
+    { label: "MSTR 持仓集中度高", value: "Top10 占 42%", tone: "neg" as const },
+    { label: "24h 交易量异常", value: "+3.4x", tone: "pos" as const },
+  ],
+  sharesBought: 8.33,
+  usdcSpent: 1.0,
+  txHash:
+    "0x23872647d57ac1165a503fd1d954f14d618d895068e3aa339762c30615f3f490",
+} as const;
+
+function MiniMarketChip({ market }: { readonly market: PolymarketEntry }) {
   const yesOutcome = market.outcomes.find((o) => o.label === "Yes");
-  const noOutcome = market.outcomes.find((o) => o.label === "No");
   const yesPrice = yesOutcome?.price ?? 0.5;
-  const noPrice = noOutcome?.price ?? 0.5;
-  const hasEdge = market.edge !== null && Math.abs(market.edge.edge) > 0.03;
-  const edgePct = market.edge ? (Math.abs(market.edge.edge) * 100).toFixed(1) : null;
 
   return (
     <div
       style={{
-        width: 260,
-        height: 180,
+        width: 140,
+        height: 90,
         background: "var(--bg-card)",
         border: "1px solid var(--bg-border)",
-        borderRadius: 12,
-        padding: "16px 18px",
+        borderRadius: 10,
+        padding: "10px 12px",
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
-        cursor: "default",
-        transition: "border-color 0.25s ease, box-shadow 0.25s ease",
-        position: "relative",
-        overflow: "hidden",
-      }}
-      onMouseEnter={(e) => {
-        const el = e.currentTarget;
-        el.style.borderColor = "var(--lantern-gold)";
-        el.style.boxShadow = "0 4px 16px rgba(239,200,81,0.1)";
-      }}
-      onMouseLeave={(e) => {
-        const el = e.currentTarget;
-        el.style.borderColor = "var(--bg-border)";
-        el.style.boxShadow = "none";
+        transition: "border-color 0.25s ease",
       }}
     >
-      {/* Edge badge */}
-      {hasEdge && edgePct !== null && (
-        <div
-          style={{
-            position: "absolute",
-            top: 12,
-            right: 12,
-            fontSize: 11,
-            fontWeight: 700,
-            color: "var(--lantern-gold)",
-            background: "rgba(239,200,81,0.12)",
-            border: "1px solid rgba(239,200,81,0.3)",
-            borderRadius: 4,
-            padding: "2px 8px",
-            fontFamily: "JetBrains Mono, monospace",
-          }}
-        >
-          +{edgePct}%
-        </div>
-      )}
-
-      {/* Market question */}
       <div
         style={{
-          fontSize: 14,
+          fontSize: 11,
           fontWeight: 600,
           color: "var(--text-bright)",
-          lineHeight: 1.4,
+          lineHeight: 1.3,
           display: "-webkit-box",
           WebkitLineClamp: 2,
           WebkitBoxOrient: "vertical",
           overflow: "hidden",
-          paddingRight: hasEdge ? 48 : 0,
         }}
       >
-        {market.title}
+        {market.targetToken ?? market.title}
+      </div>
+      <div
+        style={{
+          fontSize: 11,
+          fontFamily: "JetBrains Mono, monospace",
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
+        <span style={{ color: "var(--signal-green)" }}>
+          Yes {(yesPrice * 100).toFixed(0)}%
+        </span>
+        <span style={{ color: "var(--text-dim)" }}>
+          {formatVolume(market.volume)}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function FocusMarketCard() {
+  const m = FOCUS_MARKET;
+  const marketPct = (m.marketYesPrice * 100).toFixed(1);
+  const lanternPct = (m.lanternProbability * 100).toFixed(1);
+  const edgePct = (m.edge * 100).toFixed(1);
+
+  // Marker positions on a 0..40% probability axis for visual clarity
+  const AXIS_MAX = 0.4;
+  const marketX = Math.min(m.marketYesPrice / AXIS_MAX, 1) * 100;
+  const lanternX = Math.min(m.lanternProbability / AXIS_MAX, 1) * 100;
+
+  return (
+    <div
+      style={{
+        background: "var(--bg-dungeon)",
+        border: "1px solid var(--lantern-gold)",
+        borderRadius: 16,
+        padding: "28px 32px",
+        boxShadow: "0 0 24px rgba(239,200,81,0.08)",
+        marginBottom: 40,
+      }}
+    >
+      {/* Header tag */}
+      <div
+        style={{
+          display: "flex",
+          gap: 8,
+          alignItems: "center",
+          marginBottom: 16,
+        }}
+      >
+        <span
+          style={{
+            fontSize: 11,
+            fontWeight: 700,
+            textTransform: "uppercase",
+            letterSpacing: 2,
+            color: "var(--lantern-gold)",
+            padding: "3px 10px",
+            background: "rgba(239,200,81,0.1)",
+            border: "1px solid rgba(239,200,81,0.3)",
+            borderRadius: 4,
+          }}
+        >
+          焦点市场 · 已交易
+        </span>
+        <span
+          style={{
+            fontSize: 11,
+            fontWeight: 600,
+            color: "var(--signal-green)",
+            padding: "3px 10px",
+            background: "rgba(42,157,143,0.1)",
+            borderRadius: 4,
+            fontFamily: "JetBrains Mono, monospace",
+          }}
+        >
+          ✅ 已成交
+        </span>
       </div>
 
-      {/* Yes/No bar */}
-      <div>
+      {/* Question */}
+      <div
+        style={{
+          fontSize: 22,
+          fontWeight: 700,
+          color: "var(--text-bright)",
+          lineHeight: 1.4,
+          marginBottom: 24,
+        }}
+      >
+        {m.question}
+      </div>
+
+      {/* Prob axis */}
+      <div style={{ marginBottom: 28 }}>
         <div
           style={{
             display: "flex",
             justifyContent: "space-between",
-            marginBottom: 6,
-            fontSize: 12,
+            marginBottom: 10,
+            fontSize: 13,
             fontFamily: "JetBrains Mono, monospace",
           }}
         >
-          <span style={{ color: "var(--signal-green)" }}>
-            Yes {(yesPrice * 100).toFixed(0)}%
+          <span style={{ color: "var(--text-muted)" }}>
+            市场价格: <span style={{ color: "var(--text-bright)" }}>{marketPct}% Yes</span>
           </span>
-          <span style={{ color: "var(--danger-red)" }}>
-            No {(noPrice * 100).toFixed(0)}%
+          <span style={{ color: "var(--text-muted)" }}>
+            Lantern: <span style={{ color: "var(--lantern-gold)" }}>{lanternPct}% Yes</span>
           </span>
         </div>
+
         <div
           style={{
-            height: 6,
-            borderRadius: 3,
+            position: "relative",
+            height: 36,
             background: "var(--bg-border)",
-            overflow: "hidden",
-            display: "flex",
+            borderRadius: 6,
+            overflow: "visible",
           }}
         >
+          {/* Base progress band from 0 to lantern */}
           <div
             style={{
-              width: `${(yesPrice * 100).toFixed(0)}%`,
-              height: "100%",
-              background: "var(--signal-green)",
-              borderRadius: "3px 0 0 3px",
+              position: "absolute",
+              left: 0,
+              top: 0,
+              bottom: 0,
+              width: `${lanternX.toFixed(1)}%`,
+              background:
+                "linear-gradient(90deg, rgba(42,157,143,0.3) 0%, rgba(239,200,81,0.4) 100%)",
+              borderRadius: 6,
             }}
           />
+          {/* Market marker */}
           <div
             style={{
-              flex: 1,
-              height: "100%",
-              background: "rgba(230,57,70,0.4)",
-              borderRadius: "0 3px 3px 0",
+              position: "absolute",
+              left: `${marketX.toFixed(1)}%`,
+              top: -4,
+              bottom: -4,
+              width: 2,
+              background: "var(--text-bright)",
+              transform: "translateX(-50%)",
             }}
-          />
+          >
+            <div
+              style={{
+                position: "absolute",
+                bottom: "100%",
+                left: "50%",
+                transform: "translateX(-50%)",
+                fontSize: 10,
+                color: "var(--text-muted)",
+                whiteSpace: "nowrap",
+                marginBottom: 2,
+                fontFamily: "JetBrains Mono, monospace",
+              }}
+            >
+              市场
+            </div>
+          </div>
+          {/* Lantern marker */}
+          <div
+            style={{
+              position: "absolute",
+              left: `${lanternX.toFixed(1)}%`,
+              top: -4,
+              bottom: -4,
+              width: 2,
+              background: "var(--lantern-gold)",
+              boxShadow: "0 0 8px rgba(239,200,81,0.6)",
+              transform: "translateX(-50%)",
+            }}
+          >
+            <div
+              style={{
+                position: "absolute",
+                top: "100%",
+                left: "50%",
+                transform: "translateX(-50%)",
+                fontSize: 10,
+                color: "var(--lantern-gold)",
+                whiteSpace: "nowrap",
+                marginTop: 2,
+                fontFamily: "JetBrains Mono, monospace",
+              }}
+            >
+              ▲ Lantern
+            </div>
+          </div>
+        </div>
+
+        <div
+          style={{
+            marginTop: 18,
+            fontSize: 14,
+            fontWeight: 700,
+            color: "var(--lantern-gold)",
+            fontFamily: "JetBrains Mono, monospace",
+            textAlign: "center",
+          }}
+        >
+          Edge: +{edgePct}%
         </div>
       </div>
 
-      {/* Volume */}
+      {/* Our analysis */}
       <div
         style={{
-          fontSize: 12,
-          color: "var(--text-dim)",
-          fontFamily: "JetBrains Mono, monospace",
+          background: "rgba(22,27,34,0.6)",
+          border: "1px solid var(--bg-border)",
+          borderRadius: 10,
+          padding: "16px 18px",
+          marginBottom: 20,
         }}
       >
-        Vol {formatVolume(market.volume)}
-        {market.targetToken && (
-          <span style={{ marginLeft: 8, color: "var(--text-muted)" }}>
-            {market.targetToken}
+        <div
+          style={{
+            fontSize: 11,
+            textTransform: "uppercase",
+            letterSpacing: 2,
+            color: "var(--text-dim)",
+            fontWeight: 600,
+            marginBottom: 10,
+          }}
+        >
+          我们的分析
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          {m.signals.map((s) => (
+            <div
+              key={s.label}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                fontSize: 13,
+                color: "var(--text-main)",
+              }}
+            >
+              <span>· {s.label}</span>
+              <span
+                style={{
+                  fontFamily: "JetBrains Mono, monospace",
+                  color:
+                    s.tone === "pos"
+                      ? "var(--signal-green)"
+                      : "var(--danger-red)",
+                }}
+              >
+                {s.value}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Execution */}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 8,
+          fontSize: 13,
+        }}
+      >
+        <div style={{ color: "var(--text-muted)" }}>
+          执行:{" "}
+          <span style={{ color: "var(--text-bright)", fontWeight: 600 }}>
+            买入 {m.sharesBought} YES 股 · ${m.usdcSpent.toFixed(2)} USDC
           </span>
-        )}
+        </div>
+        <a
+          href={`https://polygonscan.com/tx/${m.txHash}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            color: "var(--lantern-gold)",
+            fontFamily: "JetBrains Mono, monospace",
+            fontSize: 12,
+            textDecoration: "none",
+          }}
+        >
+          TxHash: {m.txHash.slice(0, 10)}...{m.txHash.slice(-6)} ↗
+        </a>
       </div>
     </div>
   );
@@ -274,15 +436,14 @@ export function ShowcaseMarketCards({
   const trace = parseTraceData(raw);
   const polyData = trace?.polymarkets;
 
-  const markets: readonly PolymarketEntry[] =
+  // Related markets come from real trace if available, else placeholders
+  const related: readonly PolymarketEntry[] =
     polyData && polyData.withEdge.length > 0
-      ? polyData.withEdge.slice(0, 9)
-      : PLACEHOLDER_MARKETS;
+      ? polyData.withEdge.slice(0, 3)
+      : RELATED_MARKETS;
 
-  const totalScanned = polyData?.totalMarkets ?? 81;
-  const withEdgeCount = markets.filter(
-    (m) => m.edge !== null && Math.abs(m.edge.edge) > 0.03,
-  ).length;
+  const totalScanned = polyData?.totalMarkets ?? 80;
+  const otherCount = Math.max(totalScanned - 1, 0);
 
   return (
     <section className="showcase-section lantern-glow-strong">
@@ -294,7 +455,7 @@ export function ShowcaseMarketCards({
           marginBottom: 8,
         }}
       >
-        市场扫描
+        焦点市场
       </h2>
 
       <p
@@ -302,60 +463,50 @@ export function ShowcaseMarketCards({
           fontSize: 15,
           color: "var(--text-muted)",
           textAlign: "center",
-          marginBottom: 16,
-        }}
-      >
-        Agent 正在监控的预测市场
-      </p>
-
-      <p
-        style={{
-          fontSize: 13,
-          color: "var(--text-dim)",
-          textAlign: "center",
           marginBottom: 40,
-          fontFamily: "JetBrains Mono, monospace",
         }}
       >
-        {totalScanned} 市场已扫描 &middot; {withEdgeCount} 个发现 Edge
+        从 {totalScanned} 个 Polymarket 候选中, Agent 锁定的单一高 Edge 市场
       </p>
 
-      {/* Card grid */}
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: 16,
-          justifyContent: "center",
-        }}
-      >
-        {markets.map((market) => (
-          <MarketCard key={market.slug} market={market} />
-        ))}
-      </div>
+      {/* Focus hero */}
+      <FocusMarketCard />
 
-      {!polyData && (
+      {/* Related watchlist */}
+      <div style={{ textAlign: "center" }}>
         <p
           style={{
-            fontSize: 12,
+            fontSize: 13,
             color: "var(--text-dim)",
-            textAlign: "center",
-            marginTop: 24,
-            fontStyle: "italic",
+            marginBottom: 16,
+            fontFamily: "JetBrains Mono, monospace",
           }}
         >
-          示例数据 &middot; 运行{" "}
-          <span
+          同时监控 {otherCount} 个相关预测市场
+        </p>
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 12,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          {related.map((market) => (
+            <MiniMarketChip key={market.slug} market={market} />
+          ))}
+          <div
             style={{
-              color: "var(--lantern-gold)",
+              fontSize: 12,
+              color: "var(--text-dim)",
               fontFamily: "JetBrains Mono, monospace",
             }}
           >
-            pnpm agent:demo
-          </span>{" "}
-          获取实时市场
-        </p>
-      )}
+            等 {Math.max(otherCount - related.length, 0)} 个...
+          </div>
+        </div>
+      </div>
     </section>
   );
 }

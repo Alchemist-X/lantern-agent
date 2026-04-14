@@ -22,10 +22,10 @@ export function ShowcaseOnchainProof() {
   return (
     <div ref={ref} style={{ opacity: inView ? 1 : 0, transition: "opacity 0.5s ease" }}>
       <h2 style={{ fontFamily: "Cinzel, serif", fontSize: 40, color: "#FFF6E2", marginBottom: 8, textAlign: "center" }}>
-        链上可验证
+        决策公开 · X Layer 链上透明
       </h2>
       <p style={{ textAlign: "center", color: "#8B949E", fontSize: 15, marginBottom: 40 }}>
-        每一个决策都写在 X Layer 上——零 Gas 费，永久可查
+        Agent 的每次思考都以 JSON 写入 X Layer, 任何人都能验证
       </p>
 
       {/* Core message */}
@@ -52,6 +52,120 @@ export function ShowcaseOnchainProof() {
         <p style={{ fontSize: 15, color: "#8B949E", marginTop: 16 }}>
           这是<span style={{ color: "#EFC851" }}>链上 AI 审计</span>——只有零 Gas 链才能支撑的应用模式
         </p>
+      </div>
+
+      {/* Decision publication flow */}
+      <div style={{
+        background: "#0D1117",
+        border: "1px solid #30363D",
+        borderRadius: 16,
+        padding: "28px 28px",
+        marginBottom: 28,
+      }}>
+        <div style={{
+          fontSize: 13,
+          color: "#EFC851",
+          fontWeight: 700,
+          textTransform: "uppercase",
+          letterSpacing: 2,
+          marginBottom: 20,
+          textAlign: "center",
+        }}>
+          决策公开流程
+        </div>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          {/* Step 1 */}
+          <div style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
+            <div style={{
+              width: 28, height: 28, flexShrink: 0,
+              borderRadius: 14,
+              background: "#FF910020",
+              border: "1px solid #FF9100",
+              color: "#FF9100",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontFamily: "JetBrains Mono, monospace",
+              fontWeight: 700, fontSize: 13,
+            }}>1</div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 14, color: "#FFF6E2", fontWeight: 600, marginBottom: 6 }}>
+                Agent 完成一次 Pulse 分析
+              </div>
+              <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 12, color: "#8B949E", lineHeight: 1.8 }}>
+                ├─ 扫描 15 个代币<br />
+                ├─ 记录 10 次 Onchainos API 调用<br />
+                └─ 贝叶斯推理得出最终概率
+              </div>
+            </div>
+          </div>
+
+          {/* Step 2 */}
+          <div style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
+            <div style={{
+              width: 28, height: 28, flexShrink: 0,
+              borderRadius: 14,
+              background: "#FF910020",
+              border: "1px solid #FF9100",
+              color: "#FF9100",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontFamily: "JetBrains Mono, monospace",
+              fontWeight: 700, fontSize: 13,
+            }}>2</div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 14, color: "#FFF6E2", fontWeight: 600, marginBottom: 6 }}>
+                编码为 JSON (339 字节)
+              </div>
+              <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 12, color: "#8B949E" }}>
+                {"{ agent, chain, recommendation, signals, probability }"}
+              </div>
+            </div>
+          </div>
+
+          {/* Step 3 */}
+          <div style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
+            <div style={{
+              width: 28, height: 28, flexShrink: 0,
+              borderRadius: 14,
+              background: "#FF910020",
+              border: "1px solid #FF9100",
+              color: "#FF9100",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontFamily: "JetBrains Mono, monospace",
+              fontWeight: 700, fontSize: 13,
+            }}>3</div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 14, color: "#FFF6E2", fontWeight: 600, marginBottom: 6 }}>
+                调用 onchainos wallet contract-call
+              </div>
+              <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 12, color: "#8B949E" }}>
+                发送到 X Layer (chain 196)
+              </div>
+            </div>
+          </div>
+
+          {/* Step 4 */}
+          <div style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
+            <div style={{
+              width: 28, height: 28, flexShrink: 0,
+              borderRadius: 14,
+              background: "#2a9d8f20",
+              border: "1px solid #2a9d8f",
+              color: "#2a9d8f",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontFamily: "JetBrains Mono, monospace",
+              fontWeight: 700, fontSize: 13,
+            }}>4</div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 14, color: "#FFF6E2", fontWeight: 600, marginBottom: 6 }}>
+                永久上链 (零 Gas 费)
+              </div>
+              <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 12, color: "#8B949E", lineHeight: 1.8 }}>
+                TxHash: {txHash.slice(0, 10)}...<br />
+                <span style={{ color: "#484F58" }}>任何人都可以通过 Explorer 解码验证</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Three proof cards */}

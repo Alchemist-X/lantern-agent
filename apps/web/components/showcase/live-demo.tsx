@@ -336,7 +336,7 @@ export function ShowcaseLiveDemo({ trace: raw }: { readonly trace: Record<string
           opacity: inView ? undefined : 0,
         }}
       >
-        实时分析管线
+        推理引擎示例 · 真实 Agent 输出
       </h2>
 
       <p
@@ -345,13 +345,34 @@ export function ShowcaseLiveDemo({ trace: raw }: { readonly trace: Record<string
           fontSize: 15,
           color: "var(--text-muted)",
           textAlign: "center",
-          marginBottom: 48,
+          marginBottom: 16,
           opacity: inView ? undefined : 0,
           animationDelay: "0.1s",
         }}
       >
-        最近一次 Pulse 循环的完整推理过程
+        以下是 Agent 分析 X Layer 热门代币的真实过程, 同样的贝叶斯管线用于预测市场 Edge 检测
       </p>
+
+      <div
+        className={inView ? "animate-in" : ""}
+        style={{
+          maxWidth: 720,
+          margin: "0 auto 40px",
+          padding: "12px 18px",
+          borderLeft: "3px solid var(--lantern-gold)",
+          background: "rgba(239,200,81,0.06)",
+          borderRadius: "0 8px 8px 0",
+          fontSize: 13,
+          color: "var(--text-muted)",
+          lineHeight: 1.6,
+          opacity: inView ? undefined : 0,
+          animationDelay: "0.15s",
+        }}
+      >
+        同样的分析引擎也应用于上方焦点市场的 Edge 发现 —
+        Agent 用 Onchainos 采集 BTC / MSTR 链上信号, 再以贝叶斯方式更新
+        Polymarket 隐含概率。
+      </div>
 
       {!trace ? (
         <div
