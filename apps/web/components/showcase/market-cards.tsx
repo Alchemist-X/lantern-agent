@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 interface MarketOutcome {
   readonly label: string;
   readonly price: number;
@@ -38,10 +40,21 @@ interface PolymarketMarketRaw {
   readonly signals?: readonly string[];
 }
 
+interface PolymarketWatchlistRaw {
+  readonly title?: string;
+  readonly slug?: string;
+  readonly endDate?: string;
+  readonly volume?: number;
+  readonly targetToken?: string;
+  readonly strikePrice?: number;
+  readonly yesPrice?: number;
+}
+
 interface PolymarketDataRaw {
   readonly totalMarkets?: number;
   readonly marketsWithEdge?: number;
   readonly markets?: readonly PolymarketMarketRaw[];
+  readonly watchlist?: readonly PolymarketWatchlistRaw[];
   // Legacy shape (older data):
   readonly withEdge?: readonly PolymarketEntry[];
 }
@@ -57,9 +70,30 @@ function parseTraceData(raw: Record<string, unknown> | null): TraceData | null {
 
 function normalizeRelated(data: PolymarketDataRaw | undefined): readonly PolymarketEntry[] {
   if (!data) return [];
-  // Prefer new "markets" field from agent-demo
+  // Prefer new "watchlist" field (broader sample)
+  if (Array.isArray(data.watchlist) && data.watchlist.length > 0) {
+    return data.watchlist
+      .map((m, i) => {
+        const yesPrice = m.yesPrice ?? 0.5;
+        return {
+          title: m.title ?? `Market ${String(i + 1)}`,
+          slug: m.slug ?? `market-${String(i)}`,
+          endDate: m.endDate ?? "",
+          volume: m.volume ?? 0,
+          liquidity: 0,
+          targetToken: m.targetToken,
+          strikePrice: m.strikePrice,
+          outcomes: [
+            { label: "Yes", price: yesPrice },
+            { label: "No", price: Math.max(1 - yesPrice, 0) },
+          ],
+          edge: null,
+        };
+      });
+  }
+  // Fallback to "markets" (edge-only)
   if (Array.isArray(data.markets) && data.markets.length > 0) {
-    return data.markets.slice(0, 3).map((m, i) => {
+    return data.markets.map((m, i) => {
       const yesPrice = m.marketProb ?? 0.5;
       return {
         title: m.title ?? `Market ${String(i + 1)}`,
@@ -79,7 +113,7 @@ function normalizeRelated(data: PolymarketDataRaw | undefined): readonly Polymar
   }
   // Legacy fallback
   if (Array.isArray(data.withEdge) && data.withEdge.length > 0) {
-    return data.withEdge.slice(0, 3);
+    return data.withEdge.slice();
   }
   return [];
 }
@@ -151,15 +185,23 @@ const FOCUS_MARKET = {
     "0x23872647d57ac1165a503fd1d954f14d618d895068e3aa339762c30615f3f490",
 } as const;
 
-function MiniMarketChip({ market }: { readonly market: PolymarketEntry }) {
+function RotatingMarketCard({ market }: { readonly market: PolymarketEntry }) {
   const yesOutcome = market.outcomes.find((o) => o.label === "Yes");
   const yesPrice = yesOutcome?.price ?? 0.5;
+  const yesPct = Math.round(yesPrice * 100);
+  const noPct = 100 - yesPct;
+
+  const tokenStrike =
+    market.targetToken && market.strikePrice
+      ? `${market.targetToken} · $${market.strikePrice.toLocaleString()}`
+      : market.targetToken ?? null;
 
   return (
     <div
+      className="rotating-market-card"
       style={{
-        width: 140,
-        height: 90,
+        width: 200,
+        height: 120,
         background: "var(--bg-card)",
         border: "1px solid var(--bg-border)",
         borderRadius: 10,
@@ -167,13 +209,24 @@ function MiniMarketChip({ market }: { readonly market: PolymarketEntry }) {
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
-        transition: "border-color 0.25s ease",
+        animation: "marketFadeIn 0.6s ease",
+        transition: "transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease",
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.transform = "scale(1.04)";
+        e.currentTarget.style.borderColor = "var(--lantern-gold)";
+        e.currentTarget.style.boxShadow = "0 0 12px rgba(239,200,81,0.15)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = "scale(1)";
+        e.currentTarget.style.borderColor = "var(--bg-border)";
+        e.currentTarget.style.boxShadow = "none";
       }}
     >
       <div
         style={{
-          fontSize: 11,
-          fontWeight: 600,
+          fontSize: 12,
+          fontWeight: 700,
           color: "var(--text-bright)",
           lineHeight: 1.3,
           display: "-webkit-box",
@@ -182,22 +235,73 @@ function MiniMarketChip({ market }: { readonly market: PolymarketEntry }) {
           overflow: "hidden",
         }}
       >
-        {market.targetToken ?? market.title}
+        {market.title}
       </div>
-      <div
-        style={{
-          fontSize: 11,
-          fontFamily: "JetBrains Mono, monospace",
-          display: "flex",
-          justifyContent: "space-between",
-        }}
-      >
-        <span style={{ color: "var(--signal-green)" }}>
-          Yes {(yesPrice * 100).toFixed(0)}%
-        </span>
-        <span style={{ color: "var(--text-dim)" }}>
-          {formatVolume(market.volume)}
-        </span>
+
+      {tokenStrike ? (
+        <div
+          style={{
+            fontSize: 11,
+            color: "var(--lantern-gold)",
+            fontFamily: "JetBrains Mono, monospace",
+          }}
+        >
+          {tokenStrike}
+        </div>
+      ) : null}
+
+      <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "baseline",
+          }}
+        >
+          <span
+            style={{
+              fontSize: 20,
+              fontWeight: 700,
+              color: "var(--signal-green)",
+              fontFamily: "JetBrains Mono, monospace",
+              lineHeight: 1,
+            }}
+          >
+            {yesPct}%
+          </span>
+          <span
+            style={{
+              fontSize: 10,
+              color: "var(--text-dim)",
+              fontFamily: "JetBrains Mono, monospace",
+            }}
+          >
+            {formatVolume(market.volume)}
+          </span>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            height: 4,
+            borderRadius: 2,
+            overflow: "hidden",
+            background: "var(--bg-border)",
+          }}
+        >
+          <div
+            style={{
+              width: `${String(yesPct)}%`,
+              background: "var(--signal-green)",
+            }}
+          />
+          <div
+            style={{
+              width: `${String(noPct)}%`,
+              background: "var(--danger-red)",
+              opacity: 0.7,
+            }}
+          />
+        </div>
       </div>
     </div>
   );
@@ -474,6 +578,9 @@ function FocusMarketCard() {
   );
 }
 
+const DISPLAY_COUNT = 5;
+const ROTATION_MS = 3000;
+
 export function ShowcaseMarketCards({
   trace: raw,
 }: {
@@ -484,14 +591,39 @@ export function ShowcaseMarketCards({
 
   // Safely normalize whichever shape the trace has; fallback to placeholders
   const normalized = normalizeRelated(polyData);
-  const related: readonly PolymarketEntry[] =
+  const watchlist: readonly PolymarketEntry[] =
     normalized.length > 0 ? normalized : RELATED_MARKETS;
 
-  const totalScanned = polyData?.totalMarkets ?? 80;
-  const otherCount = Math.max(totalScanned - 1, 0);
+  const totalScanned = polyData?.totalMarkets ?? watchlist.length;
+
+  const [startIndex, setStartIndex] = useState(0);
+
+  useEffect(() => {
+    if (watchlist.length <= DISPLAY_COUNT) return;
+    const interval = setInterval(() => {
+      setStartIndex((prev) => (prev + 1) % watchlist.length);
+    }, ROTATION_MS);
+    return () => {
+      clearInterval(interval);
+    };
+  }, [watchlist.length]);
+
+  const visible = Array.from({ length: Math.min(DISPLAY_COUNT, watchlist.length) }, (_, i) => {
+    const market = watchlist[(startIndex + i) % watchlist.length];
+    return market ?? null;
+  }).filter((m): m is PolymarketEntry => m !== null);
+
+  const windowStart = watchlist.length > 0 ? (startIndex % watchlist.length) + 1 : 0;
+  const windowEnd = Math.min(windowStart + visible.length - 1, watchlist.length);
 
   return (
     <section className="showcase-section lantern-glow-strong">
+      <style>{`
+        @keyframes marketFadeIn {
+          from { opacity: 0; transform: translateY(6px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
       <h2
         style={{
           fontSize: 40,
@@ -517,18 +649,39 @@ export function ShowcaseMarketCards({
       {/* Focus hero */}
       <FocusMarketCard />
 
-      {/* Related watchlist */}
+      {/* Rotating watchlist */}
       <div style={{ textAlign: "center" }}>
-        <p
+        <div
           style={{
-            fontSize: 13,
-            color: "var(--text-dim)",
-            marginBottom: 16,
-            fontFamily: "JetBrains Mono, monospace",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "baseline",
+            gap: 16,
+            marginBottom: 20,
+            flexWrap: "wrap",
           }}
         >
-          同时监控 {otherCount} 个相关预测市场
-        </p>
+          <p
+            style={{
+              fontSize: 15,
+              fontWeight: 600,
+              color: "var(--text-bright)",
+              fontFamily: "JetBrains Mono, monospace",
+              margin: 0,
+            }}
+          >
+            同时监控 <span style={{ color: "var(--lantern-gold)" }}>{totalScanned}</span> 个预测市场
+          </p>
+          <span
+            style={{
+              fontSize: 12,
+              color: "var(--text-dim)",
+              fontFamily: "JetBrains Mono, monospace",
+            }}
+          >
+            {windowStart}-{windowEnd} / {totalScanned}
+          </span>
+        </div>
         <div
           style={{
             display: "flex",
@@ -538,18 +691,12 @@ export function ShowcaseMarketCards({
             alignItems: "center",
           }}
         >
-          {related.map((market) => (
-            <MiniMarketChip key={market.slug} market={market} />
+          {visible.map((market, i) => (
+            <RotatingMarketCard
+              key={`${market.slug}-${String((startIndex + i) % watchlist.length)}`}
+              market={market}
+            />
           ))}
-          <div
-            style={{
-              fontSize: 12,
-              color: "var(--text-dim)",
-              fontFamily: "JetBrains Mono, monospace",
-            }}
-          >
-            等 {Math.max(otherCount - related.length, 0)} 个...
-          </div>
         </div>
       </div>
     </section>

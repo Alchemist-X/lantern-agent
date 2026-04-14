@@ -845,6 +845,18 @@ function outputTrace(
         edge: m.onchainsEdge?.edge ?? 0,
         signals: m.onchainsEdge?.signals ?? [],
       })),
+      watchlist: polymarkets
+        .filter((m) => m.title && m.volume > 0 && m.outcomes.length >= 2)
+        .slice(0, 15)
+        .map((m) => ({
+          title: m.title,
+          slug: m.slug,
+          endDate: m.endDate,
+          volume: m.volume,
+          targetToken: m.targetToken,
+          strikePrice: m.strikePrice,
+          yesPrice: m.outcomes[0]?.price ?? 0,
+        })),
     },
     onchainosCallLog: apiCallLog,
     recommendation: best
