@@ -1,0 +1,39 @@
+
+> lantern-agent@0.1.0 agent:onchain /Users/Aincrad/Desktop/Cook_Proj/hackathon-united/OKX-hackathon-external
+> tsx scripts/agent-onchain.ts
+
+Lantern Agent -- On-Chain Decision Logger
+
+[1/3] Running agent scan cycle...
+
+[2/3] On-chain record:
+{
+  "agent": "lantern",
+  "chain": "xlayer-196",
+  "timestamp": "2026-04-14T11:31:41.805Z",
+  "scan": {
+    "candidates": 15,
+    "honeypots": 0
+  },
+  "recommendation": {
+    "token": "XDOG",
+    "address": "0x0cc24c51bf89c00c5affbfcf5e856c25ecbdb48e",
+    "probability": 0.7869007916635591,
+    "signals": 4
+  },
+  "polymarkets": {
+    "scanned": 81,
+    "withEdge": 1
+  },
+  "execution": {
+    "executed": false,
+    "txHash": null
+  }
+}
+
+[3/3] Writing to X Layer (339 bytes)...
+
+  Decision trace written to X Layer!
+  TxHash: 0x6c7119352863367f912a003421449d38e90b2130d4d7806ea9734ac0d1d52ab6
+  Explorer: https://www.okx.com/web3/explorer/xlayer/tx/0x6c7119352863367f912a003421449d38e90b2130d4d7806ea9734ac0d1d52ab6
+  Log saved: /Users/Aincrad/Desktop/Cook_Proj/hackathon-united/OKX-hackathon-external/runtime-artifacts/demo/onchain-log.json

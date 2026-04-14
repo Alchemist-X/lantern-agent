@@ -1,0 +1,120 @@
+
+> lantern-agent@0.1.0 agent:demo /Users/Aincrad/Desktop/Cook_Proj/hackathon-united/OKX-hackathon-external
+> tsx scripts/agent-demo.ts
+
+
+Lantern Agent -- Demo Cycle
+   Chain: X Layer (196)
+   Time: 2026-04-14T11:30:43.933Z
+
+
+======================================
+  PHASE 1: SCAN -- Market Discovery
+======================================
+
+[1/3] Fetching hot tokens on X Layer...
+  -> onchainos token hot-tokens --chain 196 --ranking-type 4
+  Found 100 trending tokens
+
+[2/3] Fetching smart money signals...
+  -> onchainos signal list --chain 196 --wallet-type 1,2,3
+  Found 3 active signals
+
+[3/3] Merged 15 candidates
+
+
+══════════════════════════════════════
+  PHASE 1.5: POLYMARKET — Edge Scan
+══════════════════════════════════════
+
+[1/3] Fetching Polymarket crypto markets...
+  Found 20 active crypto events
+
+[2/3] Computing on-chain edge for price markets...
+  -> onchainos market price --address 0x2260fac5e5542a773aa44fbcfedf7c193bc2c599 --chain 1
+
+[3/3] Found 1 markets with on-chain edge data
+
+┌──────────────────────────────────────────┬────────┬────────┬────────┐
+│ Market                                   │ Poly   │ Ours   │ Edge   │
+├──────────────────────────────────────────┼────────┼────────┼────────┤
+│ Will bitcoin hit $1m before GTA VI?      │  48.8% │ 100.0% │ +51.2%★│
+└──────────────────────────────────────────┴────────┴────────┴────────┘
+
+======================================
+  PHASE 2: ANALYZE -- Risk & Security
+======================================
+
+[1/2] Running security scan...
+  -> onchainos security token-scan --tokens 196:0x70bf3e2b75d8832d7f790a87fffc1fa9d63dc5bb,196:0x5839244eab49314bccc0fa76e3a081cb1a461111,196:0x0cc24c51bf89c00c5affbfcf5e856c25ecbdb48e,196:0x375da15dacce7a2a4f8075b5e39b8c2018057777,196:0x00880ec7de7397e4e25ad5fbd69d97db91e90372,196:0x4c225fb675c0c475b53381463782a7f741d59763,196:0x903358faf7c6304afbd560e9e29b12ab1b8fddc5,196:0x59ee065af1887a0a283d399d32a02cd098ed8f5e,196:0x87669801a1fad6dad9db70d27ac752f452989667,196:0x4d55e22b27ef892bfa057a533332fb98eff06dd1,196:0x1e8b545547f4a2a47230a15d6df17c8e85ca7777,196:0x6ab3aaa5dc7b8cbb59f17aa70d33d2d13af11111,196:0xe8e8a1df1e26277a2875a0bda912ab9f19843a53,196:0x19161d0daa6ea47c1a0fe7a184ccdb9e413b7232,196:0xee64c2d7453acfb3b19f0687c71e7f0a749f69b8
+  Scanned 15 tokens, found 0 honeypots
+
+[2/2] Fetching price data for top candidates...
+  -> onchainos token price-info --address 0x70bf3e2b75d8832d7f790a87fffc1fa9d63dc5bb --chain 196
+  -> onchainos token price-info --address 0x5839244eab49314bccc0fa76e3a081cb1a461111 --chain 196
+  -> onchainos token price-info --address 0x0cc24c51bf89c00c5affbfcf5e856c25ecbdb48e --chain 196
+  -> onchainos token price-info --address 0x375da15dacce7a2a4f8075b5e39b8c2018057777 --chain 196
+  -> onchainos token price-info --address 0x00880ec7de7397e4e25ad5fbd69d97db91e90372 --chain 196
+  Enriched top 5 candidates with price data
+
+======================================
+  PHASE 3: DECIDE -- Bayesian Scoring
+======================================
+
++----------+----------+------------+----------+------------+----------+
+| Token    | Prob     | Smart $    | Risk     | Liquidity  | Action   |
++----------+----------+------------+----------+------------+----------+
+| DOGSHIT  |  49.5%  |      --    |    2/5  | $986,266.22 |   SKIP  |
+| FDOG     |  57.1%  |    $404.31 |    1/5  | $133,836.35 |  * BUY  |
+| XDOG     |  78.7%  |    $765.34 |    1/5  | $502,793.79 |  * BUY  |
+| SEED     |  59.9%  |      --    |    2/5  | $107,243.57 |  * BUY  |
+| 欧易人生     |  41.2%  |      --    |    1/5  | $64,565.38 |   SKIP  |
+| OEOE     |  49.5%  |      --    |    2/5  | $314,158.62 |   SKIP  |
+| DOG      |  56.5%  |      --    |    2/5  |  $75,640.3 |  * BUY  |
+| X Chat   |  50.0%  |      --    |    2/5  |   $5,059.9 |   SKIP  |
+| NIUMA    |  56.5%  |      --    |    1/5  | $122,523.42 |  * BUY  |
+| X Chat   |  50.0%  |      --    |    2/5  |  $6,034.51 |   SKIP  |
++----------+----------+------------+----------+------------+----------+
+
+======================================
+  PHASE 4: EXECUTE -- Trade
+======================================
+
+  Best recommendation: XDOG
+  Signal strength: 78.7%
+  Price: 0.0042303550318446076
+  Liquidity: $502,793.79
+  Smart money: 3 wallets, $765.34
+
+  -> onchainos wallet balance --chain 196
+  [!] Wallet balance: $0 -- insufficient for trade
+  -> Skipping execution (fund wallet to enable live trading)
+
+======================================
+  PHASE 5: OUTPUT -- Reasoning Trace
+======================================
+
+  Bayesian Waterfall for XDOG:
+  --------------------------------------------------
+  Start:          50.0% (uninformed prior)
+  [UP] price_momentum         +6.5%  ->  56.5%
+     24h price change: 69.0%
+  [UP] smart_money_consensus  +14.7%  ->  71.2%
+     3 smart money wallets buying, $765.34 total
+  [UP] low_sold_ratio         +5.1%  ->  76.3%
+     Only 30% of holders have sold (diamond hands)
+  [UP] positive_inflow        +2.4%  ->  78.7%
+     Positive inflow: $54,771.81 volume with price increase
+  --------------------------------------------------
+  Final:          78.7% (BUY)
+
+  Artifact saved: /Users/Aincrad/Desktop/Cook_Proj/hackathon-united/OKX-hackathon-external/runtime-artifacts/demo/2026-04-14T11-31-14-395Z.json
+  Latest saved:   /Users/Aincrad/Desktop/Cook_Proj/hackathon-united/OKX-hackathon-external/runtime-artifacts/demo/latest.json
+
+======================================
+  Cycle complete in 30.5s
+  Candidates: 15 scanned -> 7 recommended
+  Polymarket: 81 markets, 1 with edge data, 1 high-edge
+  Executed: No (Insufficient balance)
+======================================
+
