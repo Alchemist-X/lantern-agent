@@ -16,7 +16,8 @@
     "agent:test": "pnpm --filter @lantern/contracts build && pnpm --filter @lantern/db build && pnpm --filter @lantern/terminal-ui build && tsx scripts/live-test.ts",
     "db:generate": "pnpm --filter @lantern/db drizzle-kit generate",
     "db:migrate": "pnpm --filter @lantern/db drizzle-kit migrate",
-    "db:seed": "pnpm --filter @lantern/db seed"
+    "db:seed": "pnpm --filter @lantern/db seed",
+    "agent:demo": "tsx scripts/agent-demo.ts"
   },
   "dependencies": {
     "@lantern/contracts": "workspace:*",
