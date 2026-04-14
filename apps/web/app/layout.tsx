@@ -1,34 +1,28 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { DashboardShell } from "../components/dashboard-shell";
-import { LocaleProvider } from "../lib/locale-context";
 
 export const metadata: Metadata = {
-  title: "Lantern Agent — Autonomous DEX Trading Agent on X Layer",
-  description: "Autonomous AI agent trading on X Layer DEX. Token pair discovery, Kelly Criterion sizing, live positions & P&L.",
-  metadataBase: new URL("https://lantern-pizza-spectator.vercel.app"),
+  title: "Lantern Agent — 链上信号驱动的预测市场 Agent",
+  description: "用 Onchainos 链上数据，在预测市场自主发现 Edge。每次决策公开写入 X Layer。",
+  metadataBase: new URL("https://lantern-agent-dashboard.vercel.app"),
   openGraph: {
-    title: "Lantern Agent — Autonomous DEX Trading Agent on X Layer",
-    description: "Autonomous AI agent trading on X Layer DEX. Token pair discovery, Kelly Criterion sizing, live positions & P&L.",
-    siteName: "Lantern",
+    title: "Lantern Agent — 链上信号驱动的预测市场 Agent",
+    description: "用 Onchainos 链上数据，在预测市场自主发现 Edge。",
+    siteName: "Lantern Agent",
     type: "website",
-    locale: "en_US"
+    locale: "zh_CN",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Lantern Agent — Autonomous DEX Trading Agent on X Layer",
-    description: "Autonomous AI agent trading on X Layer DEX."
-  }
+    title: "Lantern Agent",
+    description: "链上信号驱动的预测市场 Agent",
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
-      <body className="dash-body">
-        <LocaleProvider>
-          <DashboardShell>{children}</DashboardShell>
-        </LocaleProvider>
-      </body>
+    <html lang="zh-CN">
+      <body style={{ margin: 0, background: "#0D1117" }}>{children}</body>
     </html>
   );
 }
