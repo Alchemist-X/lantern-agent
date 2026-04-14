@@ -17,6 +17,10 @@ const CHAIN = "196";
 const SCRIPT_DIR = typeof __dirname !== "undefined" ? __dirname : new URL(".", import.meta.url).pathname;
 const ARTIFACTS_DIR = join(SCRIPT_DIR, "..", "runtime-artifacts", "demo");
 
+// --- Call Log ---
+
+const apiCallLog: Array<{ command: string; timestamp: string; success: boolean; resultPreview: string }> = [];
+
 // --- Helpers ---
 
 async function run(args: string[]): Promise<unknown> {
@@ -24,11 +28,32 @@ async function run(args: string[]): Promise<unknown> {
   try {
     const { stdout } = await exec(ONCHAINOS, args, { timeout: 30_000 });
     const trimmed = stdout.trim();
-    if (!trimmed) return null;
-    return JSON.parse(trimmed);
+    if (!trimmed) {
+      apiCallLog.push({
+        command: `onchainos ${args.join(" ")}`,
+        timestamp: new Date().toISOString(),
+        success: false,
+        resultPreview: "",
+      });
+      return null;
+    }
+    const result = JSON.parse(trimmed);
+    apiCallLog.push({
+      command: `onchainos ${args.join(" ")}`,
+      timestamp: new Date().toISOString(),
+      success: result !== null,
+      resultPreview: JSON.stringify(result).slice(0, 200),
+    });
+    return result;
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);
     console.log(`  [!] Failed: ${msg.slice(0, 120)}`);
+    apiCallLog.push({
+      command: `onchainos ${args.join(" ")}`,
+      timestamp: new Date().toISOString(),
+      success: false,
+      resultPreview: msg.slice(0, 200),
+    });
     return null;
   }
 }
@@ -778,6 +803,7 @@ function outputTrace(
 
   // Write artifact
   mkdirSync(ARTIFACTS_DIR, { recursive: true });
+  const withEdge = polymarkets.filter((m) => m.onchainsEdge);
   const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
   const artifact = {
     timestamp: new Date().toISOString(),
@@ -805,20 +831,22 @@ function outputTrace(
     })),
     polymarkets: {
       totalMarkets: polymarkets.length,
-      withEdge: polymarkets
-        .filter((m) => m.onchainsEdge)
-        .map((m) => ({
-          title: m.title,
-          slug: m.slug,
-          endDate: m.endDate,
-          volume: m.volume,
-          liquidity: m.liquidity,
-          targetToken: m.targetToken,
-          strikePrice: m.strikePrice,
-          outcomes: m.outcomes,
-          edge: m.onchainsEdge,
-        })),
+      marketsWithEdge: withEdge.length,
+      highEdgeCount: withEdge.filter(m => Math.abs(m.onchainsEdge?.edge ?? 0) > 0.05).length,
+      markets: withEdge.map(m => ({
+        title: m.title,
+        slug: m.slug,
+        endDate: m.endDate,
+        volume: m.volume,
+        targetToken: m.targetToken,
+        strikePrice: m.strikePrice,
+        marketProb: m.onchainsEdge?.marketProbability ?? 0,
+        ourProb: m.onchainsEdge?.ourProbability ?? 0,
+        edge: m.onchainsEdge?.edge ?? 0,
+        signals: m.onchainsEdge?.signals ?? [],
+      })),
     },
+    onchainosCallLog: apiCallLog,
     recommendation: best
       ? {
           symbol: best.symbol,

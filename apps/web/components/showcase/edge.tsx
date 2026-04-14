@@ -8,12 +8,28 @@ interface PolymarketEdge {
   readonly lanternPrice: number;
   readonly edge: number;
   readonly signals: readonly string[];
+  readonly targetToken?: string;
+  readonly strikePrice?: number;
+}
+
+interface PolymarketMarket {
+  readonly title: string;
+  readonly marketProb: number;
+  readonly ourProb: number;
+  readonly edge: number;
+  readonly signals: readonly string[];
+  readonly targetToken?: string;
+  readonly strikePrice?: number;
 }
 
 interface EdgeTrace {
   readonly polymarket?: {
     readonly marketsScanned: number;
     readonly edges: readonly PolymarketEdge[];
+  };
+  readonly polymarkets?: {
+    readonly totalMarkets: number;
+    readonly markets: readonly PolymarketMarket[];
   };
 }
 
@@ -46,6 +62,18 @@ function strengthLabel(edge: number): { readonly text: string; readonly color: s
   return { text: "弱", color: "var(--text-muted)" };
 }
 
+function marketToEdge(m: PolymarketMarket): PolymarketEdge {
+  return {
+    question: m.title,
+    marketPrice: m.marketProb,
+    lanternPrice: m.ourProb,
+    edge: m.edge,
+    signals: m.signals,
+    targetToken: m.targetToken,
+    strikePrice: m.strikePrice,
+  };
+}
+
 function parseEdgeTrace(raw: Record<string, unknown> | null): EdgeTrace | null {
   if (!raw) return null;
   return raw as unknown as EdgeTrace;
@@ -55,14 +83,24 @@ export function ShowcaseEdge({ trace: raw }: { readonly trace: Record<string, un
   const { ref, inView } = useInView(0.12);
   const trace = parseEdgeTrace(raw);
 
+  // Prefer polymarkets.markets from the new data format, fall back to legacy polymarket.edges
+  const marketsFromTrace = trace?.polymarkets?.markets;
+  const edgesFromMarkets: readonly PolymarketEdge[] | undefined =
+    marketsFromTrace && marketsFromTrace.length > 0
+      ? marketsFromTrace.map(marketToEdge)
+      : undefined;
+
   const polyData = trace?.polymarket;
-  const topEdge = polyData?.edges?.reduce<PolymarketEdge | null>(
-    (best, current) => {
-      if (!best) return current;
-      return Math.abs(current.edge) > Math.abs(best.edge) ? current : best;
-    },
-    null,
-  ) ?? null;
+  const allEdges: readonly PolymarketEdge[] =
+    edgesFromMarkets ?? polyData?.edges ?? [];
+
+  // Sort by absolute edge descending
+  const sortedEdges = [...allEdges].sort(
+    (a, b) => Math.abs(b.edge) - Math.abs(a.edge),
+  );
+
+  const topEdge = sortedEdges.length > 0 ? sortedEdges[0]! : null;
+  const otherEdges = sortedEdges.slice(1);
 
   return (
     <section ref={ref} className="showcase-section lantern-glow">
@@ -228,6 +266,21 @@ export function ShowcaseEdge({ trace: raw }: { readonly trace: Record<string, un
             );
           })()}
 
+          {/* Target token + strike price */}
+          {topEdge.targetToken && topEdge.strikePrice && (
+            <div
+              style={{
+                textAlign: "center",
+                marginBottom: 16,
+                fontSize: 12,
+                color: "var(--text-dim)",
+                fontFamily: "JetBrains Mono, monospace",
+              }}
+            >
+              {topEdge.targetToken} &middot; Strike ${topEdge.strikePrice.toLocaleString()}
+            </div>
+          )}
+
           {/* Signal list */}
           {topEdge.signals.length > 0 && (
             <div
@@ -272,8 +325,89 @@ export function ShowcaseEdge({ trace: raw }: { readonly trace: Record<string, un
           }}
         >
           <p style={{ fontSize: 14, color: "var(--text-muted)", margin: 0 }}>
-            81 个市场已扫描 &middot; Edge 数据待更新
+            {trace?.polymarkets?.totalMarkets
+              ? `${String(trace.polymarkets.totalMarkets)} 个市场已扫描`
+              : "81 个市场已扫描"}{" "}
+            &middot; Edge 数据待更新
           </p>
+        </div>
+      )}
+
+      {/* Other markets list */}
+      {otherEdges.length > 0 && (
+        <div
+          className={inView ? "animate-in" : ""}
+          style={{
+            maxWidth: 640,
+            margin: "16px auto 0",
+            display: "flex",
+            flexDirection: "column",
+            gap: 8,
+            opacity: inView ? undefined : 0,
+            animationDelay: "0.35s",
+          }}
+        >
+          {otherEdges.map((edge) => {
+            const edgePositive = edge.edge > 0;
+            const edgeColor = edgePositive
+              ? "var(--signal-green, #2a9d8f)"
+              : "var(--danger-red, #e63946)";
+            return (
+              <div
+                key={edge.question}
+                style={{
+                  background: "var(--bg-dungeon)",
+                  border: "1px solid var(--bg-border)",
+                  borderRadius: 10,
+                  padding: "14px 18px",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  gap: 12,
+                }}
+              >
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div
+                    style={{
+                      fontSize: 13,
+                      color: "var(--text-main, #E0E0E0)",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }}
+                  >
+                    {edge.question}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: 11,
+                      color: "var(--text-dim, #484F58)",
+                      marginTop: 4,
+                      fontFamily: "JetBrains Mono, monospace",
+                    }}
+                  >
+                    市场 {(edge.marketPrice * 100).toFixed(0)}% &middot; Lantern{" "}
+                    {(edge.lanternPrice * 100).toFixed(0)}%
+                    {edge.targetToken && edge.strikePrice
+                      ? ` \u00B7 ${edge.targetToken} $${edge.strikePrice.toLocaleString()}`
+                      : ""}
+                  </div>
+                </div>
+                <div
+                  data-mono=""
+                  style={{
+                    fontSize: 16,
+                    fontWeight: 700,
+                    color: edgeColor,
+                    flexShrink: 0,
+                  }}
+                >
+                  {edgePositive ? "+" : ""}
+                  {(edge.edge * 100).toFixed(1)}%
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
     </section>

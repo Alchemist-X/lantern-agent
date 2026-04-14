@@ -25,9 +25,17 @@ interface Candidate {
   readonly recommendation: string;
 }
 
+interface OnchainosCall {
+  readonly command: string;
+  readonly timestamp: string;
+  readonly success: boolean;
+  readonly resultPreview: string;
+}
+
 interface DemoTrace {
   readonly timestamp: string;
   readonly candidates: readonly Candidate[];
+  readonly onchainosCallLog?: readonly OnchainosCall[];
   readonly recommendation: {
     readonly symbol: string;
     readonly address: string;
@@ -40,7 +48,155 @@ function parseTrace(raw: Record<string, unknown> | null): DemoTrace | null {
   if (!raw) return null;
   if (typeof raw.timestamp !== "string") return null;
   if (!Array.isArray(raw.candidates)) return null;
-  return raw as unknown as DemoTrace;
+
+  const callLog = Array.isArray(raw.onchainosCallLog)
+    ? (raw.onchainosCallLog as OnchainosCall[])
+    : undefined;
+
+  return {
+    ...(raw as unknown as Omit<DemoTrace, "onchainosCallLog">),
+    onchainosCallLog: callLog,
+  } as DemoTrace;
+}
+
+function formatCallTime(iso: string): string {
+  try {
+    const d = new Date(iso);
+    return d.toLocaleTimeString("en-GB", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false,
+    });
+  } catch {
+    return "--:--:--";
+  }
+}
+
+function truncateCommand(cmd: string, max: number): string {
+  return cmd.length > max ? `${cmd.slice(0, max)}...` : cmd;
+}
+
+function OnchainosTimeline({
+  calls,
+  visible,
+}: {
+  readonly calls: readonly OnchainosCall[];
+  readonly visible: boolean;
+}) {
+  const MAX_DISPLAY = 6;
+  const displayed = calls.slice(0, MAX_DISPLAY);
+  const totalCalls = calls.length;
+
+  const firstTs = calls[0] ? new Date(calls[0].timestamp).getTime() : 0;
+  const lastTs =
+    calls.length > 0
+      ? new Date(calls[calls.length - 1]!.timestamp).getTime()
+      : 0;
+  const totalSeconds = firstTs && lastTs ? ((lastTs - firstTs) / 1000).toFixed(1) : "0";
+
+  return (
+    <div
+      style={{
+        background: "#161B22",
+        borderLeft: "3px solid #FF9100",
+        borderRadius: 12,
+        padding: "20px 24px",
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(12px)",
+        transition: "opacity 0.5s ease, transform 0.5s ease",
+      }}
+    >
+      <div
+        style={{
+          fontSize: 15,
+          fontWeight: 600,
+          color: "#FF9100",
+          marginBottom: 16,
+        }}
+      >
+        Onchainos 数据采集
+      </div>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        {displayed.map((call, i) => (
+          <div
+            key={`${call.timestamp}-${String(i)}`}
+            style={{
+              display: "flex",
+              gap: 12,
+              alignItems: "flex-start",
+              opacity: visible ? 1 : 0,
+              transform: visible ? "translateX(0)" : "translateX(-8px)",
+              transition: `opacity 0.3s ease ${String(i * 120)}ms, transform 0.3s ease ${String(i * 120)}ms`,
+            }}
+          >
+            {/* Timestamp */}
+            <div
+              data-mono=""
+              style={{
+                fontSize: 11,
+                color: "var(--text-dim, #484F58)",
+                flexShrink: 0,
+                width: 60,
+                paddingTop: 1,
+              }}
+            >
+              {formatCallTime(call.timestamp)}
+            </div>
+
+            {/* Content */}
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div
+                data-mono=""
+                style={{
+                  fontSize: 13,
+                  color: "var(--text-main, #E0E0E0)",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
+              >
+                {truncateCommand(call.command, 50)}
+              </div>
+              <div
+                style={{
+                  fontSize: 11,
+                  color: call.success
+                    ? "var(--signal-green, #2a9d8f)"
+                    : "var(--danger-red, #e63946)",
+                  marginTop: 2,
+                }}
+              >
+                {call.success ? "\u2713" : "\u2717"}{" "}
+                {call.resultPreview
+                  ? truncateCommand(call.resultPreview, 40)
+                  : call.success
+                    ? "ok"
+                    : "failed"}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Summary footer */}
+      <div
+        data-mono=""
+        style={{
+          fontSize: 11,
+          color: "var(--text-dim, #484F58)",
+          marginTop: 14,
+          paddingTop: 10,
+          borderTop: "1px solid var(--bg-border, #30363D)",
+        }}
+      >
+        {totalCalls > MAX_DISPLAY
+          ? `... 共 ${String(totalCalls)} 次 API 调用，耗时 ${totalSeconds}s`
+          : `共 ${String(totalCalls)} 次 API 调用，耗时 ${totalSeconds}s`}
+      </div>
+    </div>
+  );
 }
 
 const RISK_CHECKS = [
@@ -301,6 +457,22 @@ export function ShowcaseLiveDemo({ trace: raw }: { readonly trace: Record<string
             );
           })()}
 
+          {/* Onchainos call log */}
+          {trace.onchainosCallLog && trace.onchainosCallLog.length > 0 && (
+            <div
+              className={inView ? "animate-in" : ""}
+              style={{
+                opacity: inView ? undefined : 0,
+                animationDelay: "0.3s",
+              }}
+            >
+              <OnchainosTimeline
+                calls={trace.onchainosCallLog}
+                visible={inView}
+              />
+            </div>
+          )}
+
           {/* Bayesian waterfall */}
           {trace.recommendation && trace.recommendation.trace.length > 0 && (
             <div
@@ -311,7 +483,7 @@ export function ShowcaseLiveDemo({ trace: raw }: { readonly trace: Record<string
                 borderRadius: 16,
                 padding: "24px",
                 opacity: inView ? undefined : 0,
-                animationDelay: "0.35s",
+                animationDelay: "0.45s",
               }}
             >
               <div
@@ -368,7 +540,7 @@ export function ShowcaseLiveDemo({ trace: raw }: { readonly trace: Record<string
               flexWrap: "wrap",
               gap: 8,
               opacity: inView ? undefined : 0,
-              animationDelay: "0.5s",
+              animationDelay: "0.6s",
             }}
           >
             {trace.candidates.map((c) => {
@@ -400,7 +572,7 @@ export function ShowcaseLiveDemo({ trace: raw }: { readonly trace: Record<string
               gap: 12,
               flexWrap: "wrap",
               opacity: inView ? undefined : 0,
-              animationDelay: "0.6s",
+              animationDelay: "0.7s",
             }}
           >
             {RISK_CHECKS.map((check) => (
