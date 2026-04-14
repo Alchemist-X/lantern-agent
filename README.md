@@ -184,6 +184,28 @@ lantern-agent/
 
 ---
 
+## 部署地址
+
+| 资源 | 地址 |
+|------|------|
+| 展示页面 | [lantern-agent-dashboard.vercel.app/showcase](https://lantern-agent-dashboard.vercel.app/showcase) |
+| 仪表盘 | [lantern-agent-dashboard.vercel.app](https://lantern-agent-dashboard.vercel.app) |
+| Agentic Wallet | [`0xb266dd8d835e3388d0eaf0bf7efff3bb732dfed6`](https://www.okx.com/web3/explorer/xlayer/address/0xb266dd8d835e3388d0eaf0bf7efff3bb732dfed6) |
+| X Layer 决策日志 | [`0x3787e3c8...`](https://www.okx.com/web3/explorer/xlayer/tx/0x3787e3c8b68263cf0e834d99883912d8b20ec5aeea18d131afd5c9e0ef5974ee) |
+| Polymarket 实盘交易 | [`0x238726...`](https://polygonscan.com/tx/0x23872647d57ac1165a503fd1d954f14d618d895068e3aa339762c30615f3f490) |
+
+---
+
+## X Layer 生态定位
+
+Lantern Agent 展示了 X Layer 零 Gas 费的**杀手级应用场景**：
+
+**链上 AI 决策审计** — Agent 每次循环将完整决策日志（代币推荐、概率、信号、Edge）以 JSON 编码写入 X Layer。因为零 Gas，这在其他链上成本不可持续，但在 X Layer 上完全免费。任何人都可以通过 Explorer 验证 Agent 的每一个决策——**真正的链上透明度**。
+
+这是一个只有零 Gas 链才能支撑的应用模式：高频写入（每 60 秒一次）× 永久存储 × 零成本 = **链上 AI 审计基础设施**。
+
+---
+
 ## Quick Start
 
 ```bash
@@ -229,5 +251,11 @@ pnpm dev  # → http://localhost:3000
 **Built for OKX Build X Hackathon · X Layer Arena**
 
 *Agent 不再是辅助，而是构建、交易、竞争的主体。*
+
+## 团队
+
+| 成员 | 角色 |
+|------|------|
+| Alchemist-X | 全栈开发 · 量化策略 |
 
 </div>

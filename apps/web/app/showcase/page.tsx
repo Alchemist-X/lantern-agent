@@ -9,12 +9,13 @@ import { ShowcaseSkillCards } from "../../components/showcase/skill-cards";
 import { ShowcaseLiveDemo } from "../../components/showcase/live-demo";
 import { ShowcaseFundFlow } from "../../components/showcase/fund-flow";
 import { ShowcaseMarketCards } from "../../components/showcase/market-cards";
+import { ShowcaseOnchainProof } from "../../components/showcase/onchain-proof";
 import "./showcase.css";
 
 export default function ShowcasePage() {
   const [trace, setTrace] = useState<Record<string, unknown> | null>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const totalSlides = 8;
+  const totalSlides = 9;
 
   useEffect(() => {
     const load = () => {
@@ -55,6 +56,7 @@ export default function ShowcasePage() {
     <ShowcaseSkillCards key={5} />,
     <ShowcaseMarketCards key={6} trace={trace} />,
     <ShowcaseLiveDemo key={7} trace={trace} />,
+    <ShowcaseOnchainProof key={8} />,
   ];
 
   return (
