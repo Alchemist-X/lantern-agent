@@ -1,7 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
 interface MarketOutcome {
   readonly label: string;
   readonly price: number;
@@ -185,7 +183,16 @@ const FOCUS_MARKET = {
     "0x23872647d57ac1165a503fd1d954f14d618d895068e3aa339762c30615f3f490",
 } as const;
 
-function RotatingMarketCard({ market }: { readonly market: PolymarketEntry }) {
+function buildPolymarketUrl(market: PolymarketEntry): string {
+  // Use slug if it's a real event slug. Fall back to search when slug is
+  // missing or looks like a conditionId (0x...) — those won't resolve as URLs.
+  if (market.slug && !market.slug.startsWith("0x") && !market.slug.startsWith("market-")) {
+    return `https://polymarket.com/event/${market.slug}`;
+  }
+  return `https://polymarket.com/markets?q=${encodeURIComponent(market.title.slice(0, 40))}`;
+}
+
+function MarqueeMarketCard({ market }: { readonly market: PolymarketEntry }) {
   const yesOutcome = market.outcomes.find((o) => o.label === "Yes");
   const yesPrice = yesOutcome?.price ?? 0.5;
   const yesPct = Math.round(yesPrice * 100);
@@ -196,114 +203,127 @@ function RotatingMarketCard({ market }: { readonly market: PolymarketEntry }) {
       ? `${market.targetToken} · $${market.strikePrice.toLocaleString()}`
       : market.targetToken ?? null;
 
+  const polymarketUrl = buildPolymarketUrl(market);
+
   return (
-    <div
-      className="rotating-market-card"
+    <a
+      href={polymarketUrl}
+      target="_blank"
+      rel="noopener noreferrer"
       style={{
-        width: 200,
-        height: 120,
-        background: "var(--bg-card)",
-        border: "1px solid var(--bg-border)",
-        borderRadius: 10,
-        padding: "10px 12px",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        animation: "marketFadeIn 0.6s ease",
-        transition: "transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease",
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = "scale(1.04)";
-        e.currentTarget.style.borderColor = "var(--lantern-gold)";
-        e.currentTarget.style.boxShadow = "0 0 12px rgba(239,200,81,0.15)";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = "scale(1)";
-        e.currentTarget.style.borderColor = "var(--bg-border)";
-        e.currentTarget.style.boxShadow = "none";
+        textDecoration: "none",
+        color: "inherit",
+        flexShrink: 0,
       }}
     >
       <div
+        className="marquee-market-card"
         style={{
-          fontSize: 12,
-          fontWeight: 700,
-          color: "var(--text-bright)",
-          lineHeight: 1.3,
-          display: "-webkit-box",
-          WebkitLineClamp: 2,
-          WebkitBoxOrient: "vertical",
-          overflow: "hidden",
+          width: 200,
+          height: 120,
+          background: "var(--bg-card)",
+          border: "1px solid var(--bg-border)",
+          borderRadius: 10,
+          padding: "10px 12px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          cursor: "pointer",
+          transition: "transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease",
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = "scale(1.04)";
+          e.currentTarget.style.borderColor = "var(--lantern-gold)";
+          e.currentTarget.style.boxShadow = "0 0 12px rgba(239,200,81,0.15)";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = "scale(1)";
+          e.currentTarget.style.borderColor = "var(--bg-border)";
+          e.currentTarget.style.boxShadow = "none";
         }}
       >
-        {market.title}
-      </div>
-
-      {tokenStrike ? (
         <div
           style={{
-            fontSize: 11,
-            color: "var(--lantern-gold)",
-            fontFamily: "JetBrains Mono, monospace",
-          }}
-        >
-          {tokenStrike}
-        </div>
-      ) : null}
-
-      <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "baseline",
-          }}
-        >
-          <span
-            style={{
-              fontSize: 20,
-              fontWeight: 700,
-              color: "var(--signal-green)",
-              fontFamily: "JetBrains Mono, monospace",
-              lineHeight: 1,
-            }}
-          >
-            {yesPct}%
-          </span>
-          <span
-            style={{
-              fontSize: 10,
-              color: "var(--text-dim)",
-              fontFamily: "JetBrains Mono, monospace",
-            }}
-          >
-            {formatVolume(market.volume)}
-          </span>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            height: 4,
-            borderRadius: 2,
+            fontSize: 12,
+            fontWeight: 700,
+            color: "var(--text-bright)",
+            lineHeight: 1.3,
+            display: "-webkit-box",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical",
             overflow: "hidden",
-            background: "var(--bg-border)",
           }}
         >
+          {market.title}
+        </div>
+
+        {tokenStrike ? (
           <div
             style={{
-              width: `${String(yesPct)}%`,
-              background: "var(--signal-green)",
+              fontSize: 11,
+              color: "var(--lantern-gold)",
+              fontFamily: "JetBrains Mono, monospace",
             }}
-          />
+          >
+            {tokenStrike}
+          </div>
+        ) : null}
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
           <div
             style={{
-              width: `${String(noPct)}%`,
-              background: "var(--danger-red)",
-              opacity: 0.7,
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "baseline",
             }}
-          />
+          >
+            <span
+              style={{
+                fontSize: 20,
+                fontWeight: 700,
+                color: "var(--signal-green)",
+                fontFamily: "JetBrains Mono, monospace",
+                lineHeight: 1,
+              }}
+            >
+              {yesPct}%
+            </span>
+            <span
+              style={{
+                fontSize: 10,
+                color: "var(--text-dim)",
+                fontFamily: "JetBrains Mono, monospace",
+              }}
+            >
+              {formatVolume(market.volume)}
+            </span>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              height: 4,
+              borderRadius: 2,
+              overflow: "hidden",
+              background: "var(--bg-border)",
+            }}
+          >
+            <div
+              style={{
+                width: `${String(yesPct)}%`,
+                background: "var(--signal-green)",
+              }}
+            />
+            <div
+              style={{
+                width: `${String(noPct)}%`,
+                background: "var(--danger-red)",
+                opacity: 0.7,
+              }}
+            />
+          </div>
         </div>
       </div>
-    </div>
+    </a>
   );
 }
 
@@ -578,8 +598,74 @@ function FocusMarketCard() {
   );
 }
 
-const DISPLAY_COUNT = 5;
-const ROTATION_MS = 3000;
+function MarketMarquee({
+  markets,
+  totalScanned,
+}: {
+  readonly markets: readonly PolymarketEntry[];
+  readonly totalScanned: number;
+}) {
+  // Duplicate the markets to create a seamless -50% translate loop
+  const loopedMarkets = [...markets, ...markets];
+
+  return (
+    <div style={{ textAlign: "center" }}>
+      <p
+        style={{
+          fontSize: 15,
+          fontWeight: 600,
+          color: "var(--text-bright)",
+          fontFamily: "JetBrains Mono, monospace",
+          marginBottom: 20,
+        }}
+      >
+        同时监控{" "}
+        <span style={{ color: "var(--lantern-gold)", fontWeight: 700 }}>
+          {totalScanned}
+        </span>{" "}
+        个预测市场
+      </p>
+
+      {/* Marquee container */}
+      <div
+        style={{
+          position: "relative",
+          overflow: "hidden",
+          mask: "linear-gradient(to right, transparent, #000 10%, #000 90%, transparent)",
+          WebkitMask:
+            "linear-gradient(to right, transparent, #000 10%, #000 90%, transparent)",
+        }}
+      >
+        <div
+          className="marquee-track"
+          style={{
+            display: "flex",
+            gap: 16,
+            animation: "marketMarquee 40s linear infinite",
+            width: "fit-content",
+          }}
+        >
+          {loopedMarkets.map((market, i) => (
+            <MarqueeMarketCard
+              key={`${market.slug}-${String(i)}`}
+              market={market}
+            />
+          ))}
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes marketMarquee {
+          from { transform: translateX(0); }
+          to { transform: translateX(-50%); }
+        }
+        .marquee-track:hover {
+          animation-play-state: paused;
+        }
+      `}</style>
+    </div>
+  );
+}
 
 export function ShowcaseMarketCards({
   trace: raw,
@@ -596,34 +682,8 @@ export function ShowcaseMarketCards({
 
   const totalScanned = polyData?.totalMarkets ?? watchlist.length;
 
-  const [startIndex, setStartIndex] = useState(0);
-
-  useEffect(() => {
-    if (watchlist.length <= DISPLAY_COUNT) return;
-    const interval = setInterval(() => {
-      setStartIndex((prev) => (prev + 1) % watchlist.length);
-    }, ROTATION_MS);
-    return () => {
-      clearInterval(interval);
-    };
-  }, [watchlist.length]);
-
-  const visible = Array.from({ length: Math.min(DISPLAY_COUNT, watchlist.length) }, (_, i) => {
-    const market = watchlist[(startIndex + i) % watchlist.length];
-    return market ?? null;
-  }).filter((m): m is PolymarketEntry => m !== null);
-
-  const windowStart = watchlist.length > 0 ? (startIndex % watchlist.length) + 1 : 0;
-  const windowEnd = Math.min(windowStart + visible.length - 1, watchlist.length);
-
   return (
     <section className="showcase-section lantern-glow-strong">
-      <style>{`
-        @keyframes marketFadeIn {
-          from { opacity: 0; transform: translateY(6px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
       <h2
         style={{
           fontSize: 40,
@@ -649,56 +709,8 @@ export function ShowcaseMarketCards({
       {/* Focus hero */}
       <FocusMarketCard />
 
-      {/* Rotating watchlist */}
-      <div style={{ textAlign: "center" }}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "baseline",
-            gap: 16,
-            marginBottom: 20,
-            flexWrap: "wrap",
-          }}
-        >
-          <p
-            style={{
-              fontSize: 15,
-              fontWeight: 600,
-              color: "var(--text-bright)",
-              fontFamily: "JetBrains Mono, monospace",
-              margin: 0,
-            }}
-          >
-            同时监控 <span style={{ color: "var(--lantern-gold)" }}>{totalScanned}</span> 个预测市场
-          </p>
-          <span
-            style={{
-              fontSize: 12,
-              color: "var(--text-dim)",
-              fontFamily: "JetBrains Mono, monospace",
-            }}
-          >
-            {windowStart}-{windowEnd} / {totalScanned}
-          </span>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: 12,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          {visible.map((market, i) => (
-            <RotatingMarketCard
-              key={`${market.slug}-${String((startIndex + i) % watchlist.length)}`}
-              market={market}
-            />
-          ))}
-        </div>
-      </div>
+      {/* Continuous left-to-right marquee watchlist */}
+      <MarketMarquee markets={watchlist} totalScanned={totalScanned} />
     </section>
   );
 }
