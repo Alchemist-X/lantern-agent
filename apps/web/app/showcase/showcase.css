@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+.showcase {
+  --bg-abyss: #0D1117;
+  --bg-dungeon: #161B22;
+  --bg-card: #1C2128;
+  --bg-border: #30363D;
+  --lantern-orange: #FF9100;
+  --lantern-gold: #EFC851;
+  --signal-green: #2a9d8f;
+  --danger-red: #e63946;
+  --warning-amber: #f4a261;
+  --block-blue: #5fa8d3;
+  --text-bright: #FFF6E2;
+  --text-main: #E0E0E0;
+  --text-muted: #8B949E;
+  --text-dim: #484F58;
+
+  background: var(--bg-abyss);
+  color: var(--text-main);
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.showcase h1, .showcase h2, .showcase h3 {
+  font-family: 'Cinzel', serif;
+  color: var(--text-bright);
+}
+
+.showcase [data-mono] {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Lantern glow backgrounds */
+.lantern-glow {
+  background: radial-gradient(ellipse 500px 350px at 50% 30%, rgba(255,145,0,0.04) 0%, transparent 100%);
+}
+.lantern-glow-strong {
+  background: radial-gradient(ellipse 350px 250px at 50% 20%, rgba(255,145,0,0.08) 0%, rgba(255,145,0,0.03) 40%, transparent 100%);
+}
+
+/* Section base */
+.showcase-section {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 80px 24px;
+  position: relative;
+}
+
+/* Fade in animation */
+@keyframes showcaseFadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes showcaseSlideLeft {
+  from { opacity: 0; transform: translateX(-30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes showcaseSlideRight {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes lanternIgnite {
+  0% { box-shadow: 0 0 0 transparent; }
+  50% { box-shadow: 0 0 30px rgba(255,145,0,0.2); }
+  100% { box-shadow: 0 0 12px rgba(255,145,0,0.08); }
+}
+@keyframes floatDown {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+@keyframes barGrow {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+@keyframes stepReveal {
+  from { opacity: 0; transform: translateX(-12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.animate-in {
+  opacity: 0;
+  animation: showcaseFadeIn 0.5s ease-out forwards;
+}
+.animate-slide-left {
+  opacity: 0;
+  animation: showcaseSlideLeft 0.5s ease-out forwards;
+}
+.animate-slide-right {
+  opacity: 0;
+  animation: showcaseSlideRight 0.5s ease-out forwards;
+}

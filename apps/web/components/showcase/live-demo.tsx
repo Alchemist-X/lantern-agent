@@ -1,0 +1,431 @@
+"use client";
+
+import { useInView } from "./use-in-view";
+
+interface TraceStep {
+  readonly name: string;
+  readonly direction: string;
+  readonly likelihoodRatio: number;
+  readonly description: string;
+  readonly probBefore: number;
+  readonly probAfter: number;
+}
+
+interface Candidate {
+  readonly symbol: string;
+  readonly address: string;
+  readonly price: number;
+  readonly change24h: number;
+  readonly liquidity: number;
+  readonly holders: number;
+  readonly riskLevel: number;
+  readonly smartMoneyBuying: boolean;
+  readonly signalWalletCount: number;
+  readonly signalStrength: number;
+  readonly recommendation: string;
+}
+
+interface DemoTrace {
+  readonly timestamp: string;
+  readonly candidates: readonly Candidate[];
+  readonly recommendation: {
+    readonly symbol: string;
+    readonly address: string;
+    readonly finalProbability: number;
+    readonly trace: readonly TraceStep[];
+  } | null;
+}
+
+function parseTrace(raw: Record<string, unknown> | null): DemoTrace | null {
+  if (!raw) return null;
+  if (typeof raw.timestamp !== "string") return null;
+  if (!Array.isArray(raw.candidates)) return null;
+  return raw as unknown as DemoTrace;
+}
+
+const RISK_CHECKS = [
+  { label: "回撤20%", icon: "\u2705" },
+  { label: "止损30%", icon: "\u2705" },
+  { label: "敞口50%", icon: "\u2705" },
+  { label: "代币30%", icon: "\u2705" },
+  { label: "持仓10", icon: "\u2705" },
+  { label: "最小$5", icon: "\u2705" },
+] as const;
+
+function formatPrice(price: number): string {
+  if (price < 0.01) return `$${price.toFixed(6)}`;
+  if (price < 1) return `$${price.toFixed(4)}`;
+  return `$${price.toFixed(2)}`;
+}
+
+function ConfidenceBadge({ probability }: { readonly probability: number }) {
+  const level = probability > 0.7 ? "HIGH" : probability > 0.55 ? "MEDIUM" : "LOW";
+  const color = probability > 0.7 ? "var(--signal-green)" : probability > 0.55 ? "var(--warning-amber)" : "var(--text-muted)";
+
+  return (
+    <span
+      style={{
+        fontSize: 11,
+        fontWeight: 600,
+        color,
+        background: `${color}18`,
+        padding: "2px 8px",
+        borderRadius: 4,
+        letterSpacing: 1,
+      }}
+    >
+      {level}
+    </span>
+  );
+}
+
+function BayesianStep({
+  step,
+  index,
+  visible,
+}: {
+  readonly step: TraceStep;
+  readonly index: number;
+  readonly visible: boolean;
+}) {
+  const delta = step.probAfter - step.probBefore;
+  const deltaPct = (delta * 100).toFixed(1);
+  const cumulativePct = (step.probAfter * 100).toFixed(1);
+  const isPositive = delta > 0;
+  const barWidth = Math.min(Math.abs(delta) * 400, 100);
+
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 10,
+        padding: "6px 0",
+        borderBottom: "1px solid var(--bg-border)",
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateX(0)" : "translateX(-12px)",
+        transition: `opacity 0.4s ease ${String(index * 300)}ms, transform 0.4s ease ${String(index * 300)}ms`,
+      }}
+    >
+      <div style={{ width: 120, fontSize: 12, color: "var(--text-muted)", flexShrink: 0 }}>
+        {step.name}
+      </div>
+      <div
+        data-mono=""
+        style={{
+          width: 55,
+          fontSize: 12,
+          fontWeight: 600,
+          color: isPositive ? "var(--signal-green)" : "var(--danger-red)",
+          textAlign: "right",
+          flexShrink: 0,
+        }}
+      >
+        {isPositive ? "+" : ""}{deltaPct}%
+      </div>
+      <div
+        style={{
+          flex: 1,
+          height: 8,
+          background: "var(--bg-border)",
+          borderRadius: 4,
+          overflow: "hidden",
+          position: "relative",
+        }}
+      >
+        <div
+          style={{
+            position: "absolute",
+            left: isPositive ? "50%" : undefined,
+            right: isPositive ? undefined : "50%",
+            height: "100%",
+            width: `${String(barWidth)}%`,
+            background: isPositive ? "var(--signal-green)" : "var(--danger-red)",
+            borderRadius: 4,
+            animation: visible ? "barGrow 0.6s ease-out forwards" : undefined,
+            animationDelay: `${String(index * 300)}ms`,
+            transformOrigin: isPositive ? "left" : "right",
+          }}
+        />
+      </div>
+      <div
+        data-mono=""
+        style={{
+          width: 48,
+          fontSize: 12,
+          color: "var(--text-main)",
+          textAlign: "right",
+          flexShrink: 0,
+        }}
+      >
+        {cumulativePct}%
+      </div>
+    </div>
+  );
+}
+
+export function ShowcaseLiveDemo({ trace: raw }: { readonly trace: Record<string, unknown> | null }) {
+  const { ref, inView } = useInView(0.1);
+  const trace = parseTrace(raw);
+
+  return (
+    <section ref={ref} className="showcase-section lantern-glow">
+      <h2
+        className={inView ? "animate-in" : ""}
+        style={{
+          fontSize: 40,
+          fontWeight: 700,
+          textAlign: "center",
+          marginBottom: 8,
+          opacity: inView ? undefined : 0,
+        }}
+      >
+        实时分析 &middot; 战斗日志
+      </h2>
+
+      <p
+        className={inView ? "animate-in" : ""}
+        style={{
+          fontSize: 15,
+          color: "var(--text-muted)",
+          textAlign: "center",
+          marginBottom: 48,
+          opacity: inView ? undefined : 0,
+          animationDelay: "0.1s",
+        }}
+      >
+        Agent 最近一次循环的真实输出
+      </p>
+
+      {!trace ? (
+        <div
+          className={inView ? "animate-in" : ""}
+          style={{
+            background: "var(--bg-dungeon)",
+            border: "1px solid var(--bg-border)",
+            borderRadius: 12,
+            padding: "40px 24px",
+            textAlign: "center",
+            opacity: inView ? undefined : 0,
+            animationDelay: "0.2s",
+          }}
+        >
+          <p
+            data-mono=""
+            style={{ fontSize: 14, color: "var(--text-muted)", margin: 0 }}
+          >
+            运行 <span style={{ color: "var(--lantern-gold)" }}>pnpm agent:demo</span> 生成数据
+          </p>
+        </div>
+      ) : (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 24,
+          }}
+        >
+          {/* Recommendation card */}
+          {trace.recommendation && (() => {
+            const rec = trace.recommendation;
+            const candidate = trace.candidates.find((c) => c.symbol === rec.symbol);
+            return (
+              <div
+                className={inView ? "animate-in" : ""}
+                style={{
+                  background: "var(--bg-dungeon)",
+                  border: "1px solid var(--lantern-gold)",
+                  borderRadius: 16,
+                  padding: "24px",
+                  opacity: inView ? undefined : 0,
+                  animationDelay: "0.2s",
+                }}
+              >
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 16 }}>
+                  <div>
+                    <div style={{ fontSize: 24, fontWeight: 700, color: "var(--text-bright)", marginBottom: 4 }}>
+                      {rec.symbol}
+                    </div>
+                    {candidate && (
+                      <div style={{ fontSize: 13, color: "var(--text-muted)" }}>
+                        {formatPrice(candidate.price)}
+                        <span
+                          style={{
+                            marginLeft: 8,
+                            color: candidate.change24h > 0 ? "var(--signal-green)" : "var(--danger-red)",
+                          }}
+                        >
+                          {candidate.change24h > 0 ? "+" : ""}{(candidate.change24h * 100).toFixed(1)}%
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  <div style={{ textAlign: "right" }}>
+                    <div
+                      data-mono=""
+                      style={{
+                        fontSize: 36,
+                        fontWeight: 700,
+                        color: "var(--signal-green)",
+                        lineHeight: 1,
+                      }}
+                    >
+                      {(rec.finalProbability * 100).toFixed(1)}%
+                    </div>
+                    <div style={{ marginTop: 4 }}>
+                      <ConfidenceBadge probability={rec.finalProbability} />
+                    </div>
+                  </div>
+                </div>
+
+                {candidate && (
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: 16,
+                      marginTop: 16,
+                      flexWrap: "wrap",
+                      fontSize: 12,
+                      color: "var(--text-muted)",
+                    }}
+                  >
+                    {candidate.smartMoneyBuying && (
+                      <span>Smart Money: {candidate.signalWalletCount} wallets</span>
+                    )}
+                    <span>Liquidity: ${candidate.liquidity > 1000 ? `${(candidate.liquidity / 1000).toFixed(0)}K` : String(candidate.liquidity)}</span>
+                    <span>Holders: {candidate.holders.toLocaleString()}</span>
+                    <span>Risk: {candidate.riskLevel}/5</span>
+                  </div>
+                )}
+              </div>
+            );
+          })()}
+
+          {/* Bayesian waterfall */}
+          {trace.recommendation && trace.recommendation.trace.length > 0 && (
+            <div
+              className={inView ? "animate-in" : ""}
+              style={{
+                background: "var(--bg-dungeon)",
+                border: "1px solid var(--bg-border)",
+                borderRadius: 16,
+                padding: "24px",
+                opacity: inView ? undefined : 0,
+                animationDelay: "0.35s",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: 16,
+                  fontWeight: 600,
+                  color: "var(--text-bright)",
+                  marginBottom: 16,
+                }}
+              >
+                贝叶斯推理过程
+              </div>
+
+              {trace.recommendation.trace.map((step, i) => (
+                <BayesianStep
+                  key={step.name}
+                  step={step}
+                  index={i}
+                  visible={inView}
+                />
+              ))}
+
+              {/* Final result */}
+              <div
+                style={{
+                  marginTop: 16,
+                  padding: "12px 16px",
+                  background: "rgba(239,200,81,0.08)",
+                  border: "1px solid var(--lantern-gold)",
+                  borderRadius: 8,
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <span style={{ fontSize: 14, fontWeight: 600, color: "var(--lantern-gold)" }}>
+                  最终概率
+                </span>
+                <span
+                  data-mono=""
+                  style={{ fontSize: 20, fontWeight: 700, color: "var(--lantern-gold)" }}
+                >
+                  {(trace.recommendation.finalProbability * 100).toFixed(1)}%
+                </span>
+              </div>
+            </div>
+          )}
+
+          {/* Candidate mini-cards */}
+          <div
+            className={inView ? "animate-in" : ""}
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 8,
+              opacity: inView ? undefined : 0,
+              animationDelay: "0.5s",
+            }}
+          >
+            {trace.candidates.map((c) => {
+              const isBuy = c.recommendation === "BUY";
+              return (
+                <div
+                  key={c.address}
+                  style={{
+                    fontSize: 12,
+                    padding: "4px 12px",
+                    borderRadius: 16,
+                    border: `1px solid ${isBuy ? "var(--signal-green)" : "var(--bg-border)"}`,
+                    color: isBuy ? "var(--signal-green)" : "var(--text-dim)",
+                    background: isBuy ? "rgba(42,157,143,0.08)" : "transparent",
+                  }}
+                >
+                  {c.symbol} {isBuy ? "BUY" : "SKIP"}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Risk check */}
+          <div
+            className={inView ? "animate-in" : ""}
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              gap: 12,
+              flexWrap: "wrap",
+              opacity: inView ? undefined : 0,
+              animationDelay: "0.6s",
+            }}
+          >
+            {RISK_CHECKS.map((check) => (
+              <div
+                key={check.label}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 4,
+                  padding: "6px 12px",
+                  background: "rgba(42,157,143,0.06)",
+                  border: "1px solid rgba(42,157,143,0.2)",
+                  borderRadius: 8,
+                  fontSize: 12,
+                  color: "var(--signal-green)",
+                  boxShadow: "0 0 8px rgba(42,157,143,0.1)",
+                }}
+              >
+                <span>{check.icon}</span>
+                <span>{check.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </section>
+  );
+}
