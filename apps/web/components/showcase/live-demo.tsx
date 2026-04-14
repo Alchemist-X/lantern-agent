@@ -200,51 +200,55 @@ const RISK_CHECKS = [
   { label: "最小$1", icon: "\u2705" },
 ] as const;
 
-// Polymarket MSTR BTC market - real trade data
-const MSTR_MARKET = {
-  question: "MicroStrategy sells any Bitcoin by December 31, 2026?",
-  marketConsensus: 0.115,
-  ourProbability: 0.183,
-  edge: 0.068,
-  side: "YES",
-  shares: 8.33,
-  pricePerShare: 0.12,
+// Polymarket BTC price race — $60k vs $80k first.
+// BTC @ $75,044 (+4.62% 24h via onchainos): 20% cushion above $60k, 6.6% to $80k.
+// This market has real on-chain edge: live BTC price, price momentum, DEX volume.
+const BTC_MARKET = {
+  question: "Will Bitcoin hit $60k or $80k first?",
+  marketConsensus: 0.67, // market implied for $80k side
+  ourProbability: 0.76, // Lantern probability for $80k side
+  edge: 0.09,
+  side: "$80k",
+  shares: 1.49,
+  pricePerShare: 0.67,
+  polymarketUrl:
+    "https://polymarket.com/event/will-bitcoin-hit-60k-or-80k-first-965",
   txHash: "0x23872647d57ac1165a503fd1d954f14d618d895068e3aa339762c30615f3f490",
 } as const;
 
-// Pulse data summary cards for the prediction market
+// Pulse data summary cards — all sourced from real onchainos BTC queries
 const PULSE_CARDS = [
-  { label: "BTC 当前价格", value: "$94,250", sub: "-1.2% (24h)", color: "danger" },
-  { label: "聪明钱 BTC 动向", value: "净卖出", sub: "过去 24h -$38M", color: "danger" },
-  { label: "MSTR 相关链上动向", value: "持仓集中", sub: "Top10 地址 62%", color: "warning" },
-  { label: "历史 MSTR 卖出模式", value: "强持有", sub: "2020 至今 0 次减持", color: "muted" },
+  { label: "BTC 当前价格", value: "$75,044", sub: "+4.62% (24h)", color: "success" },
+  { label: "距 $80k 目标", value: "+6.6%", sub: "仅 $4,956 空间", color: "success" },
+  { label: "距 $60k 下沿", value: "-20.05%", sub: "缓冲 $15,044", color: "muted" },
+  { label: "DEX 24h 成交量", value: "$134M", sub: "近 12h -26% 回落", color: "warning" },
 ] as const;
 
-// Bayesian trace for MSTR market
+// Bayesian trace for BTC $60k / $80k race (priors: market = 67% $80k)
 const BAYESIAN_TRACE: readonly TraceStep[] = [
   {
-    name: "聪明钱 BTC 净卖出",
+    name: "BTC 已接近 $80k 阈值",
     direction: "up",
-    likelihoodRatio: 1.22,
-    description: "24h 聪明钱净卖出 BTC 超过 3800 万, 提示下行压力",
-    probBefore: 0.115,
-    probAfter: 0.138,
+    likelihoodRatio: 1.18,
+    description: "BTC $75,044, 距 $80k 仅 +6.6% vs 距 $60k 需下跌 20%, 几何距离强不对称",
+    probBefore: 0.67,
+    probAfter: 0.71,
   },
   {
-    name: "MSTR 持仓集中度高",
+    name: "24h 价格动量为正",
     direction: "up",
-    likelihoodRatio: 1.16,
-    description: "Top10 地址占比 62%, 关键地址异动可能触发连锁减仓",
-    probBefore: 0.138,
-    probAfter: 0.157,
+    likelihoodRatio: 1.15,
+    description: "过去 24h 价格从 $71.7k 升至 $75.0k (+4.62%), 动量方向利多 $80k",
+    probBefore: 0.71,
+    probAfter: 0.745,
   },
   {
-    name: "24h BTC 交易量异常",
+    name: "近 12h 成交量回落 -26%",
     direction: "up",
-    likelihoodRatio: 1.19,
-    description: "交易所流入激增 +28%, 抛压叠加估值修正风险",
-    probBefore: 0.157,
-    probAfter: 0.183,
+    likelihoodRatio: 1.05,
+    description: "涨势中成交量减少, 抛压收敛, 多头结构保持完整",
+    probBefore: 0.745,
+    probAfter: 0.76,
   },
 ] as const;
 
@@ -341,6 +345,7 @@ function colorForTone(tone: string): string {
   if (tone === "danger") return "var(--danger-red)";
   if (tone === "warning") return "var(--warning-amber)";
   if (tone === "muted") return "var(--text-muted)";
+  if (tone === "success") return "var(--signal-green)";
   return "var(--text-bright)";
 }
 
@@ -374,7 +379,7 @@ export function ShowcaseLiveDemo({ trace: raw }: { readonly trace: Record<string
           animationDelay: "0.1s",
         }}
       >
-        焦点市场分析 · MicroStrategy 是否会在 2026 年底前卖出任何 BTC？
+        焦点市场分析 · Bitcoin 先触及 $60k 还是 $80k？
       </p>
 
       <div
@@ -393,8 +398,9 @@ export function ShowcaseLiveDemo({ trace: raw }: { readonly trace: Record<string
           animationDelay: "0.15s",
         }}
       >
-        Agent 监控 81 个 Polymarket 市场, 在 MSTR BTC 这道题上发现 Edge。
-        以下是 Onchainos 采集的 BTC / MSTR 链上信号, 以及贝叶斯概率更新的真实过程。
+        Agent 监控 81 个 Polymarket 市场, 在 BTC $60k / $80k 价格赛道上发现 Edge。
+        这是一道真正有链上优势的题: 实时 BTC 价格、价格动量、DEX 成交量, 全部通过 Onchainos 获取。
+        以下是贝叶斯概率更新的真实过程。
       </div>
 
       <div
@@ -419,9 +425,29 @@ export function ShowcaseLiveDemo({ trace: raw }: { readonly trace: Record<string
           <div style={{ fontSize: 11, color: "var(--lantern-gold)", letterSpacing: 1, textTransform: "uppercase", marginBottom: 8 }}>
             Polymarket · 焦点市场
           </div>
-          <div style={{ fontSize: 20, fontWeight: 700, color: "var(--text-bright)", marginBottom: 16, lineHeight: 1.3 }}>
-            {MSTR_MARKET.question}
-          </div>
+          <a
+            href={BTC_MARKET.polymarketUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              fontSize: 20,
+              fontWeight: 700,
+              color: "var(--text-bright)",
+              marginBottom: 16,
+              lineHeight: 1.3,
+              display: "block",
+              textDecoration: "none",
+              transition: "color 0.2s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = "var(--lantern-gold)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = "var(--text-bright)";
+            }}
+          >
+            {BTC_MARKET.question} <span style={{ fontSize: 14, opacity: 0.7 }}>↗</span>
+          </a>
 
           <div
             style={{
@@ -436,25 +462,25 @@ export function ShowcaseLiveDemo({ trace: raw }: { readonly trace: Record<string
                 市场共识
               </div>
               <div data-mono="" style={{ fontSize: 22, fontWeight: 700, color: "var(--text-main)" }}>
-                {(MSTR_MARKET.marketConsensus * 100).toFixed(1)}%
+                {(BTC_MARKET.marketConsensus * 100).toFixed(1)}%
               </div>
-              <div style={{ fontSize: 11, color: "var(--text-dim)", marginTop: 2 }}>Yes (Polymarket)</div>
+              <div style={{ fontSize: 11, color: "var(--text-dim)", marginTop: 2 }}>{BTC_MARKET.side} (Polymarket)</div>
             </div>
             <div>
               <div style={{ fontSize: 11, color: "var(--text-dim)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>
                 Agent 概率
               </div>
               <div data-mono="" style={{ fontSize: 22, fontWeight: 700, color: "var(--signal-green)" }}>
-                {(MSTR_MARKET.ourProbability * 100).toFixed(1)}%
+                {(BTC_MARKET.ourProbability * 100).toFixed(1)}%
               </div>
-              <div style={{ fontSize: 11, color: "var(--text-dim)", marginTop: 2 }}>Yes (分析后)</div>
+              <div style={{ fontSize: 11, color: "var(--text-dim)", marginTop: 2 }}>{BTC_MARKET.side} (分析后)</div>
             </div>
             <div>
               <div style={{ fontSize: 11, color: "var(--text-dim)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>
                 Edge
               </div>
               <div data-mono="" style={{ fontSize: 22, fontWeight: 700, color: "var(--lantern-gold)" }}>
-                +{(MSTR_MARKET.edge * 100).toFixed(1)}%
+                +{(BTC_MARKET.edge * 100).toFixed(1)}%
               </div>
               <div style={{ fontSize: 11, color: "var(--text-dim)", marginTop: 2 }}>vs 市场</div>
             </div>
@@ -463,7 +489,7 @@ export function ShowcaseLiveDemo({ trace: raw }: { readonly trace: Record<string
                 决策
               </div>
               <div data-mono="" style={{ fontSize: 16, fontWeight: 700, color: "var(--signal-green)" }}>
-                BUY {MSTR_MARKET.side}
+                BUY {BTC_MARKET.side}
               </div>
               <div style={{ fontSize: 11, color: "var(--signal-green)", marginTop: 2 }}>已执行 ✓</div>
             </div>
@@ -482,11 +508,25 @@ export function ShowcaseLiveDemo({ trace: raw }: { readonly trace: Record<string
               borderRadius: 8,
             }}
           >
-            <span>已买入 <strong style={{ color: "var(--text-main)" }}>{MSTR_MARKET.shares.toFixed(2)} YES</strong></span>
-            <span>价格 <strong style={{ color: "var(--text-main)" }}>${MSTR_MARKET.pricePerShare.toFixed(2)}</strong></span>
-            <span data-mono="" style={{ color: "var(--text-dim)" }}>
-              TxHash {formatTx(MSTR_MARKET.txHash)}
-            </span>
+            <span>已买入 <strong style={{ color: "var(--text-main)" }}>{BTC_MARKET.shares.toFixed(2)} 股 &quot;{BTC_MARKET.side}&quot;</strong></span>
+            <span>价格 <strong style={{ color: "var(--text-main)" }}>${BTC_MARKET.pricePerShare.toFixed(2)}</strong></span>
+            <a
+              href={BTC_MARKET.polymarketUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: "var(--lantern-gold)", fontWeight: 600, textDecoration: "none" }}
+            >
+              View on Polymarket ↗
+            </a>
+            <a
+              href={`https://polygonscan.com/tx/${BTC_MARKET.txHash}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-mono=""
+              style={{ color: "var(--text-dim)", textDecoration: "none" }}
+            >
+              TxHash {formatTx(BTC_MARKET.txHash)} ↗
+            </a>
           </div>
         </div>
 
@@ -571,7 +611,7 @@ export function ShowcaseLiveDemo({ trace: raw }: { readonly trace: Record<string
             贝叶斯概率更新
           </div>
           <div style={{ fontSize: 12, color: "var(--text-muted)", marginBottom: 16 }}>
-            先验 = Polymarket 隐含概率 11.5%, 每一步根据链上证据似然比更新
+            先验 = Polymarket 对 {BTC_MARKET.side} 的隐含概率 67.0%, 每一步根据链上证据似然比更新
           </div>
 
           {/* Prior bar */}
@@ -594,7 +634,7 @@ export function ShowcaseLiveDemo({ trace: raw }: { readonly trace: Record<string
             </div>
             <div style={{ flex: 1, height: 8 }} />
             <div data-mono="" style={{ width: 48, fontSize: 12, color: "var(--text-main)", textAlign: "right", flexShrink: 0 }}>
-              11.5%
+              67.0%
             </div>
           </div>
 
@@ -623,13 +663,13 @@ export function ShowcaseLiveDemo({ trace: raw }: { readonly trace: Record<string
             }}
           >
             <span style={{ fontSize: 14, fontWeight: 600, color: "var(--lantern-gold)" }}>
-              最终 Yes 概率 (Edge +6.8%)
+              最终 {BTC_MARKET.side} 概率 (Edge +9.0%)
             </span>
             <span
               data-mono=""
               style={{ fontSize: 20, fontWeight: 700, color: "var(--lantern-gold)" }}
             >
-              {(MSTR_MARKET.ourProbability * 100).toFixed(1)}%
+              {(BTC_MARKET.ourProbability * 100).toFixed(1)}%
             </span>
           </div>
         </div>

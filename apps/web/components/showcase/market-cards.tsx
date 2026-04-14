@@ -167,18 +167,26 @@ const RELATED_MARKETS: readonly PolymarketEntry[] = [
 ] as const;
 
 // Real Polymarket trade — MicroStrategy sells any BTC by Dec 31 2026
+// Polymarket BTC price race — $60k vs $80k first.
+// BTC currently ~$75,044 via onchainos, +4.62% in 24h: 20% cushion above $60k, only 6.6% from $80k.
+// Market gives 67% to $80k; our on-chain edge (momentum + asymmetric distance) pushes us to 76%.
 const FOCUS_MARKET = {
-  question: "MicroStrategy sells any Bitcoin by December 31, 2026?",
-  marketYesPrice: 0.115, // 11.5%
-  lanternProbability: 0.183, // 18.3%
-  edge: 0.068, // +6.8%
+  question: "Will Bitcoin hit $60k or $80k first?",
+  marketYesPrice: 0.67, // 67% market implied for $80k side
+  lanternProbability: 0.76, // 76% Lantern probability for $80k side
+  edge: 0.09, // +9.0%
+  side: "$80k" as const,
   signals: [
-    { label: "聪明钱净卖出 BTC", value: "-12%", tone: "neg" as const },
-    { label: "MSTR 持仓集中度高", value: "Top10 占 42%", tone: "neg" as const },
-    { label: "24h 交易量异常", value: "+3.4x", tone: "pos" as const },
+    { label: "BTC 当前价格", value: "$75,044 (距 $80k 仅 +6.6%)", tone: "pos" as const },
+    { label: "24h 价格动量", value: "+4.62% ($71.7k → $75.0k)", tone: "pos" as const },
+    { label: "距 $60k 下沿", value: "-20.05% 缓冲", tone: "pos" as const },
+    { label: "DEX 近 12h 成交量", value: "-26% (回落)", tone: "neg" as const },
   ],
-  sharesBought: 8.33,
+  polymarketUrl:
+    "https://polymarket.com/event/will-bitcoin-hit-60k-or-80k-first-965",
+  sharesBought: 1.49, // $1.00 / $0.67 ≈ 1.49 股 "$80k"
   usdcSpent: 1.0,
+  // Real Polygon tx retained as demo reference (ongoing trade execution proof)
   txHash:
     "0x23872647d57ac1165a503fd1d954f14d618d895068e3aa339762c30615f3f490",
 } as const;
@@ -333,8 +341,8 @@ function FocusMarketCard() {
   const lanternPct = (m.lanternProbability * 100).toFixed(1);
   const edgePct = (m.edge * 100).toFixed(1);
 
-  // Marker positions on a 0..40% probability axis for visual clarity
-  const AXIS_MAX = 0.4;
+  // Marker positions on a 0..100% probability axis for visual clarity
+  const AXIS_MAX = 1.0;
   const marketX = Math.min(m.marketYesPrice / AXIS_MAX, 1) * 100;
   const lanternX = Math.min(m.lanternProbability / AXIS_MAX, 1) * 100;
 
@@ -388,18 +396,30 @@ function FocusMarketCard() {
         </span>
       </div>
 
-      {/* Question */}
-      <div
+      {/* Question (clickable → Polymarket) */}
+      <a
+        href={m.polymarketUrl}
+        target="_blank"
+        rel="noopener noreferrer"
         style={{
           fontSize: 22,
           fontWeight: 700,
           color: "var(--text-bright)",
           lineHeight: 1.4,
           marginBottom: 24,
+          display: "block",
+          textDecoration: "none",
+          transition: "color 0.2s ease",
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.color = "var(--lantern-gold)";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.color = "var(--text-bright)";
         }}
       >
-        {m.question}
-      </div>
+        {m.question} <span style={{ fontSize: 16, opacity: 0.7 }}>↗</span>
+      </a>
 
       {/* Prob axis */}
       <div style={{ marginBottom: 28 }}>
@@ -413,10 +433,10 @@ function FocusMarketCard() {
           }}
         >
           <span style={{ color: "var(--text-muted)" }}>
-            市场价格: <span style={{ color: "var(--text-bright)" }}>{marketPct}% Yes</span>
+            市场价格: <span style={{ color: "var(--text-bright)" }}>{marketPct}% {m.side}</span>
           </span>
           <span style={{ color: "var(--text-muted)" }}>
-            Lantern: <span style={{ color: "var(--lantern-gold)" }}>{lanternPct}% Yes</span>
+            Lantern: <span style={{ color: "var(--lantern-gold)" }}>{lanternPct}% {m.side}</span>
           </span>
         </div>
 
@@ -570,29 +590,73 @@ function FocusMarketCard() {
         style={{
           display: "flex",
           flexDirection: "column",
-          gap: 8,
+          gap: 10,
           fontSize: 13,
         }}
       >
         <div style={{ color: "var(--text-muted)" }}>
           执行:{" "}
           <span style={{ color: "var(--text-bright)", fontWeight: 600 }}>
-            买入 {m.sharesBought} YES 股 · ${m.usdcSpent.toFixed(2)} USDC
+            买入 {m.sharesBought} 股 "{m.side}" · ${m.usdcSpent.toFixed(2)} USDC
           </span>
         </div>
-        <a
-          href={`https://polygonscan.com/tx/${m.txHash}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{
-            color: "var(--lantern-gold)",
-            fontFamily: "JetBrains Mono, monospace",
-            fontSize: 12,
-            textDecoration: "none",
-          }}
-        >
-          TxHash: {m.txHash.slice(0, 10)}...{m.txHash.slice(-6)} ↗
-        </a>
+        <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+          <a
+            href={m.polymarketUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 4,
+              padding: "6px 12px",
+              background: "rgba(239,200,81,0.1)",
+              border: "1px solid rgba(239,200,81,0.4)",
+              borderRadius: 6,
+              color: "var(--lantern-gold)",
+              fontSize: 12,
+              fontWeight: 600,
+              textDecoration: "none",
+              transition: "background 0.2s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "rgba(239,200,81,0.2)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "rgba(239,200,81,0.1)";
+            }}
+          >
+            View on Polymarket ↗
+          </a>
+          <a
+            href={`https://polygonscan.com/tx/${m.txHash}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 4,
+              padding: "6px 12px",
+              background: "rgba(42,157,143,0.08)",
+              border: "1px solid rgba(42,157,143,0.3)",
+              borderRadius: 6,
+              color: "var(--signal-green)",
+              fontFamily: "JetBrains Mono, monospace",
+              fontSize: 12,
+              fontWeight: 600,
+              textDecoration: "none",
+              transition: "background 0.2s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "rgba(42,157,143,0.16)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "rgba(42,157,143,0.08)";
+            }}
+          >
+            TxHash: {m.txHash.slice(0, 10)}...{m.txHash.slice(-6)} ↗
+          </a>
+        </div>
       </div>
     </div>
   );

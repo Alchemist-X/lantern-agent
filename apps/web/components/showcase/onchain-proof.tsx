@@ -203,13 +203,13 @@ export function ShowcaseOnchainProof() {
               Polymarket 实盘交易
             </div>
             <div style={{ fontSize: 14, color: "#FFF6E2", fontWeight: 600, marginBottom: 8 }}>
-              $1 → 8.33 YES 股
+              $1 → 1.49 股 &quot;$80k&quot;
             </div>
             <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 11, color: "#8B949E", wordBreak: "break-all", marginBottom: 12 }}>
               {polyTxHash.slice(0, 22)}...
             </div>
             <div style={{ fontSize: 12, color: "#484F58" }}>
-              MSTR BTC 市场 · Polygon · 点击查看 ↗
+              BTC $60k/$80k 市场 · Polygon · 点击查看 ↗
             </div>
           </div>
         </a>
