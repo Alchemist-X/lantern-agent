@@ -24,18 +24,64 @@ interface PolymarketEntry {
   readonly edge: MarketEdge | null;
 }
 
-interface PolymarketData {
-  readonly totalMarkets: number;
-  readonly withEdge: readonly PolymarketEntry[];
+// Raw shape from agent-demo output
+interface PolymarketMarketRaw {
+  readonly title?: string;
+  readonly slug?: string;
+  readonly endDate?: string;
+  readonly volume?: number;
+  readonly targetToken?: string;
+  readonly strikePrice?: number;
+  readonly marketProb?: number;
+  readonly ourProb?: number;
+  readonly edge?: number;
+  readonly signals?: readonly string[];
+}
+
+interface PolymarketDataRaw {
+  readonly totalMarkets?: number;
+  readonly marketsWithEdge?: number;
+  readonly markets?: readonly PolymarketMarketRaw[];
+  // Legacy shape (older data):
+  readonly withEdge?: readonly PolymarketEntry[];
 }
 
 interface TraceData {
-  readonly polymarkets?: PolymarketData;
+  readonly polymarkets?: PolymarketDataRaw;
 }
 
 function parseTraceData(raw: Record<string, unknown> | null): TraceData | null {
   if (!raw) return null;
   return raw as unknown as TraceData;
+}
+
+function normalizeRelated(data: PolymarketDataRaw | undefined): readonly PolymarketEntry[] {
+  if (!data) return [];
+  // Prefer new "markets" field from agent-demo
+  if (Array.isArray(data.markets) && data.markets.length > 0) {
+    return data.markets.slice(0, 3).map((m, i) => {
+      const yesPrice = m.marketProb ?? 0.5;
+      return {
+        title: m.title ?? `Market ${String(i + 1)}`,
+        slug: m.slug ?? `market-${String(i)}`,
+        endDate: m.endDate ?? "",
+        volume: m.volume ?? 0,
+        liquidity: 0,
+        targetToken: m.targetToken,
+        strikePrice: m.strikePrice,
+        outcomes: [
+          { label: "Yes", price: yesPrice },
+          { label: "No", price: Math.max(1 - yesPrice, 0) },
+        ],
+        edge: null,
+      };
+    });
+  }
+  // Legacy fallback
+  if (Array.isArray(data.withEdge) && data.withEdge.length > 0) {
+    return data.withEdge.slice(0, 3);
+  }
+  return [];
 }
 
 function formatVolume(vol: number): string {
@@ -436,11 +482,10 @@ export function ShowcaseMarketCards({
   const trace = parseTraceData(raw);
   const polyData = trace?.polymarkets;
 
-  // Related markets come from real trace if available, else placeholders
+  // Safely normalize whichever shape the trace has; fallback to placeholders
+  const normalized = normalizeRelated(polyData);
   const related: readonly PolymarketEntry[] =
-    polyData && polyData.withEdge.length > 0
-      ? polyData.withEdge.slice(0, 3)
-      : RELATED_MARKETS;
+    normalized.length > 0 ? normalized : RELATED_MARKETS;
 
   const totalScanned = polyData?.totalMarkets ?? 80;
   const otherCount = Math.max(totalScanned - 1, 0);
