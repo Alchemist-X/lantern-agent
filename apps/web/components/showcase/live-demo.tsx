@@ -336,7 +336,7 @@ export function ShowcaseLiveDemo({ trace: raw }: { readonly trace: Record<string
           opacity: inView ? undefined : 0,
         }}
       >
-        实时分析 &middot; 战斗日志
+        实时分析管线
       </h2>
 
       <p
@@ -350,7 +350,7 @@ export function ShowcaseLiveDemo({ trace: raw }: { readonly trace: Record<string
           animationDelay: "0.1s",
         }}
       >
-        Agent 最近一次循环的真实输出
+        最近一次 Pulse 循环的完整推理过程
       </p>
 
       {!trace ? (
@@ -457,6 +457,97 @@ export function ShowcaseLiveDemo({ trace: raw }: { readonly trace: Record<string
             );
           })()}
 
+          {/* Pulse Data Detail - what we analyzed */}
+          {trace.candidates && trace.candidates.length > 0 && (
+            <div
+              className={inView ? "animate-in" : ""}
+              style={{
+                background: "var(--bg-dungeon)",
+                border: "1px solid var(--bg-border)",
+                borderRadius: 12,
+                padding: "24px",
+                opacity: inView ? undefined : 0,
+                animationDelay: "0.25s",
+              }}
+            >
+              <div style={{
+                fontSize: 15,
+                fontWeight: 600,
+                color: "var(--lantern-gold)",
+                marginBottom: 16,
+              }}>
+                Pulse 数据摘要 · 本轮分析内容
+              </div>
+
+              <div style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+                gap: 12,
+                marginBottom: 16,
+              }}>
+                <div>
+                  <div style={{ fontSize: 11, color: "var(--text-dim)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>
+                    X Layer 代币扫描
+                  </div>
+                  <div data-mono="" style={{ fontSize: 18, fontWeight: 700, color: "var(--text-bright)" }}>
+                    {trace.candidates.length} 个候选
+                  </div>
+                </div>
+                <div>
+                  <div style={{ fontSize: 11, color: "var(--text-dim)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>
+                    聪明钱信号
+                  </div>
+                  <div data-mono="" style={{ fontSize: 18, fontWeight: 700, color: "var(--text-bright)" }}>
+                    {trace.candidates.filter(c => c.smartMoneyBuying).length} 个代币有共识
+                  </div>
+                </div>
+                <div>
+                  <div style={{ fontSize: 11, color: "var(--text-dim)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>
+                    安全扫描
+                  </div>
+                  <div data-mono="" style={{ fontSize: 18, fontWeight: 700, color: "var(--signal-green)" }}>
+                    0 蜜罐 / {trace.candidates.length} 通过
+                  </div>
+                </div>
+                <div>
+                  <div style={{ fontSize: 11, color: "var(--text-dim)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>
+                    BUY 推荐
+                  </div>
+                  <div data-mono="" style={{ fontSize: 18, fontWeight: 700, color: "var(--lantern-orange)" }}>
+                    {trace.candidates.filter(c => c.recommendation === "BUY").length} 个 · 最高 {Math.max(...trace.candidates.map(c => c.signalStrength * 100)).toFixed(1)}%
+                  </div>
+                </div>
+              </div>
+
+              {/* Top 3 candidates detail table */}
+              <div style={{ fontSize: 11, color: "var(--text-dim)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 8 }}>
+                Top 3 代币详情
+              </div>
+              <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 12, color: "var(--text-main)" }}>
+                {trace.candidates.slice(0, 3).map((c, i) => (
+                  <div key={c.address} style={{
+                    display: "grid",
+                    gridTemplateColumns: "24px 1fr 80px 80px 80px",
+                    gap: 8,
+                    padding: "6px 0",
+                    borderBottom: i < 2 ? "1px solid var(--bg-border)" : "none",
+                    color: c.recommendation === "BUY" ? "var(--text-main)" : "var(--text-dim)",
+                  }}>
+                    <div>{i + 1}</div>
+                    <div>{c.symbol} <span style={{ color: "var(--text-dim)" }}>{c.address.slice(0, 8)}...</span></div>
+                    <div style={{ textAlign: "right" }}>{(c.signalStrength * 100).toFixed(1)}%</div>
+                    <div style={{ textAlign: "right", color: c.change24h > 0 ? "var(--signal-green)" : "var(--danger-red)" }}>
+                      {c.change24h > 0 ? "+" : ""}{(c.change24h * 100).toFixed(1)}%
+                    </div>
+                    <div style={{ textAlign: "right", color: c.riskLevel <= 2 ? "var(--signal-green)" : "var(--warning-amber)" }}>
+                      Risk {c.riskLevel}/5
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Onchainos call log */}
           {trace.onchainosCallLog && trace.onchainosCallLog.length > 0 && (
             <div
@@ -494,7 +585,7 @@ export function ShowcaseLiveDemo({ trace: raw }: { readonly trace: Record<string
                   marginBottom: 16,
                 }}
               >
-                贝叶斯推理过程
+                贝叶斯概率更新
               </div>
 
               {trace.recommendation.trace.map((step, i) => (

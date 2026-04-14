@@ -65,6 +65,75 @@ export function ShowcaseExplainer() {
         </p>
       </div>
 
+      {/* Pipeline visualization - how Lantern thinks */}
+      <div style={{
+        background: "var(--bg-dungeon)",
+        border: "1px solid var(--bg-border)",
+        borderRadius: 16,
+        padding: "24px 28px",
+        margin: "32px auto",
+        maxWidth: 720,
+      }}>
+        <div style={{
+          fontSize: 12,
+          color: "var(--text-dim)",
+          textTransform: "uppercase",
+          letterSpacing: 2,
+          marginBottom: 20,
+          textAlign: "center",
+        }}>
+          Agent 推理管线 · 约 30 秒 / 循环
+        </div>
+
+        {[
+          { time: "00s", icon: "\u{1F50D}", name: "扫描市场", detail: "onchainos 抓取 100+ 代币 · 聪明钱信号 · 安全元数据" },
+          { time: "10s", icon: "\u{1F4CA}", name: "聚合数据", detail: "价格 + K线 + 持有者分布 + 巨鲸动向 + 蜜罐检测" },
+          { time: "20s", icon: "\u{1F9E0}", name: "贝叶斯推理", detail: "先验概率 50% → 信号逐步更新 → 最终概率 + 置信度" },
+          { time: "30s", icon: "\u{1F4DC}", name: "决策归档", detail: "推荐 BUY/SKIP · JSON 写入 X Layer (零 Gas)" },
+        ].map((step, i) => (
+          <div key={step.time} style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 16,
+            padding: "10px 0",
+            borderBottom: i < 3 ? "1px solid var(--bg-border)" : "none",
+          }}>
+            <div data-mono="" style={{
+              fontSize: 12,
+              color: "var(--lantern-gold)",
+              width: 40,
+              flexShrink: 0,
+            }}>
+              [{step.time}]
+            </div>
+            <div style={{
+              fontSize: 20,
+              width: 32,
+              textAlign: "center",
+              flexShrink: 0,
+            }}>
+              {step.icon}
+            </div>
+            <div style={{ flex: 1 }}>
+              <div style={{
+                fontSize: 14,
+                fontWeight: 600,
+                color: "var(--text-bright)",
+              }}>
+                {step.name}
+              </div>
+              <div style={{
+                fontSize: 12,
+                color: "var(--text-muted)",
+                marginTop: 2,
+              }}>
+                {step.detail}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
       {/* Edge explanation box */}
       <div
         className={inView ? "animate-in" : ""}

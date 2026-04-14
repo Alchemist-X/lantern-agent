@@ -11,40 +11,34 @@ interface FundStep {
 const STEPS: readonly FundStep[] = [
   {
     number: 1,
-    name: "USDC (交易所)",
-    description: "在 OKX 等交易所持有 USDC 稳定币",
-    protocol: "CEX",
+    name: "OnchainOS Agentic Wallet",
+    description: "Agent 链上身份 · TEE 签名保护 · 15 条 EVM 链 + Solana",
+    protocol: "onchainos",
   },
   {
     number: 2,
-    name: "钱包 (Polygon)",
-    description: "提币到 Polygon 链上钱包",
-    protocol: "Polygon",
+    name: "Polymarket 账户",
+    description: "通过 Agentic Wallet 签名授权存入 USDC 到 Polymarket CLOB",
+    protocol: "Polymarket CLOB",
   },
   {
     number: 3,
-    name: "Polymarket 账户",
-    description: "通过代理合约存入 Polymarket",
-    protocol: "Polymarket",
-  },
-  {
-    number: 4,
-    name: "Agent 自动下单",
-    description: "Lantern Agent 识别 Edge 后自主执行交易",
-    protocol: "Lantern",
+    name: "Agent 自主决策",
+    description: "扫描 81 个市场 · 贝叶斯推理 · 识别定价偏差 · 无需人工确认",
+    protocol: "Lantern Engine",
     highlight: true,
   },
   {
-    number: 5,
-    name: "持仓 (预测市场)",
-    description: "持有 YES/NO outcome tokens，等待结算",
-    protocol: "CLOB",
+    number: 4,
+    name: "链上下单",
+    description: "FOK 订单 · 真实成交 · TxHash 永久可查",
+    protocol: "Polygon 137",
   },
   {
-    number: 6,
-    name: "收益回到钱包",
-    description: "市场结算后利润自动回到链上钱包",
-    protocol: "Settlement",
+    number: 5,
+    name: "X Layer 决策归档",
+    description: "每次循环的完整推理日志写入 X Layer (零 Gas)",
+    protocol: "X Layer 196",
   },
 ] as const;
 
@@ -211,7 +205,7 @@ export function ShowcaseFundFlow() {
           marginBottom: 40,
         }}
       >
-        从交易所到预测市场的完整流程
+        从 Agentic Wallet 到预测市场的完整自主路径
       </p>
 
       <div
