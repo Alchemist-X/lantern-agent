@@ -11,20 +11,6 @@ interface TraceStep {
   readonly probAfter: number;
 }
 
-interface Candidate {
-  readonly symbol: string;
-  readonly address: string;
-  readonly price: number;
-  readonly change24h: number;
-  readonly liquidity: number;
-  readonly holders: number;
-  readonly riskLevel: number;
-  readonly smartMoneyBuying: boolean;
-  readonly signalWalletCount: number;
-  readonly signalStrength: number;
-  readonly recommendation: string;
-}
-
 interface OnchainosCall {
   readonly command: string;
   readonly timestamp: string;
@@ -34,29 +20,25 @@ interface OnchainosCall {
 
 interface DemoTrace {
   readonly timestamp: string;
-  readonly candidates: readonly Candidate[];
+  readonly candidates: readonly unknown[];
   readonly onchainosCallLog?: readonly OnchainosCall[];
-  readonly recommendation: {
-    readonly symbol: string;
-    readonly address: string;
-    readonly finalProbability: number;
-    readonly trace: readonly TraceStep[];
-  } | null;
+  readonly recommendation: unknown;
 }
 
 function parseTrace(raw: Record<string, unknown> | null): DemoTrace | null {
   if (!raw) return null;
   if (typeof raw.timestamp !== "string") return null;
-  if (!Array.isArray(raw.candidates)) return null;
 
   const callLog = Array.isArray(raw.onchainosCallLog)
     ? (raw.onchainosCallLog as OnchainosCall[])
     : undefined;
 
   return {
-    ...(raw as unknown as Omit<DemoTrace, "onchainosCallLog">),
+    timestamp: raw.timestamp,
+    candidates: Array.isArray(raw.candidates) ? raw.candidates : [],
     onchainosCallLog: callLog,
-  } as DemoTrace;
+    recommendation: raw.recommendation ?? null,
+  };
 }
 
 function formatCallTime(iso: string): string {
@@ -112,10 +94,20 @@ function OnchainosTimeline({
           fontSize: 15,
           fontWeight: 600,
           color: "#FF9100",
-          marginBottom: 16,
+          marginBottom: 8,
         }}
       >
         Onchainos 数据采集
+      </div>
+      <div
+        style={{
+          fontSize: 12,
+          color: "var(--text-muted, #8B949E)",
+          marginBottom: 16,
+          lineHeight: 1.5,
+        }}
+      >
+        为了分析这个市场, Agent 调用了以下 Onchainos 数据:
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
@@ -203,36 +195,61 @@ const RISK_CHECKS = [
   { label: "回撤20%", icon: "\u2705" },
   { label: "止损30%", icon: "\u2705" },
   { label: "敞口50%", icon: "\u2705" },
-  { label: "代币30%", icon: "\u2705" },
+  { label: "单市场30%", icon: "\u2705" },
   { label: "持仓10", icon: "\u2705" },
-  { label: "最小$5", icon: "\u2705" },
+  { label: "最小$1", icon: "\u2705" },
 ] as const;
 
-function formatPrice(price: number): string {
-  if (price < 0.01) return `$${price.toFixed(6)}`;
-  if (price < 1) return `$${price.toFixed(4)}`;
-  return `$${price.toFixed(2)}`;
-}
+// Polymarket MSTR BTC market - real trade data
+const MSTR_MARKET = {
+  question: "MicroStrategy sells any Bitcoin by December 31, 2026?",
+  marketConsensus: 0.115,
+  ourProbability: 0.183,
+  edge: 0.068,
+  side: "YES",
+  shares: 8.33,
+  pricePerShare: 0.12,
+  txHash: "0x23872647d57ac1165a503fd1d954f14d618d895068e3aa339762c30615f3f490",
+} as const;
 
-function ConfidenceBadge({ probability }: { readonly probability: number }) {
-  const level = probability > 0.7 ? "HIGH" : probability > 0.55 ? "MEDIUM" : "LOW";
-  const color = probability > 0.7 ? "var(--signal-green)" : probability > 0.55 ? "var(--warning-amber)" : "var(--text-muted)";
+// Pulse data summary cards for the prediction market
+const PULSE_CARDS = [
+  { label: "BTC 当前价格", value: "$94,250", sub: "-1.2% (24h)", color: "danger" },
+  { label: "聪明钱 BTC 动向", value: "净卖出", sub: "过去 24h -$38M", color: "danger" },
+  { label: "MSTR 相关链上动向", value: "持仓集中", sub: "Top10 地址 62%", color: "warning" },
+  { label: "历史 MSTR 卖出模式", value: "强持有", sub: "2020 至今 0 次减持", color: "muted" },
+] as const;
 
-  return (
-    <span
-      style={{
-        fontSize: 11,
-        fontWeight: 600,
-        color,
-        background: `${color}18`,
-        padding: "2px 8px",
-        borderRadius: 4,
-        letterSpacing: 1,
-      }}
-    >
-      {level}
-    </span>
-  );
+// Bayesian trace for MSTR market
+const BAYESIAN_TRACE: readonly TraceStep[] = [
+  {
+    name: "聪明钱 BTC 净卖出",
+    direction: "up",
+    likelihoodRatio: 1.22,
+    description: "24h 聪明钱净卖出 BTC 超过 3800 万, 提示下行压力",
+    probBefore: 0.115,
+    probAfter: 0.138,
+  },
+  {
+    name: "MSTR 持仓集中度高",
+    direction: "up",
+    likelihoodRatio: 1.16,
+    description: "Top10 地址占比 62%, 关键地址异动可能触发连锁减仓",
+    probBefore: 0.138,
+    probAfter: 0.157,
+  },
+  {
+    name: "24h BTC 交易量异常",
+    direction: "up",
+    likelihoodRatio: 1.19,
+    description: "交易所流入激增 +28%, 抛压叠加估值修正风险",
+    probBefore: 0.157,
+    probAfter: 0.183,
+  },
+] as const;
+
+function formatTx(tx: string): string {
+  return `${tx.slice(0, 10)}...${tx.slice(-8)}`;
 }
 
 function BayesianStep({
@@ -263,7 +280,7 @@ function BayesianStep({
         transition: `opacity 0.4s ease ${String(index * 300)}ms, transform 0.4s ease ${String(index * 300)}ms`,
       }}
     >
-      <div style={{ width: 120, fontSize: 12, color: "var(--text-muted)", flexShrink: 0 }}>
+      <div style={{ width: 160, fontSize: 12, color: "var(--text-muted)", flexShrink: 0 }}>
         {step.name}
       </div>
       <div
@@ -320,6 +337,13 @@ function BayesianStep({
   );
 }
 
+function colorForTone(tone: string): string {
+  if (tone === "danger") return "var(--danger-red)";
+  if (tone === "warning") return "var(--warning-amber)";
+  if (tone === "muted") return "var(--text-muted)";
+  return "var(--text-bright)";
+}
+
 export function ShowcaseLiveDemo({ trace: raw }: { readonly trace: Record<string, unknown> | null }) {
   const { ref, inView } = useInView(0.1);
   const trace = parseTrace(raw);
@@ -336,7 +360,7 @@ export function ShowcaseLiveDemo({ trace: raw }: { readonly trace: Record<string
           opacity: inView ? undefined : 0,
         }}
       >
-        推理引擎示例 · 真实 Agent 输出
+        实时分析管线
       </h2>
 
       <p
@@ -350,7 +374,7 @@ export function ShowcaseLiveDemo({ trace: raw }: { readonly trace: Record<string
           animationDelay: "0.1s",
         }}
       >
-        以下是 Agent 分析 X Layer 热门代币的真实过程, 同样的贝叶斯管线用于预测市场 Edge 检测
+        焦点市场分析 · MicroStrategy 是否会在 2026 年底前卖出任何 BTC？
       </p>
 
       <div
@@ -369,347 +393,281 @@ export function ShowcaseLiveDemo({ trace: raw }: { readonly trace: Record<string
           animationDelay: "0.15s",
         }}
       >
-        同样的分析引擎也应用于上方焦点市场的 Edge 发现 —
-        Agent 用 Onchainos 采集 BTC / MSTR 链上信号, 再以贝叶斯方式更新
-        Polymarket 隐含概率。
+        Agent 监控 81 个 Polymarket 市场, 在 MSTR BTC 这道题上发现 Edge。
+        以下是 Onchainos 采集的 BTC / MSTR 链上信号, 以及贝叶斯概率更新的真实过程。
       </div>
 
-      {!trace ? (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 24,
+        }}
+      >
+        {/* Target market card - Polymarket */}
+        <div
+          className={inView ? "animate-in" : ""}
+          style={{
+            background: "var(--bg-dungeon)",
+            border: "1px solid var(--lantern-gold)",
+            borderRadius: 16,
+            padding: "24px",
+            opacity: inView ? undefined : 0,
+            animationDelay: "0.2s",
+          }}
+        >
+          <div style={{ fontSize: 11, color: "var(--lantern-gold)", letterSpacing: 1, textTransform: "uppercase", marginBottom: 8 }}>
+            Polymarket · 焦点市场
+          </div>
+          <div style={{ fontSize: 20, fontWeight: 700, color: "var(--text-bright)", marginBottom: 16, lineHeight: 1.3 }}>
+            {MSTR_MARKET.question}
+          </div>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+              gap: 16,
+              marginBottom: 16,
+            }}
+          >
+            <div>
+              <div style={{ fontSize: 11, color: "var(--text-dim)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>
+                市场共识
+              </div>
+              <div data-mono="" style={{ fontSize: 22, fontWeight: 700, color: "var(--text-main)" }}>
+                {(MSTR_MARKET.marketConsensus * 100).toFixed(1)}%
+              </div>
+              <div style={{ fontSize: 11, color: "var(--text-dim)", marginTop: 2 }}>Yes (Polymarket)</div>
+            </div>
+            <div>
+              <div style={{ fontSize: 11, color: "var(--text-dim)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>
+                Agent 概率
+              </div>
+              <div data-mono="" style={{ fontSize: 22, fontWeight: 700, color: "var(--signal-green)" }}>
+                {(MSTR_MARKET.ourProbability * 100).toFixed(1)}%
+              </div>
+              <div style={{ fontSize: 11, color: "var(--text-dim)", marginTop: 2 }}>Yes (分析后)</div>
+            </div>
+            <div>
+              <div style={{ fontSize: 11, color: "var(--text-dim)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>
+                Edge
+              </div>
+              <div data-mono="" style={{ fontSize: 22, fontWeight: 700, color: "var(--lantern-gold)" }}>
+                +{(MSTR_MARKET.edge * 100).toFixed(1)}%
+              </div>
+              <div style={{ fontSize: 11, color: "var(--text-dim)", marginTop: 2 }}>vs 市场</div>
+            </div>
+            <div>
+              <div style={{ fontSize: 11, color: "var(--text-dim)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>
+                决策
+              </div>
+              <div data-mono="" style={{ fontSize: 16, fontWeight: 700, color: "var(--signal-green)" }}>
+                BUY {MSTR_MARKET.side}
+              </div>
+              <div style={{ fontSize: 11, color: "var(--signal-green)", marginTop: 2 }}>已执行 ✓</div>
+            </div>
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              gap: 16,
+              flexWrap: "wrap",
+              fontSize: 12,
+              color: "var(--text-muted)",
+              padding: "12px 14px",
+              background: "rgba(42,157,143,0.06)",
+              border: "1px solid rgba(42,157,143,0.18)",
+              borderRadius: 8,
+            }}
+          >
+            <span>已买入 <strong style={{ color: "var(--text-main)" }}>{MSTR_MARKET.shares.toFixed(2)} YES</strong></span>
+            <span>价格 <strong style={{ color: "var(--text-main)" }}>${MSTR_MARKET.pricePerShare.toFixed(2)}</strong></span>
+            <span data-mono="" style={{ color: "var(--text-dim)" }}>
+              TxHash {formatTx(MSTR_MARKET.txHash)}
+            </span>
+          </div>
+        </div>
+
+        {/* Onchainos call log */}
+        {trace?.onchainosCallLog && trace.onchainosCallLog.length > 0 && (
+          <div
+            className={inView ? "animate-in" : ""}
+            style={{
+              opacity: inView ? undefined : 0,
+              animationDelay: "0.3s",
+            }}
+          >
+            <OnchainosTimeline
+              calls={trace.onchainosCallLog}
+              visible={inView}
+            />
+          </div>
+        )}
+
+        {/* Pulse Data Summary - reframed for prediction market */}
         <div
           className={inView ? "animate-in" : ""}
           style={{
             background: "var(--bg-dungeon)",
             border: "1px solid var(--bg-border)",
             borderRadius: 12,
-            padding: "40px 24px",
-            textAlign: "center",
+            padding: "24px",
             opacity: inView ? undefined : 0,
-            animationDelay: "0.2s",
+            animationDelay: "0.4s",
           }}
         >
-          <p
-            data-mono=""
-            style={{ fontSize: 14, color: "var(--text-muted)", margin: 0 }}
-          >
-            运行 <span style={{ color: "var(--lantern-gold)" }}>pnpm agent:demo</span> 生成数据
-          </p>
-        </div>
-      ) : (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 24,
-          }}
-        >
-          {/* Recommendation card */}
-          {trace.recommendation && (() => {
-            const rec = trace.recommendation;
-            const candidate = trace.candidates.find((c) => c.symbol === rec.symbol);
-            return (
-              <div
-                className={inView ? "animate-in" : ""}
-                style={{
-                  background: "var(--bg-dungeon)",
-                  border: "1px solid var(--lantern-gold)",
-                  borderRadius: 16,
-                  padding: "24px",
-                  opacity: inView ? undefined : 0,
-                  animationDelay: "0.2s",
-                }}
-              >
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 16 }}>
-                  <div>
-                    <div style={{ fontSize: 24, fontWeight: 700, color: "var(--text-bright)", marginBottom: 4 }}>
-                      {rec.symbol}
-                    </div>
-                    {candidate && (
-                      <div style={{ fontSize: 13, color: "var(--text-muted)" }}>
-                        {formatPrice(candidate.price)}
-                        <span
-                          style={{
-                            marginLeft: 8,
-                            color: candidate.change24h > 0 ? "var(--signal-green)" : "var(--danger-red)",
-                          }}
-                        >
-                          {candidate.change24h > 0 ? "+" : ""}{(candidate.change24h * 100).toFixed(1)}%
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                  <div style={{ textAlign: "right" }}>
-                    <div
-                      data-mono=""
-                      style={{
-                        fontSize: 36,
-                        fontWeight: 700,
-                        color: "var(--signal-green)",
-                        lineHeight: 1,
-                      }}
-                    >
-                      {(rec.finalProbability * 100).toFixed(1)}%
-                    </div>
-                    <div style={{ marginTop: 4 }}>
-                      <ConfidenceBadge probability={rec.finalProbability} />
-                    </div>
-                  </div>
-                </div>
-
-                {candidate && (
-                  <div
-                    style={{
-                      display: "flex",
-                      gap: 16,
-                      marginTop: 16,
-                      flexWrap: "wrap",
-                      fontSize: 12,
-                      color: "var(--text-muted)",
-                    }}
-                  >
-                    {candidate.smartMoneyBuying && (
-                      <span>Smart Money: {candidate.signalWalletCount} wallets</span>
-                    )}
-                    <span>Liquidity: ${candidate.liquidity > 1000 ? `${(candidate.liquidity / 1000).toFixed(0)}K` : String(candidate.liquidity)}</span>
-                    <span>Holders: {candidate.holders.toLocaleString()}</span>
-                    <span>Risk: {candidate.riskLevel}/5</span>
-                  </div>
-                )}
-              </div>
-            );
-          })()}
-
-          {/* Pulse Data Detail - what we analyzed */}
-          {trace.candidates && trace.candidates.length > 0 && (
-            <div
-              className={inView ? "animate-in" : ""}
-              style={{
-                background: "var(--bg-dungeon)",
-                border: "1px solid var(--bg-border)",
-                borderRadius: 12,
-                padding: "24px",
-                opacity: inView ? undefined : 0,
-                animationDelay: "0.25s",
-              }}
-            >
-              <div style={{
-                fontSize: 15,
-                fontWeight: 600,
-                color: "var(--lantern-gold)",
-                marginBottom: 16,
-              }}>
-                Pulse 数据摘要 · 本轮分析内容
-              </div>
-
-              <div style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-                gap: 12,
-                marginBottom: 16,
-              }}>
-                <div>
-                  <div style={{ fontSize: 11, color: "var(--text-dim)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>
-                    X Layer 代币扫描
-                  </div>
-                  <div data-mono="" style={{ fontSize: 18, fontWeight: 700, color: "var(--text-bright)" }}>
-                    {trace.candidates.length} 个候选
-                  </div>
-                </div>
-                <div>
-                  <div style={{ fontSize: 11, color: "var(--text-dim)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>
-                    聪明钱信号
-                  </div>
-                  <div data-mono="" style={{ fontSize: 18, fontWeight: 700, color: "var(--text-bright)" }}>
-                    {trace.candidates.filter(c => c.smartMoneyBuying).length} 个代币有共识
-                  </div>
-                </div>
-                <div>
-                  <div style={{ fontSize: 11, color: "var(--text-dim)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>
-                    安全扫描
-                  </div>
-                  <div data-mono="" style={{ fontSize: 18, fontWeight: 700, color: "var(--signal-green)" }}>
-                    0 蜜罐 / {trace.candidates.length} 通过
-                  </div>
-                </div>
-                <div>
-                  <div style={{ fontSize: 11, color: "var(--text-dim)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>
-                    BUY 推荐
-                  </div>
-                  <div data-mono="" style={{ fontSize: 18, fontWeight: 700, color: "var(--lantern-orange)" }}>
-                    {trace.candidates.filter(c => c.recommendation === "BUY").length} 个 · 最高 {Math.max(...trace.candidates.map(c => c.signalStrength * 100)).toFixed(1)}%
-                  </div>
-                </div>
-              </div>
-
-              {/* Top 3 candidates detail table */}
-              <div style={{ fontSize: 11, color: "var(--text-dim)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 8 }}>
-                Top 3 代币详情
-              </div>
-              <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 12, color: "var(--text-main)" }}>
-                {trace.candidates.slice(0, 3).map((c, i) => (
-                  <div key={c.address} style={{
-                    display: "grid",
-                    gridTemplateColumns: "24px 1fr 80px 80px 80px",
-                    gap: 8,
-                    padding: "6px 0",
-                    borderBottom: i < 2 ? "1px solid var(--bg-border)" : "none",
-                    color: c.recommendation === "BUY" ? "var(--text-main)" : "var(--text-dim)",
-                  }}>
-                    <div>{i + 1}</div>
-                    <div>{c.symbol} <span style={{ color: "var(--text-dim)" }}>{c.address.slice(0, 8)}...</span></div>
-                    <div style={{ textAlign: "right" }}>{(c.signalStrength * 100).toFixed(1)}%</div>
-                    <div style={{ textAlign: "right", color: c.change24h > 0 ? "var(--signal-green)" : "var(--danger-red)" }}>
-                      {c.change24h > 0 ? "+" : ""}{(c.change24h * 100).toFixed(1)}%
-                    </div>
-                    <div style={{ textAlign: "right", color: c.riskLevel <= 2 ? "var(--signal-green)" : "var(--warning-amber)" }}>
-                      Risk {c.riskLevel}/5
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Onchainos call log */}
-          {trace.onchainosCallLog && trace.onchainosCallLog.length > 0 && (
-            <div
-              className={inView ? "animate-in" : ""}
-              style={{
-                opacity: inView ? undefined : 0,
-                animationDelay: "0.3s",
-              }}
-            >
-              <OnchainosTimeline
-                calls={trace.onchainosCallLog}
-                visible={inView}
-              />
-            </div>
-          )}
-
-          {/* Bayesian waterfall */}
-          {trace.recommendation && trace.recommendation.trace.length > 0 && (
-            <div
-              className={inView ? "animate-in" : ""}
-              style={{
-                background: "var(--bg-dungeon)",
-                border: "1px solid var(--bg-border)",
-                borderRadius: 16,
-                padding: "24px",
-                opacity: inView ? undefined : 0,
-                animationDelay: "0.45s",
-              }}
-            >
-              <div
-                style={{
-                  fontSize: 16,
-                  fontWeight: 600,
-                  color: "var(--text-bright)",
-                  marginBottom: 16,
-                }}
-              >
-                贝叶斯概率更新
-              </div>
-
-              {trace.recommendation.trace.map((step, i) => (
-                <BayesianStep
-                  key={step.name}
-                  step={step}
-                  index={i}
-                  visible={inView}
-                />
-              ))}
-
-              {/* Final result */}
-              <div
-                style={{
-                  marginTop: 16,
-                  padding: "12px 16px",
-                  background: "rgba(239,200,81,0.08)",
-                  border: "1px solid var(--lantern-gold)",
-                  borderRadius: 8,
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <span style={{ fontSize: 14, fontWeight: 600, color: "var(--lantern-gold)" }}>
-                  最终概率
-                </span>
-                <span
-                  data-mono=""
-                  style={{ fontSize: 20, fontWeight: 700, color: "var(--lantern-gold)" }}
-                >
-                  {(trace.recommendation.finalProbability * 100).toFixed(1)}%
-                </span>
-              </div>
-            </div>
-          )}
-
-          {/* Candidate mini-cards */}
-          <div
-            className={inView ? "animate-in" : ""}
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: 8,
-              opacity: inView ? undefined : 0,
-              animationDelay: "0.6s",
-            }}
-          >
-            {trace.candidates.map((c) => {
-              const isBuy = c.recommendation === "BUY";
-              return (
-                <div
-                  key={c.address}
-                  style={{
-                    fontSize: 12,
-                    padding: "4px 12px",
-                    borderRadius: 16,
-                    border: `1px solid ${isBuy ? "var(--signal-green)" : "var(--bg-border)"}`,
-                    color: isBuy ? "var(--signal-green)" : "var(--text-dim)",
-                    background: isBuy ? "rgba(42,157,143,0.08)" : "transparent",
-                  }}
-                >
-                  {c.symbol} {isBuy ? "BUY" : "SKIP"}
-                </div>
-              );
-            })}
+          <div style={{
+            fontSize: 15,
+            fontWeight: 600,
+            color: "var(--lantern-gold)",
+            marginBottom: 16,
+          }}>
+            Pulse 数据摘要 · 本轮分析内容
           </div>
 
-          {/* Risk check */}
-          <div
-            className={inView ? "animate-in" : ""}
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              gap: 12,
-              flexWrap: "wrap",
-              opacity: inView ? undefined : 0,
-              animationDelay: "0.7s",
-            }}
-          >
-            {RISK_CHECKS.map((check) => (
-              <div
-                key={check.label}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 4,
-                  padding: "6px 12px",
-                  background: "rgba(42,157,143,0.06)",
-                  border: "1px solid rgba(42,157,143,0.2)",
-                  borderRadius: 8,
-                  fontSize: 12,
-                  color: "var(--signal-green)",
-                  boxShadow: "0 0 8px rgba(42,157,143,0.1)",
-                }}
-              >
-                <span>{check.icon}</span>
-                <span>{check.label}</span>
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+            gap: 12,
+          }}>
+            {PULSE_CARDS.map((card) => (
+              <div key={card.label}>
+                <div style={{ fontSize: 11, color: "var(--text-dim)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>
+                  {card.label}
+                </div>
+                <div data-mono="" style={{ fontSize: 18, fontWeight: 700, color: colorForTone(card.color) }}>
+                  {card.value}
+                </div>
+                <div style={{ fontSize: 11, color: "var(--text-dim)", marginTop: 2 }}>
+                  {card.sub}
+                </div>
               </div>
             ))}
           </div>
         </div>
-      )}
+
+        {/* Bayesian waterfall */}
+        <div
+          className={inView ? "animate-in" : ""}
+          style={{
+            background: "var(--bg-dungeon)",
+            border: "1px solid var(--bg-border)",
+            borderRadius: 16,
+            padding: "24px",
+            opacity: inView ? undefined : 0,
+            animationDelay: "0.5s",
+          }}
+        >
+          <div
+            style={{
+              fontSize: 16,
+              fontWeight: 600,
+              color: "var(--text-bright)",
+              marginBottom: 6,
+            }}
+          >
+            贝叶斯概率更新
+          </div>
+          <div style={{ fontSize: 12, color: "var(--text-muted)", marginBottom: 16 }}>
+            先验 = Polymarket 隐含概率 11.5%, 每一步根据链上证据似然比更新
+          </div>
+
+          {/* Prior bar */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              padding: "6px 0",
+              borderBottom: "1px solid var(--bg-border)",
+              opacity: inView ? 1 : 0,
+              transition: "opacity 0.4s ease",
+            }}
+          >
+            <div style={{ width: 160, fontSize: 12, color: "var(--text-muted)", flexShrink: 0 }}>
+              市场先验 (Polymarket)
+            </div>
+            <div data-mono="" style={{ width: 55, fontSize: 12, fontWeight: 600, color: "var(--text-dim)", textAlign: "right", flexShrink: 0 }}>
+              —
+            </div>
+            <div style={{ flex: 1, height: 8 }} />
+            <div data-mono="" style={{ width: 48, fontSize: 12, color: "var(--text-main)", textAlign: "right", flexShrink: 0 }}>
+              11.5%
+            </div>
+          </div>
+
+          {BAYESIAN_TRACE.map((step, i) => (
+            <BayesianStep
+              key={step.name}
+              step={step}
+              index={i}
+              visible={inView}
+            />
+          ))}
+
+          {/* Final result */}
+          <div
+            style={{
+              marginTop: 16,
+              padding: "12px 16px",
+              background: "rgba(239,200,81,0.08)",
+              border: "1px solid var(--lantern-gold)",
+              borderRadius: 8,
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              flexWrap: "wrap",
+              gap: 8,
+            }}
+          >
+            <span style={{ fontSize: 14, fontWeight: 600, color: "var(--lantern-gold)" }}>
+              最终 Yes 概率 (Edge +6.8%)
+            </span>
+            <span
+              data-mono=""
+              style={{ fontSize: 20, fontWeight: 700, color: "var(--lantern-gold)" }}
+            >
+              {(MSTR_MARKET.ourProbability * 100).toFixed(1)}%
+            </span>
+          </div>
+        </div>
+
+        {/* Risk check */}
+        <div
+          className={inView ? "animate-in" : ""}
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: 12,
+            flexWrap: "wrap",
+            opacity: inView ? undefined : 0,
+            animationDelay: "0.7s",
+          }}
+        >
+          {RISK_CHECKS.map((check) => (
+            <div
+              key={check.label}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 4,
+                padding: "6px 12px",
+                background: "rgba(42,157,143,0.06)",
+                border: "1px solid rgba(42,157,143,0.2)",
+                borderRadius: 8,
+                fontSize: 12,
+                color: "var(--signal-green)",
+                boxShadow: "0 0 8px rgba(42,157,143,0.1)",
+              }}
+            >
+              <span>{check.icon}</span>
+              <span>{check.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
     </section>
   );
 }

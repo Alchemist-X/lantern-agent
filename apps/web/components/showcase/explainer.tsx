@@ -65,6 +65,294 @@ export function ShowcaseExplainer() {
         </p>
       </div>
 
+      {/* StS2 Comic-style Comparison Panels */}
+      <style>{`
+        .sts-panel-row {
+          display: flex;
+          gap: 16px;
+          max-width: 960px;
+          margin: 0 auto 40px;
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+        .sts-panel {
+          flex: 1 1 280px;
+          min-width: 280px;
+          max-width: 320px;
+          height: 260px;
+          background: linear-gradient(180deg, #1a1a2e 0%, #0D1117 100%);
+          border: 2px solid #EFC851;
+          border-radius: 8px;
+          padding: 20px 16px 16px;
+          position: relative;
+          box-shadow:
+            inset 0 0 20px rgba(239,200,81,0.05),
+            0 4px 16px rgba(0,0,0,0.4),
+            0 0 24px rgba(255,145,0,0.08);
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: space-between;
+        }
+        .sts-panel::before {
+          content: "";
+          position: absolute;
+          inset: 4px;
+          border: 1px solid rgba(239,200,81,0.2);
+          border-radius: 4px;
+          pointer-events: none;
+        }
+        .sts-panel-caption {
+          font-size: 14px;
+          font-weight: 700;
+          color: #EFC851;
+          text-align: center;
+          letter-spacing: 1px;
+          margin-top: 8px;
+          text-shadow: 0 0 8px rgba(255,145,0,0.25);
+        }
+        .sts-svg-wrap {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+        }
+        .sts-stroke {
+          stroke: #FFF6E2;
+          stroke-width: 2.5;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+          fill: none;
+          filter: drop-shadow(0 0 4px rgba(255,145,0,0.15));
+        }
+        .sts-stroke-accent {
+          stroke: #FF9100;
+          stroke-width: 3;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+          fill: none;
+          filter: drop-shadow(0 0 6px rgba(255,145,0,0.5));
+        }
+        .sts-stroke-dim {
+          stroke: rgba(255,246,226,0.5);
+          stroke-width: 2;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+          fill: none;
+        }
+        .sts-text {
+          fill: #EFC851;
+          font-family: var(--font-mono, monospace);
+          font-size: 14px;
+          font-weight: 700;
+        }
+        .sts-text-dim {
+          fill: rgba(255,246,226,0.6);
+          font-family: var(--font-mono, monospace);
+          font-size: 11px;
+        }
+        @media (max-width: 720px) {
+          .sts-panel {
+            max-width: 100%;
+          }
+        }
+      `}</style>
+
+      <div
+        className={`sts-panel-row ${inView ? "animate-in" : ""}`}
+        style={{
+          opacity: inView ? undefined : 0,
+          animationDelay: "0.2s",
+        }}
+      >
+        {/* Card 1: 推理能力趋近人类 */}
+        <div className="sts-panel">
+          <div className="sts-svg-wrap">
+            <svg viewBox="0 0 280 160" width="100%" height="160">
+              <defs>
+                <radialGradient id="glow1">
+                  <stop offset="0%" stopColor="#FF9100" stopOpacity="0.5" />
+                  <stop offset="100%" stopColor="#FF9100" stopOpacity="0" />
+                </radialGradient>
+              </defs>
+              {/* Human on left */}
+              <g transform="translate(10,20)">
+                <circle cx="35" cy="50" r="11" className="sts-stroke" />
+                <path d="M35 61 L35 95" className="sts-stroke" />
+                <path d="M35 70 L20 85" className="sts-stroke" />
+                <path d="M35 70 L50 85" className="sts-stroke" />
+                <path d="M35 95 L24 118" className="sts-stroke" />
+                <path d="M35 95 L46 118" className="sts-stroke" />
+                {/* thought bubble with chart */}
+                <path
+                  d="M50 10 Q75 5 88 20 Q92 35 78 40 Q62 42 52 32 Q46 22 50 10 Z"
+                  className="sts-stroke"
+                />
+                <path d="M58 28 L62 22 L66 26 L70 18 L74 24 L78 20" className="sts-stroke-accent" />
+                <circle cx="48" cy="42" r="1.8" className="sts-stroke" />
+                <circle cx="44" cy="47" r="1.2" className="sts-stroke" />
+              </g>
+
+              {/* ≈ sign */}
+              <text x="140" y="80" textAnchor="middle" className="sts-text" fontSize="28">≈</text>
+
+              {/* Agent (lantern) on right */}
+              <g transform="translate(180,20)">
+                <circle cx="50" cy="40" r="28" fill="url(#glow1)" />
+                <rect x="38" y="26" width="24" height="30" rx="3" className="sts-stroke-accent" />
+                <path d="M50 22 L50 26" className="sts-stroke" />
+                <circle cx="50" cy="41" r="5" className="sts-stroke-accent" />
+                <path d="M50 56 L50 92" className="sts-stroke" />
+                <path d="M50 68 L32 84" className="sts-stroke" />
+                <path d="M50 68 L68 84" className="sts-stroke" />
+                <path d="M50 92 L38 118" className="sts-stroke" />
+                <path d="M50 92 L62 118" className="sts-stroke" />
+                {/* bigger thought bubble */}
+                <path
+                  d="M70 5 Q100 0 112 18 Q118 38 100 44 Q80 46 68 32 Q62 18 70 5 Z"
+                  className="sts-stroke"
+                />
+                <path d="M76 26 L80 18 L84 24 L88 14 L92 22 L96 16 L100 22" className="sts-stroke-accent" />
+                <circle cx="78" cy="32" r="1.5" className="sts-stroke" />
+                <circle cx="92" cy="32" r="1.5" className="sts-stroke" />
+                <circle cx="66" cy="48" r="1.5" className="sts-stroke" />
+              </g>
+            </svg>
+          </div>
+          <div className="sts-panel-caption">推理能力趋近人类</div>
+        </div>
+
+        {/* Card 2: 7x24 覆盖数千市场 */}
+        <div className="sts-panel">
+          <div className="sts-svg-wrap">
+            <svg viewBox="0 0 280 160" width="100%" height="160">
+              <defs>
+                <radialGradient id="glow2">
+                  <stop offset="0%" stopColor="#FF9100" stopOpacity="0.5" />
+                  <stop offset="100%" stopColor="#FF9100" stopOpacity="0" />
+                </radialGradient>
+              </defs>
+              {/* Sleeping human */}
+              <g transform="translate(5,30)">
+                <circle cx="30" cy="50" r="11" className="sts-stroke-dim" />
+                <path d="M30 61 L30 90" className="sts-stroke-dim" />
+                <path d="M30 70 L15 80" className="sts-stroke-dim" />
+                <path d="M30 70 L45 80" className="sts-stroke-dim" />
+                <path d="M30 90 L20 112" className="sts-stroke-dim" />
+                <path d="M30 90 L40 112" className="sts-stroke-dim" />
+                {/* Zs */}
+                <text x="48" y="30" className="sts-text" fontSize="14">Z</text>
+                <text x="56" y="42" className="sts-text" fontSize="11">z</text>
+                <text x="62" y="52" className="sts-text" fontSize="9">z</text>
+                {/* closed eye */}
+                <path d="M26 48 L30 50" className="sts-stroke-dim" />
+              </g>
+
+              {/* Agent in middle */}
+              <g transform="translate(95,30)">
+                <circle cx="30" cy="40" r="28" fill="url(#glow2)" />
+                <rect x="18" y="26" width="24" height="30" rx="3" className="sts-stroke-accent" />
+                <path d="M30 22 L30 26" className="sts-stroke" />
+                <circle cx="30" cy="41" r="5" className="sts-stroke-accent" />
+                <path d="M30 56 L30 92" className="sts-stroke" />
+                <path d="M30 68 L12 82" className="sts-stroke" />
+                <path d="M30 68 L48 82" className="sts-stroke" />
+                <path d="M30 92 L18 115" className="sts-stroke" />
+                <path d="M30 92 L42 115" className="sts-stroke" />
+              </g>
+
+              {/* Radiating lines to grid */}
+              <path d="M145 55 L195 30" className="sts-stroke-accent" strokeDasharray="3 3" />
+              <path d="M145 70 L195 60" className="sts-stroke-accent" strokeDasharray="3 3" />
+              <path d="M145 90 L195 100" className="sts-stroke-accent" strokeDasharray="3 3" />
+              <path d="M145 105 L195 130" className="sts-stroke-accent" strokeDasharray="3 3" />
+
+              {/* 4x4 market grid */}
+              <g transform="translate(200,22)">
+                {Array.from({ length: 16 }).map((_, i) => {
+                  const col = i % 4;
+                  const row = Math.floor(i / 4);
+                  return (
+                    <rect
+                      key={i}
+                      x={col * 18}
+                      y={row * 28}
+                      width="14"
+                      height="20"
+                      rx="2"
+                      className="sts-stroke"
+                      opacity={0.6 + (i % 3) * 0.15}
+                    />
+                  );
+                })}
+              </g>
+            </svg>
+          </div>
+          <div className="sts-panel-caption">7×24 覆盖数千市场</div>
+        </div>
+
+        {/* Card 3: 秒级响应 vs 分钟级延迟 */}
+        <div className="sts-panel">
+          <div className="sts-svg-wrap">
+            <svg viewBox="0 0 280 160" width="100%" height="160">
+              <defs>
+                <radialGradient id="glow3">
+                  <stop offset="0%" stopColor="#FF9100" stopOpacity="0.5" />
+                  <stop offset="100%" stopColor="#FF9100" stopOpacity="0" />
+                </radialGradient>
+              </defs>
+              {/* Lightning bolt */}
+              <g transform="translate(8,20)">
+                <path
+                  d="M22 0 L8 36 L20 36 L14 62 L32 24 L20 24 L26 0 Z"
+                  className="sts-stroke-accent"
+                  fill="rgba(255,145,0,0.15)"
+                />
+              </g>
+
+              {/* 1s label + arrow to Agent */}
+              <text x="60" y="30" className="sts-text" fontSize="13">1s</text>
+              <path d="M52 38 L95 45" className="sts-stroke-accent" />
+              <path d="M90 40 L95 45 L90 50" className="sts-stroke-accent" />
+
+              {/* Agent (fast arrival) */}
+              <g transform="translate(100,20)">
+                <circle cx="25" cy="30" r="22" fill="url(#glow3)" />
+                <rect x="15" y="18" width="20" height="26" rx="3" className="sts-stroke-accent" />
+                <path d="M25 15 L25 18" className="sts-stroke" />
+                <circle cx="25" cy="31" r="4" className="sts-stroke-accent" />
+                <path d="M25 44 L25 72" className="sts-stroke" />
+                <path d="M25 54 L12 66" className="sts-stroke" />
+                <path d="M25 54 L38 66" className="sts-stroke" />
+                <path d="M25 72 L15 92" className="sts-stroke" />
+                <path d="M25 72 L35 92" className="sts-stroke" />
+                {/* speed lines */}
+                <path d="M-5 28 L8 28" className="sts-stroke-accent" />
+                <path d="M-8 36 L6 36" className="sts-stroke-accent" />
+                <path d="M-5 44 L8 44" className="sts-stroke-accent" />
+              </g>
+
+              {/* 3min+ dotted arrow */}
+              <text x="180" y="30" className="sts-text-dim" fontSize="12">3min+</text>
+              <path d="M175 40 L218 50" className="sts-stroke-dim" strokeDasharray="4 4" />
+              <path d="M213 45 L218 50 L213 55" className="sts-stroke-dim" />
+
+              {/* Slow human */}
+              <g transform="translate(220,25)">
+                <circle cx="22" cy="30" r="10" className="sts-stroke-dim" />
+                <path d="M22 40 L22 72" className="sts-stroke-dim" />
+                <path d="M22 50 L10 64" className="sts-stroke-dim" />
+                <path d="M22 50 L34 64" className="sts-stroke-dim" />
+                <path d="M22 72 L14 95" className="sts-stroke-dim" />
+                <path d="M22 72 L30 95" className="sts-stroke-dim" />
+              </g>
+            </svg>
+          </div>
+          <div className="sts-panel-caption">秒级响应 vs 分钟级延迟</div>
+        </div>
+      </div>
+
       {/* Pipeline visualization - how Lantern thinks */}
       <div style={{
         background: "var(--bg-dungeon)",
