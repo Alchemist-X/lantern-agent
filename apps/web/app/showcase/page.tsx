@@ -130,14 +130,14 @@ export default function ShowcasePage() {
         &larr;
       </button>
 
-      {/* Right arrow button (offset from dot indicators) */}
+      {/* Right arrow button */}
       <button
         onClick={goNext}
         disabled={currentSlide === totalSlides - 1}
         aria-label="下一页"
         style={{
           position: "fixed",
-          right: 80,
+          right: 24,
           top: "50%",
           transform: "translateY(-50%)",
           width: 56,
@@ -172,38 +172,48 @@ export default function ShowcasePage() {
         &rarr;
       </button>
 
-      {/* Vertical dot indicators on right side */}
-      <div
-        style={{
-          position: "fixed",
-          right: 24,
-          top: "50%",
-          transform: "translateY(-50%)",
-          display: "flex",
-          flexDirection: "column",
-          gap: 14,
-          alignItems: "center",
-          zIndex: 100,
-        }}
-      >
-        {slides.map((_, i) => {
-          const active = i === currentSlide;
-          return (
-            <div
-              key={String(i)}
-              onClick={() => setCurrentSlide(i)}
-              style={{
-                width: active ? 12 : 6,
-                height: active ? 12 : 6,
-                borderRadius: "50%",
-                background: active ? "#FF9100" : "#30363D",
-                cursor: "pointer",
-                transition: "all 0.3s ease",
-                boxShadow: active ? "0 0 8px rgba(255,145,0,0.5)" : "none",
-              }}
-            />
-          );
-        })}
+      {/* Horizontal dot indicators at bottom center */}
+      <div style={{
+        position: "fixed",
+        bottom: 32,
+        left: "50%",
+        transform: "translateX(-50%)",
+        display: "flex",
+        gap: 12,
+        alignItems: "center",
+        zIndex: 100,
+        padding: "10px 20px",
+        background: "rgba(13, 17, 22, 0.6)",
+        backdropFilter: "blur(8px)",
+        borderRadius: 20,
+        border: "1px solid rgba(48, 54, 61, 0.4)",
+      }}>
+        {slides.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setCurrentSlide(i)}
+            aria-label={`Go to slide ${i + 1}`}
+            style={{
+              width: i === currentSlide ? 24 : 8,
+              height: 8,
+              borderRadius: i === currentSlide ? 4 : "50%",
+              background: i === currentSlide ? "#FF9100" : "#30363D",
+              boxShadow: i === currentSlide ? "0 0 8px rgba(255,145,0,0.5)" : "none",
+              border: "none",
+              padding: 0,
+              cursor: "pointer",
+              transition: "all 0.3s ease",
+            }}
+          />
+        ))}
+        <span style={{
+          marginLeft: 8,
+          fontSize: 11,
+          color: "#484F58",
+          fontFamily: "JetBrains Mono, monospace",
+        }}>
+          {currentSlide + 1} / {slides.length}
+        </span>
       </div>
 
       <style>{`
