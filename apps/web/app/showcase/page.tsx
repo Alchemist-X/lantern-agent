@@ -75,17 +75,102 @@ export default function ShowcasePage() {
         }}
       >
         <div
+          className="slide-content"
           style={{
             width: "100%",
             maxWidth: 1000,
             padding: "0 24px",
             overflowY: "auto",
             maxHeight: "90vh",
+            scrollbarWidth: "none",
           }}
         >
           {slides[currentSlide]}
         </div>
       </div>
+
+      {/* Left arrow button */}
+      <button
+        onClick={goPrev}
+        disabled={currentSlide === 0}
+        aria-label="上一页"
+        style={{
+          position: "fixed",
+          left: 24,
+          top: "50%",
+          transform: "translateY(-50%)",
+          width: 56,
+          height: 56,
+          borderRadius: "50%",
+          background: "rgba(28, 33, 40, 0.6)",
+          backdropFilter: "blur(8px)",
+          border: "1px solid rgba(255, 145, 0, 0.2)",
+          color: currentSlide === 0 ? "#484F58" : "#FFF6E2",
+          fontSize: 24,
+          cursor: currentSlide === 0 ? "default" : "pointer",
+          opacity: currentSlide === 0 ? 0.3 : 0.7,
+          transition: "all 0.25s ease",
+          zIndex: 100,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+        onMouseEnter={(e) => {
+          if (currentSlide === 0) return;
+          e.currentTarget.style.opacity = "1";
+          e.currentTarget.style.background = "rgba(255, 145, 0, 0.15)";
+          e.currentTarget.style.borderColor = "rgba(255, 145, 0, 0.5)";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.opacity = currentSlide === 0 ? "0.3" : "0.7";
+          e.currentTarget.style.background = "rgba(28, 33, 40, 0.6)";
+          e.currentTarget.style.borderColor = "rgba(255, 145, 0, 0.2)";
+        }}
+      >
+        &larr;
+      </button>
+
+      {/* Right arrow button (offset from dot indicators) */}
+      <button
+        onClick={goNext}
+        disabled={currentSlide === totalSlides - 1}
+        aria-label="下一页"
+        style={{
+          position: "fixed",
+          right: 80,
+          top: "50%",
+          transform: "translateY(-50%)",
+          width: 56,
+          height: 56,
+          borderRadius: "50%",
+          background: "rgba(28, 33, 40, 0.6)",
+          backdropFilter: "blur(8px)",
+          border: "1px solid rgba(255, 145, 0, 0.2)",
+          color: currentSlide === totalSlides - 1 ? "#484F58" : "#FFF6E2",
+          fontSize: 24,
+          cursor: currentSlide === totalSlides - 1 ? "default" : "pointer",
+          opacity: currentSlide === totalSlides - 1 ? 0.3 : 0.7,
+          transition: "all 0.25s ease",
+          zIndex: 100,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+        onMouseEnter={(e) => {
+          if (currentSlide === totalSlides - 1) return;
+          e.currentTarget.style.opacity = "1";
+          e.currentTarget.style.background = "rgba(255, 145, 0, 0.15)";
+          e.currentTarget.style.borderColor = "rgba(255, 145, 0, 0.5)";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.opacity =
+            currentSlide === totalSlides - 1 ? "0.3" : "0.7";
+          e.currentTarget.style.background = "rgba(28, 33, 40, 0.6)";
+          e.currentTarget.style.borderColor = "rgba(255, 145, 0, 0.2)";
+        }}
+      >
+        &rarr;
+      </button>
 
       {/* Vertical dot indicators on right side */}
       <div
@@ -121,33 +206,8 @@ export default function ShowcasePage() {
         })}
       </div>
 
-      {/* Scroll hint - only on first slide */}
-      {currentSlide === 0 && (
-        <div
-          style={{
-            position: "fixed",
-            right: 56,
-            bottom: 24,
-            fontSize: 12,
-            color: "#8B949E",
-            fontFamily: "Inter, sans-serif",
-            letterSpacing: 1,
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-            zIndex: 100,
-            animation: "scrollHintPulse 2s ease-in-out infinite",
-          }}
-        >
-          <span>Press &rarr; to continue</span>
-        </div>
-      )}
-
       <style>{`
-        @keyframes scrollHintPulse {
-          0%, 100% { opacity: 0.5; transform: translateX(0); }
-          50% { opacity: 1; transform: translateX(-4px); }
-        }
+        .slide-content::-webkit-scrollbar { display: none; }
       `}</style>
     </div>
   );
