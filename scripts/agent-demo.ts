@@ -245,79 +245,142 @@ interface PolyMarket {
 
 async function scanPolymarkets(): Promise<PolyMarket[]> {
   console.log("\n══════════════════════════════════════");
-  console.log("  PHASE 1.5: POLYMARKET — Edge Scan");
+  console.log("  PHASE 1.5: POLYMARKET — Price Markets Edge Scan");
   console.log("══════════════════════════════════════\n");
 
-  // Fetch active crypto markets from Gamma API
+  // Multi-pronged fetch: use /markets (volume-sorted, better price markets) +
+  // /events (crypto tag) to get broad coverage of BTC/ETH/SOL price prediction
+  // markets at daily/weekly/monthly granularity.
   console.log("[1/3] Fetching Polymarket crypto markets...");
-  let events: any[] = [];
-  try {
-    const res = await fetch(
-      "https://gamma-api.polymarket.com/events?active=true&closed=false&tag=crypto&limit=20",
-      { signal: AbortSignal.timeout(15000) },
-    );
-    if (res.ok) {
-      events = await res.json();
-    }
-  } catch {
-    console.log("  ⚠ Failed to fetch Polymarket events\n");
-  }
-  console.log(`  Found ${events.length} active crypto events\n`);
+  const rawMarkets: any[] = [];
+  const rawEvents: any[] = [];
 
-  const markets: PolyMarket[] = [];
+  const marketQueries = [
+    "https://gamma-api.polymarket.com/markets?closed=false&limit=500&order=volume24hr&ascending=false",
+  ];
+  const eventQueries = [
+    "https://gamma-api.polymarket.com/events?active=true&closed=false&tag=crypto&limit=100",
+    "https://gamma-api.polymarket.com/events?active=true&closed=false&tag_slug=crypto-prices&limit=100",
+    "https://gamma-api.polymarket.com/events?active=true&closed=false&tag=bitcoin&limit=50",
+  ];
 
-  for (const event of events) {
-    if (!event.markets || !Array.isArray(event.markets)) continue;
-
-    for (const market of event.markets) {
-      const title: string = market.question || event.title || "";
-      // Try to identify crypto price markets
-      const btcMatch = title.match(
-        /Bitcoin.*(?:above|hit|price).*\$?([\d,]+)/i,
-      );
-      const ethMatch = title.match(
-        /Ethereum.*(?:above|hit|price).*\$?([\d,]+)/i,
-      );
-      const solMatch = title.match(
-        /Solana.*(?:above|hit|price).*\$?([\d,]+)/i,
-      );
-
-      let targetToken: string | undefined;
-      let strikePrice: number | undefined;
-
-      if (btcMatch) {
-        targetToken = "BTC";
-        strikePrice = parseInt(btcMatch[1]!.replace(/,/g, ""), 10);
-      } else if (ethMatch) {
-        targetToken = "ETH";
-        strikePrice = parseInt(ethMatch[1]!.replace(/,/g, ""), 10);
-      } else if (solMatch) {
-        targetToken = "SOL";
-        strikePrice = parseInt(solMatch[1]!.replace(/,/g, ""), 10);
+  for (const url of marketQueries) {
+    try {
+      const res = await fetch(url, { signal: AbortSignal.timeout(15000) });
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data)) rawMarkets.push(...data);
       }
+    } catch {}
+  }
 
-      const outcomePrices = (
-        market.outcomePrices ? JSON.parse(market.outcomePrices) : []
-      ).map((p: string) => parseFloat(p));
+  for (const url of eventQueries) {
+    try {
+      const res = await fetch(url, { signal: AbortSignal.timeout(15000) });
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data)) rawEvents.push(...data);
+      }
+    } catch {}
+  }
 
-      markets.push({
-        title,
-        slug: market.conditionId || market.slug || "",
-        endDate: market.endDate || event.endDate || "",
-        volume: parseFloat(market.volume || "0"),
-        liquidity: parseFloat(market.liquidity || "0"),
-        outcomes:
-          outcomePrices.length >= 2
-            ? [
-                { label: "Yes", price: outcomePrices[0] || 0 },
-                { label: "No", price: outcomePrices[1] || 0 },
-              ]
-            : [],
-        targetToken,
-        strikePrice,
+  // Flatten: pull per-market entries out of events too and merge
+  const combined: Array<{ market: any; eventSlug: string; eventTitle: string }> = [];
+  for (const m of rawMarkets) {
+    const ev = Array.isArray(m.events) && m.events[0] ? m.events[0] : null;
+    combined.push({
+      market: m,
+      eventSlug: ev?.slug || m.slug || "",
+      eventTitle: ev?.title || "",
+    });
+  }
+  for (const event of rawEvents) {
+    if (!Array.isArray(event.markets)) continue;
+    for (const m of event.markets) {
+      combined.push({
+        market: m,
+        eventSlug: event.slug || "",
+        eventTitle: event.title || "",
       });
     }
   }
+
+  // Dedupe by conditionId
+  const byId = new Map<string, { market: any; eventSlug: string; eventTitle: string }>();
+  for (const entry of combined) {
+    const id = entry.market.conditionId || entry.market.id || entry.market.slug;
+    if (id && !byId.has(id)) byId.set(id, entry);
+  }
+  const uniqueEntries = [...byId.values()];
+  console.log(`  Fetched ${uniqueEntries.length} unique candidate markets\n`);
+
+  const markets: PolyMarket[] = [];
+
+  // Pattern: PRICE prediction markets only (BTC/ETH/SOL with strike or direction)
+  const TOKEN_PATTERNS: Array<{ re: RegExp; token: string }> = [
+    { re: /\b(bitcoin|btc)\b/i, token: "BTC" },
+    { re: /\b(ethereum|eth)\b/i, token: "ETH" },
+    { re: /\b(solana|sol)\b/i, token: "SOL" },
+  ];
+  const PRICE_KEYWORD_RE =
+    /\b(above|below|hit|reach|over|under|price|up or down|between|dip to)\b/i;
+
+  for (const { market, eventSlug } of uniqueEntries) {
+    const title: string = market.question || "";
+    if (!title) continue;
+
+    // Must mention BTC / ETH / SOL
+    let targetToken: string | undefined;
+    for (const { re, token } of TOKEN_PATTERNS) {
+      if (re.test(title)) {
+        targetToken = token;
+        break;
+      }
+    }
+    if (!targetToken) continue;
+
+    // Must look like a PRICE market, not a political/corporate event
+    if (!PRICE_KEYWORD_RE.test(title)) continue;
+
+    // Extract strike price from the title. Handles "$80,000", "$150k", "80K".
+    let strikePrice: number | undefined;
+    const priceMatch = title.match(/\$?\s*([\d,]+(?:\.\d+)?)\s*([KkMm])?/);
+    if (priceMatch && priceMatch[1]) {
+      let p = parseFloat(priceMatch[1].replace(/,/g, ""));
+      const suffix = (priceMatch[2] || "").toLowerCase();
+      if (suffix === "k") p *= 1_000;
+      else if (suffix === "m") p *= 1_000_000;
+      // Heuristic: BTC strikes are typically > $10k; treat bare small numbers
+      // with K-ish title hints as thousands.
+      if (targetToken === "BTC" && p < 1000 && /k/i.test(title)) p *= 1000;
+      if (p > 0) strikePrice = p;
+    }
+
+    const outcomePrices = (
+      market.outcomePrices ? JSON.parse(market.outcomePrices) : []
+    ).map((p: string) => parseFloat(p));
+
+    markets.push({
+      title,
+      // Use EVENT slug so Polymarket deep links resolve properly.
+      slug: eventSlug || market.slug || "",
+      endDate: market.endDate || "",
+      volume: parseFloat(market.volume || "0"),
+      liquidity: parseFloat(market.liquidity || "0"),
+      outcomes:
+        outcomePrices.length >= 2
+          ? [
+              { label: "Yes", price: outcomePrices[0] || 0 },
+              { label: "No", price: outcomePrices[1] || 0 },
+            ]
+          : [],
+      targetToken,
+      strikePrice,
+    });
+  }
+
+  // Sort by volume, highest first
+  markets.sort((a, b) => b.volume - a.volume);
 
   // For crypto price markets, use onchainos to estimate real probability
   console.log("[2/3] Computing on-chain edge for price markets...");
