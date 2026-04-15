@@ -6,16 +6,6 @@
  *   pnpm exec tsx scripts/poly-trade.ts
  */
 
-import { createRequire } from "node:module";
-import { pathToFileURL } from "node:url";
-
-// The clob-client + ethers are installed inside services/executor/node_modules.
-const executorRequire = createRequire(
-  pathToFileURL(
-    "/Users/Aincrad/Desktop/Cook_Proj/hackathon-united/OKX-hackathon-external/services/executor/node_modules/@polymarket/clob-client/package.json",
-  ).href,
-);
-
 // ── Wallet configuration ────────────────────────────────────────────────────
 const PRIVATE_KEY =
   "0x627a8ac708ab40f3c0cf0fec7dc5ade758d918d39be788c70871dadccd009fca";
@@ -46,11 +36,10 @@ async function main() {
   log("Funder address", FUNDER_ADDRESS);
 
   // Dynamic imports to avoid top-level await
-  const ethersPath = executorRequire.resolve("ethers");
-  const { Wallet } = await import(ethersPath);
-
-  const clobPath = executorRequire.resolve("@polymarket/clob-client");
-  const { ClobClient, Side, OrderType } = await import(clobPath);
+  const { Wallet } = await import("ethers");
+  const { ClobClient, Side, OrderType } = await import(
+    "@polymarket/clob-client"
+  );
 
   // Step 1: Create a signer from the private key
   log("Creating ethers Wallet signer...");
