@@ -363,7 +363,9 @@ export function ShowcaseExplainer() {
         maxWidth: 720,
       }}>
         <div style={{
+          fontFamily: "Inter, sans-serif",
           fontSize: 12,
+          fontWeight: 500,
           color: "var(--text-dim)",
           textTransform: "uppercase",
           letterSpacing: 2,
@@ -531,7 +533,7 @@ export function ShowcaseExplainer() {
           animationDelay: "0.45s",
         }}
       >
-        同时跟踪数十个市场 &middot; 每 60 秒重新评估 &middot; 7&times;24 不间断
+        同时跟踪数十个市场 &middot; 每 5 分钟重新评估 &middot; 7&times;24 不间断
       </p>
     </section>
   );

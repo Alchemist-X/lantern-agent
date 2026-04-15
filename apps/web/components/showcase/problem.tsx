@@ -85,8 +85,9 @@ export function ShowcaseProblem() {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: 24,
+          gridTemplateColumns: "1fr auto 1fr",
+          gap: 20,
+          alignItems: "stretch",
           marginBottom: 48,
         }}
       >
@@ -98,45 +99,74 @@ export function ShowcaseProblem() {
             border: "1px solid var(--bg-border)",
             borderRadius: 12,
             padding: 28,
-            opacity: inView ? undefined : 0,
+            opacity: inView ? 0.4 : 0,
             animationDelay: "0.2s",
+            filter: "grayscale(0.6)",
           }}
         >
+          {/* Confused human SVG */}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginBottom: 12,
+            }}
+          >
+            <svg
+              viewBox="0 0 80 100"
+              width="80"
+              height="100"
+              stroke="#888"
+              strokeWidth="2"
+              fill="none"
+            >
+              <text
+                x="40"
+                y="12"
+                textAnchor="middle"
+                fill="#888"
+                fontSize="16"
+                stroke="none"
+              >
+                ?
+              </text>
+              <circle cx="40" cy="28" r="10" />
+              <path d="M40 38 L40 65" />
+              <path d="M40 45 L25 60" />
+              <path d="M40 45 L55 60" />
+              <path d="M40 65 L30 90" />
+              <path d="M40 65 L50 90" />
+            </svg>
+          </div>
           <div
             style={{
               fontSize: 14,
               color: "var(--text-muted)",
               marginBottom: 20,
               fontWeight: 600,
+              textAlign: "center",
             }}
           >
             其他 Agent
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             {otherSteps.map((step, i) => (
-              <div key={step}>
-                <div
-                  style={{
-                    fontSize: 14,
-                    color: "var(--text-muted)",
-                    padding: "10px 0",
-                    animation: inView
-                      ? `stepReveal 0.4s ease-out ${0.3 + i * 0.1}s forwards`
-                      : undefined,
-                    opacity: inView ? 0 : 0,
-                  }}
-                >
-                  {step}
-                </div>
-                {i < otherSteps.length - 1 && (
-                  <div
-                    style={{
-                      borderLeft: "1px dashed var(--bg-border)",
-                      height: 16,
-                      marginLeft: 8,
-                    }}
-                  />
-                )}
+              <div
+                key={step}
+                style={{
+                  fontSize: 14,
+                  color: "var(--text-muted)",
+                  padding: "8px 12px",
+                  border: "1px dashed #484F58",
+                  borderRadius: 6,
+                  textAlign: "center",
+                  animation: inView
+                    ? `stepReveal 0.4s ease-out ${0.3 + i * 0.1}s forwards`
+                    : undefined,
+                  opacity: inView ? 0 : 0,
+                }}
+              >
+                {step}
               </div>
             ))}
           </div>
@@ -145,9 +175,33 @@ export function ShowcaseProblem() {
               fontSize: 12,
               color: "var(--text-dim)",
               marginTop: 16,
+              textAlign: "center",
             }}
           >
             4 步, 有人在回路
+          </div>
+        </div>
+
+        {/* VS divider */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "0 8px",
+          }}
+        >
+          <div
+            data-mono=""
+            style={{
+              fontSize: 28,
+              fontWeight: 700,
+              color: "var(--lantern-gold)",
+              letterSpacing: 2,
+              textShadow: "0 0 12px rgba(239,200,81,0.4)",
+            }}
+          >
+            VS
           </div>
         </div>
 
@@ -155,18 +209,61 @@ export function ShowcaseProblem() {
         <div
           className={inView ? "animate-slide-right" : ""}
           style={{
-            background: "var(--bg-dungeon)",
-            border: "1px solid rgba(239,200,81,0.25)",
+            background:
+              "radial-gradient(circle at 50% 0%, rgba(255,145,0,0.12), var(--bg-dungeon) 70%)",
+            border: "1px solid rgba(255,145,0,0.5)",
             borderRadius: 12,
             padding: 28,
             opacity: inView ? undefined : 0,
             animationDelay: "0.2s",
+            boxShadow:
+              "0 0 24px rgba(255,145,0,0.15), inset 0 0 20px rgba(255,145,0,0.05)",
           }}
         >
+          {/* Lantern agent SVG */}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginBottom: 12,
+            }}
+          >
+            <svg
+              viewBox="0 0 80 100"
+              width="80"
+              height="100"
+              stroke="#FF9100"
+              strokeWidth="2"
+              fill="none"
+            >
+              <rect x="30" y="10" width="20" height="26" rx="3" />
+              <circle cx="40" cy="22" r="4" fill="#FF9100" opacity="0.6" />
+              <path d="M40 6 L40 10" />
+              <path d="M40 36 L40 65" stroke="#FFF6E2" />
+              <path d="M40 45 L25 60" stroke="#FFF6E2" />
+              <path d="M40 45 L55 60" stroke="#FFF6E2" />
+              <path d="M40 65 L30 90" stroke="#FFF6E2" />
+              <path d="M40 65 L50 90" stroke="#FFF6E2" />
+              <rect
+                x="62"
+                y="18"
+                width="14"
+                height="10"
+                rx="1"
+                stroke="#EFC851"
+                opacity="0.7"
+              />
+              <path
+                d="M64 25 L67 22 L70 24 L74 20"
+                stroke="#EFC851"
+              />
+            </svg>
+          </div>
           <div
             style={{
               display: "flex",
               alignItems: "center",
+              justifyContent: "center",
               gap: 8,
               marginBottom: 20,
             }}
@@ -182,31 +279,26 @@ export function ShowcaseProblem() {
               Lantern Agent
             </span>
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             {lanternSteps.map((step, i) => (
-              <div key={step}>
-                <div
-                  style={{
-                    fontSize: 14,
-                    color: "var(--text-bright)",
-                    padding: "10px 0",
-                    animation: inView
-                      ? `stepReveal 0.4s ease-out ${0.3 + i * 0.1}s forwards`
-                      : undefined,
-                    opacity: inView ? 0 : 0,
-                  }}
-                >
-                  {step}
-                </div>
-                {i < lanternSteps.length - 1 && (
-                  <div
-                    style={{
-                      borderLeft: "2px solid var(--lantern-orange)",
-                      height: 16,
-                      marginLeft: 8,
-                    }}
-                  />
-                )}
+              <div
+                key={step}
+                style={{
+                  fontSize: 14,
+                  color: "var(--text-bright)",
+                  padding: "8px 12px",
+                  border: "1px solid var(--lantern-orange)",
+                  borderRadius: 6,
+                  textAlign: "center",
+                  boxShadow: "0 0 10px rgba(255,145,0,0.12)",
+                  background: "rgba(255,145,0,0.04)",
+                  animation: inView
+                    ? `stepReveal 0.4s ease-out ${0.3 + i * 0.1}s forwards`
+                    : undefined,
+                  opacity: inView ? 0 : 0,
+                }}
+              >
+                {step}
               </div>
             ))}
           </div>
@@ -216,6 +308,7 @@ export function ShowcaseProblem() {
               fontSize: 12,
               color: "var(--signal-green)",
               marginTop: 16,
+              textAlign: "center",
             }}
           >
             0 人工步骤

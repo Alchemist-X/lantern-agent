@@ -87,85 +87,68 @@ export default function ShowcasePage() {
         </div>
       </div>
 
-      {/* Navigation bar fixed at bottom */}
+      {/* Vertical dot indicators on right side */}
       <div
         style={{
           position: "fixed",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          padding: "16px 24px",
+          right: 24,
+          top: "50%",
+          transform: "translateY(-50%)",
           display: "flex",
-          justifyContent: "space-between",
+          flexDirection: "column",
+          gap: 14,
           alignItems: "center",
-          background: "linear-gradient(transparent, #0D1117)",
           zIndex: 100,
         }}
       >
-        <button
-          onClick={goPrev}
-          disabled={currentSlide === 0}
-          style={{
-            background: "none",
-            border: "1px solid #30363D",
-            color: currentSlide === 0 ? "#484F58" : "#E0E0E0",
-            padding: "8px 20px",
-            borderRadius: 8,
-            cursor: currentSlide === 0 ? "default" : "pointer",
-            fontFamily: "Inter, sans-serif",
-            fontSize: 14,
-          }}
-        >
-          &larr; 上一页
-        </button>
-
-        {/* Dot indicators */}
-        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-          {slides.map((_, i) => (
+        {slides.map((_, i) => {
+          const active = i === currentSlide;
+          return (
             <div
               key={String(i)}
               onClick={() => setCurrentSlide(i)}
               style={{
-                width: i === currentSlide ? 24 : 8,
-                height: 8,
-                borderRadius: 4,
-                background: i === currentSlide ? "#FF9100" : "#30363D",
+                width: active ? 12 : 6,
+                height: active ? 12 : 6,
+                borderRadius: "50%",
+                background: active ? "#FF9100" : "#30363D",
                 cursor: "pointer",
                 transition: "all 0.3s ease",
+                boxShadow: active ? "0 0 8px rgba(255,145,0,0.5)" : "none",
               }}
             />
-          ))}
-          <span
-            style={{
-              marginLeft: 12,
-              fontSize: 12,
-              color: "#484F58",
-              fontFamily: "JetBrains Mono, monospace",
-            }}
-          >
-            {currentSlide + 1} / {slides.length}
-          </span>
-        </div>
+          );
+        })}
+      </div>
 
-        <button
-          onClick={goNext}
-          disabled={currentSlide === totalSlides - 1}
+      {/* Scroll hint - only on first slide */}
+      {currentSlide === 0 && (
+        <div
           style={{
-            background:
-              currentSlide === totalSlides - 1 ? "none" : "#FF910020",
-            border: `1px solid ${currentSlide === totalSlides - 1 ? "#30363D" : "#FF910050"}`,
-            color: currentSlide === totalSlides - 1 ? "#484F58" : "#FF9100",
-            padding: "8px 20px",
-            borderRadius: 8,
-            cursor:
-              currentSlide === totalSlides - 1 ? "default" : "pointer",
+            position: "fixed",
+            right: 56,
+            bottom: 24,
+            fontSize: 12,
+            color: "#8B949E",
             fontFamily: "Inter, sans-serif",
-            fontSize: 14,
+            letterSpacing: 1,
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            zIndex: 100,
+            animation: "scrollHintPulse 2s ease-in-out infinite",
           }}
         >
-          下一页 &rarr;
-        </button>
-      </div>
+          <span>Press &rarr; to continue</span>
+        </div>
+      )}
+
+      <style>{`
+        @keyframes scrollHintPulse {
+          0%, 100% { opacity: 0.5; transform: translateX(0); }
+          50% { opacity: 1; transform: translateX(-4px); }
+        }
+      `}</style>
     </div>
   );
 }

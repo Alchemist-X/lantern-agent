@@ -72,7 +72,7 @@ export function ShowcaseArchitecture() {
           animationDelay: "0.1s",
         }}
       >
-        每 60 秒，完成一个完整循环
+        每 5 分钟，完成一个完整评估
       </p>
 
       {/* Cycle visualization */}
@@ -128,7 +128,7 @@ export function ShowcaseArchitecture() {
         ))}
       </div>
 
-      {/* Curved return arrow with "60 秒" label */}
+      {/* Curved return arrow with "300 秒" label */}
       <div
         className={inView ? "animate-in" : ""}
         style={{
@@ -164,7 +164,7 @@ export function ShowcaseArchitecture() {
               color: "var(--lantern-gold)",
             }}
           >
-            60 秒
+            300 秒
           </span>
           {/* Left arrow tip */}
           <span
@@ -236,7 +236,7 @@ export function ShowcaseArchitecture() {
           animationDelay: "0.45s",
         }}
       >
-        &#9889; X Layer &middot; 零 Gas &middot; 500+ DEX &middot; 60 秒循环
+        &#9889; X Layer &middot; 零 Gas &middot; 500+ DEX &middot; 5 分钟循环
       </p>
     </section>
   );
