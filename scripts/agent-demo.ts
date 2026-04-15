@@ -62,6 +62,9 @@ function pct(n: number): string {
   return `${(n * 100).toFixed(1)}%`;
 }
 
+/** Hours in a calendar year — used to annualize time-to-expiry for Black-Scholes. */
+const HOURS_PER_YEAR = 8760;
+
 /** Approximate standard normal CDF (Abramowitz & Stegun). */
 function normalCdf(x: number): number {
   const a1 = 0.254829592;
@@ -414,31 +417,50 @@ async function scanPolymarkets(): Promise<PolyMarket[]> {
 
     if (currentPrice <= 0 || !m.strikePrice) continue;
 
-    // Simple probability estimate: how far is current price from strike?
-    // Use a simplified model (distance + momentum)
+    // Distance (strike relative to current price) — used for signals display
     const distance = (m.strikePrice - currentPrice) / currentPrice;
 
     // Calculate hours to expiry
     const endMs = new Date(m.endDate).getTime();
     const hoursToExpiry = Math.max(1, (endMs - Date.now()) / (1000 * 3600));
 
-    // Very rough probability using distance and time
-    // For "above" markets: closer to strike + more time = higher prob
-    const normalizedDistance =
-      distance / (0.01 * Math.sqrt(hoursToExpiry / 24)); // scale by sqrt(time)
-    const baseProb = 1 - normalCdf(normalizedDistance * 2); // simplified
+    // --- Black-Scholes probability model ---
+    // Risk-neutral drift = 0 (no directional bias from Lantern here);
+    // realistic BTC annualized volatility ~60-70%.
+    const ANNUALIZED_VOLATILITY = 0.65;
+    const T = hoursToExpiry / HOURS_PER_YEAR;
+    const sqrtT = Math.sqrt(T);
+    const vol = ANNUALIZED_VOLATILITY * sqrtT;
+
+    let probAbove: number;
+    if (vol < 1e-10) {
+      probAbove = currentPrice > m.strikePrice ? 1 : 0;
+    } else {
+      const d2 =
+        (Math.log(currentPrice / m.strikePrice) -
+          0.5 * ANNUALIZED_VOLATILITY * ANNUALIZED_VOLATILITY * T) /
+        vol;
+      probAbove = normalCdf(d2);
+    }
+
+    // "Reach X / hit X / above X / over X" markets = P(price > strike)
+    // "Dip to X / below X / under X" markets = P(price < strike) = 1 - P(price > strike)
+    const isBelowMarket = /dip|below|under/i.test(m.title);
+    const baseProb = isBelowMarket ? 1 - probAbove : probAbove;
 
     const marketProb = m.outcomes[0]?.price ?? 0.5;
-    const edge = baseProb - marketProb;
+    // For now the Lantern edge = BS prob itself (no directional overlay yet).
+    const ourProb = baseProb;
+    const edge = ourProb - marketProb;
 
     m.onchainsEdge = {
-      ourProbability: baseProb,
+      ourProbability: ourProb,
       marketProbability: marketProb,
       edge,
       signals: [
         `Current ${m.targetToken} price: $${currentPrice.toLocaleString()}`,
         `Strike: $${m.strikePrice.toLocaleString()} (${distance > 0 ? "+" : ""}${(distance * 100).toFixed(1)}% away)`,
-        `Time to expiry: ${hoursToExpiry.toFixed(0)}h`,
+        `Time to expiry: ${hoursToExpiry.toFixed(0)}h (σ=${(ANNUALIZED_VOLATILITY * 100).toFixed(0)}% ann.)`,
       ],
     };
   }
