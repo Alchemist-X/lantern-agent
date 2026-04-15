@@ -166,29 +166,29 @@ const RELATED_MARKETS: readonly PolymarketEntry[] = [
   },
 ] as const;
 
-// Real Polymarket trade — MicroStrategy sells any BTC by Dec 31 2026
-// Polymarket BTC price race — $60k vs $80k first.
-// BTC currently ~$75,044 via onchainos, +4.62% in 24h: 20% cushion above $60k, only 6.6% from $80k.
-// Market gives 67% to $80k; our on-chain edge (momentum + asymmetric distance) pushes us to 76%.
+// Polymarket focus — "Will Bitcoin reach $80,000 in April?"
+// Real fresh-trace data from demo pipeline (Black-Scholes model, σ=65%, 年化波动率):
+//   BTC 当前 ~$73,792 · Strike $80,000 (+8.4% 距离) · 剩余 ~16 天
+//   市场隐含 Yes 价格 = 27.5% · BS 模型 Yes 概率 = 21.7% · Edge = -5.8%
+//   Edge 为负意味着市场在高估 "Yes" 方 → Lantern 的信号是回避/反向。
 const FOCUS_MARKET = {
-  question: "Will Bitcoin hit $60k or $80k first?",
-  marketYesPrice: 0.67, // 67% market implied for $80k side
-  lanternProbability: 0.76, // 76% Lantern probability for $80k side
-  edge: 0.09, // +9.0%
-  side: "$80k" as const,
+  question: "Will Bitcoin reach $80,000 in April?",
+  marketYesPrice: 0.275,         // 27.5% — fresh Polymarket Yes price
+  lanternProbability: 0.217,     // 21.7% — Black-Scholes implied prob
+  edge: -0.058,                  // -5.8% — BS 比市场低, 市场高估 Yes
+  side: "Yes" as const,
   signals: [
-    { label: "BTC 当前价格", value: "$75,044 (距 $80k 仅 +6.6%)", tone: "pos" as const },
-    { label: "24h 价格动量", value: "+4.62% ($71.7k → $75.0k)", tone: "pos" as const },
-    { label: "距 $60k 下沿", value: "-20.05% 缓冲", tone: "pos" as const },
-    { label: "DEX 近 12h 成交量", value: "-26% (回落)", tone: "neg" as const },
+    { label: "BTC 当前价格", value: "$73,792 (距 $80k +8.4%)", tone: "pos" as const },
+    { label: "年化波动率", value: "65% (BS 模型)", tone: "neutral" as const },
+    { label: "剩余交易日", value: "16 天 (至 4/29 到期)", tone: "neutral" as const },
+    { label: "BS vs 市场价", value: "21.7% vs 27.5% (市场高估)", tone: "neg" as const },
   ],
   polymarketUrl:
-    "https://polymarket.com/event/will-bitcoin-hit-60k-or-80k-first-965",
-  sharesBought: 1.49, // $1.00 / $0.67 ≈ 1.49 股 "$80k"
-  usdcSpent: 1.0,
-  // Real Polygon tx retained as demo reference (ongoing trade execution proof)
-  txHash:
-    "0x23872647d57ac1165a503fd1d954f14d618d895068e3aa339762c30615f3f490",
+    "https://polymarket.com/event/what-price-will-bitcoin-hit-in-april-2026",
+  // 该市场为演示, 未实际执行交易
+  sharesBought: 0,
+  usdcSpent: 0,
+  txHash: "", // 本焦点市场未执行交易 (演示数据)
 } as const;
 
 function buildPolymarketUrl(market: PolymarketEntry): string {
@@ -340,6 +340,10 @@ function FocusMarketCard() {
   const marketPct = (m.marketYesPrice * 100).toFixed(1);
   const lanternPct = (m.lanternProbability * 100).toFixed(1);
   const edgePct = (m.edge * 100).toFixed(1);
+  const edgeSign = m.edge >= 0 ? "+" : "";
+  const edgeColor =
+    m.edge >= 0 ? "var(--lantern-gold)" : "var(--danger-red)";
+  const executed = (m.sharesBought as number) > 0 && (m.txHash as string).length > 0;
 
   // Marker positions on a 0..100% probability axis for visual clarity
   const AXIS_MAX = 1.0;
@@ -379,20 +383,22 @@ function FocusMarketCard() {
             borderRadius: 4,
           }}
         >
-          焦点市场 · 已交易
+          焦点市场 · BS 模型分析
         </span>
         <span
           style={{
             fontSize: 11,
             fontWeight: 600,
-            color: "var(--signal-green)",
+            color: executed ? "var(--signal-green)" : "var(--text-muted)",
             padding: "3px 10px",
-            background: "rgba(42,157,143,0.1)",
+            background: executed
+              ? "rgba(42,157,143,0.1)"
+              : "rgba(139,148,158,0.08)",
             borderRadius: 4,
             fontFamily: "JetBrains Mono, monospace",
           }}
         >
-          ✅ 已成交
+          {executed ? "✅ 已成交" : "⚙︎ 未执行 · 演示数据"}
         </span>
       </div>
 
@@ -526,12 +532,17 @@ function FocusMarketCard() {
             marginTop: 18,
             fontSize: 14,
             fontWeight: 700,
-            color: "var(--lantern-gold)",
+            color: edgeColor,
             fontFamily: "JetBrains Mono, monospace",
             textAlign: "center",
           }}
         >
-          Edge: +{edgePct}%
+          Edge: {edgeSign}{edgePct}%
+          <span style={{ fontSize: 11, color: "var(--text-muted)", marginLeft: 8, fontWeight: 500 }}>
+            {m.edge >= 0
+              ? "(BS 概率高于市场 → 买入 Yes)"
+              : "(BS 概率低于市场 → 回避 Yes / 买入 No)"}
+          </span>
         </div>
       </div>
 
@@ -575,7 +586,9 @@ function FocusMarketCard() {
                   color:
                     s.tone === "pos"
                       ? "var(--signal-green)"
-                      : "var(--danger-red)",
+                      : s.tone === "neg"
+                      ? "var(--danger-red)"
+                      : "var(--text-main)",
                 }}
               >
                 {s.value}
@@ -585,7 +598,7 @@ function FocusMarketCard() {
         </div>
       </div>
 
-      {/* Execution */}
+      {/* Execution / Status */}
       <div
         style={{
           display: "flex",
@@ -595,10 +608,21 @@ function FocusMarketCard() {
         }}
       >
         <div style={{ color: "var(--text-muted)" }}>
-          执行:{" "}
-          <span style={{ color: "var(--text-bright)", fontWeight: 600 }}>
-            买入 {m.sharesBought} 股 "{m.side}" · ${m.usdcSpent.toFixed(2)} USDC
-          </span>
+          {executed ? (
+            <>
+              执行:{" "}
+              <span style={{ color: "var(--text-bright)", fontWeight: 600 }}>
+                买入 {m.sharesBought} 股 &quot;{m.side}&quot; · ${m.usdcSpent.toFixed(2)} USDC
+              </span>
+            </>
+          ) : (
+            <>
+              状态:{" "}
+              <span style={{ color: "var(--text-bright)", fontWeight: 600 }}>
+                未执行 (演示数据) · Lantern 的 BS 模型表明市场在高估 &quot;{m.side}&quot;, 回避本笔交易
+              </span>
+            </>
+          )}
         </div>
         <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
           <a
@@ -628,34 +652,36 @@ function FocusMarketCard() {
           >
             View on Polymarket ↗
           </a>
-          <a
-            href={`https://polygonscan.com/tx/${m.txHash}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 4,
-              padding: "6px 12px",
-              background: "rgba(42,157,143,0.08)",
-              border: "1px solid rgba(42,157,143,0.3)",
-              borderRadius: 6,
-              color: "var(--signal-green)",
-              fontFamily: "JetBrains Mono, monospace",
-              fontSize: 12,
-              fontWeight: 600,
-              textDecoration: "none",
-              transition: "background 0.2s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "rgba(42,157,143,0.16)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "rgba(42,157,143,0.08)";
-            }}
-          >
-            TxHash: {m.txHash.slice(0, 10)}...{m.txHash.slice(-6)} ↗
-          </a>
+          {executed && (
+            <a
+              href={`https://polygonscan.com/tx/${m.txHash}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 4,
+                padding: "6px 12px",
+                background: "rgba(42,157,143,0.08)",
+                border: "1px solid rgba(42,157,143,0.3)",
+                borderRadius: 6,
+                color: "var(--signal-green)",
+                fontFamily: "JetBrains Mono, monospace",
+                fontSize: 12,
+                fontWeight: 600,
+                textDecoration: "none",
+                transition: "background 0.2s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "rgba(42,157,143,0.16)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "rgba(42,157,143,0.08)";
+              }}
+            >
+              TxHash: {m.txHash.slice(0, 10)}...{m.txHash.slice(-6)} ↗
+            </a>
+          )}
         </div>
       </div>
     </div>

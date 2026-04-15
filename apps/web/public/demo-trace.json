@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-15T04:02:05.115Z",
+  "timestamp": "2026-04-15T05:51:04.831Z",
   "cycle": "demo",
   "scan": {
     "chain": "X Layer (196)",
@@ -10,77 +10,157 @@
     {
       "symbol": "XDOG",
       "address": "0x0cc24c51bf89c00c5affbfcf5e856c25ecbdb48e",
-      "price": 0.004111669763077744,
-      "change24h": -2.05,
-      "liquidity": 493132.5457225672,
-      "marketCap": 4102530.2784960954,
-      "holders": 35606,
+      "price": 0.004143615193919342,
+      "change24h": 0,
+      "liquidity": 495457.10395268945,
+      "marketCap": 4134404.700528753,
+      "holders": 35609,
       "riskLevel": 1,
       "smartMoneyBuying": false,
       "signalWalletCount": 0,
-      "signalStrength": 0.4117647058823529,
+      "signalStrength": 0.5,
       "recommendation": "SKIP",
-      "skipReason": "Signal strength 41.2% below threshold (55%)",
+      "skipReason": "Signal strength 50.0% below threshold (55%)",
+      "probabilityTrace": []
+    },
+    {
+      "symbol": "DOGSHIT",
+      "address": "0x70bf3e2b75d8832d7f790a87fffc1fa9d63dc5bb",
+      "price": 0.00007655406054290976,
+      "change24h": 0.49,
+      "liquidity": 981192.0357686647,
+      "marketCap": 4220632.36342208,
+      "holders": 32578,
+      "riskLevel": 2,
+      "smartMoneyBuying": false,
+      "signalWalletCount": 0,
+      "signalStrength": 0.6766892984157776,
+      "recommendation": "BUY",
+      "probabilityTrace": [
+        {
+          "name": "price_momentum",
+          "direction": "bullish",
+          "likelihoodRatio": 1.3,
+          "description": "24h price change: 49.0%",
+          "probBefore": 0.5,
+          "probAfter": 0.5652173913043479
+        },
+        {
+          "name": "buy_sell_ratio",
+          "direction": "bullish",
+          "likelihoodRatio": 1.4,
+          "description": "Buy/Sell: 15/6 (71% buys)",
+          "probBefore": 0.5652173913043479,
+          "probAfter": 0.6453900709219859
+        },
+        {
+          "name": "positive_inflow",
+          "direction": "bullish",
+          "likelihoodRatio": 1.15,
+          "description": "Positive inflow: $59,625.67 volume with price increase",
+          "probBefore": 0.6453900709219859,
+          "probAfter": 0.6766892984157776
+        }
+      ]
+    },
+    {
+      "symbol": "FDOG",
+      "address": "0x5839244eab49314bccc0fa76e3a081cb1a461111",
+      "price": 0.00016069723045338417,
+      "change24h": -0.05,
+      "liquidity": 62499.122157208396,
+      "marketCap": 160536.53322293077,
+      "holders": 10802,
+      "riskLevel": 1,
+      "smartMoneyBuying": true,
+      "signalWalletCount": 3,
+      "signalStrength": 0.6175908221797322,
+      "recommendation": "BUY",
       "probabilityTrace": [
         {
           "name": "price_momentum",
           "direction": "bearish",
-          "likelihoodRatio": 0.7,
-          "description": "24h price change: -205.0%",
+          "likelihoodRatio": 0.85,
+          "description": "24h price change: -5.0%",
           "probBefore": 0.5,
-          "probAfter": 0.4117647058823529
+          "probAfter": 0.45945945945945943
+        },
+        {
+          "name": "smart_money_consensus",
+          "direction": "bullish",
+          "likelihoodRatio": 1.9,
+          "description": "3 smart money wallets buying, $404.31 total",
+          "probBefore": 0.45945945945945943,
+          "probAfter": 0.6175908221797322
         }
       ]
     },
     {
       "symbol": "NIUMA",
       "address": "0x87669801a1fad6dad9db70d27ac752f452989667",
-      "price": 0.0009632368703353705,
-      "change24h": 0.32,
-      "liquidity": 129119.55685221721,
-      "marketCap": 937465.2284837363,
-      "holders": 88102,
+      "price": 0.0009694444818706961,
+      "change24h": -0.04,
+      "liquidity": 129626.49741809706,
+      "marketCap": 943506.7538297045,
+      "holders": 88104,
       "riskLevel": 1,
       "smartMoneyBuying": false,
       "signalWalletCount": 0,
-      "signalStrength": 0.5446265938069217,
+      "signalStrength": 0.45945945945945943,
       "recommendation": "SKIP",
-      "skipReason": "Signal strength 54.5% below threshold (55%)",
+      "skipReason": "Signal strength 45.9% below threshold (55%)",
       "probabilityTrace": [
         {
           "name": "price_momentum",
-          "direction": "bullish",
-          "likelihoodRatio": 1.3,
-          "description": "24h price change: 32.0%",
+          "direction": "bearish",
+          "likelihoodRatio": 0.85,
+          "description": "24h price change: -4.0%",
           "probBefore": 0.5,
-          "probAfter": 0.5652173913043479
+          "probAfter": 0.45945945945945943
+        }
+      ]
+    },
+    {
+      "symbol": "欧易人生",
+      "address": "0x00880ec7de7397e4e25ad5fbd69d97db91e90372",
+      "price": 0.0004007282330171655,
+      "change24h": -2.8,
+      "liquidity": 59364.94339687733,
+      "marketCap": 400728.2330171655,
+      "holders": 3149,
+      "riskLevel": 1,
+      "smartMoneyBuying": false,
+      "signalWalletCount": 0,
+      "signalStrength": 0.3589743589743589,
+      "recommendation": "SKIP",
+      "skipReason": "Signal strength 35.9% below threshold (55%)",
+      "probabilityTrace": [
+        {
+          "name": "price_momentum",
+          "direction": "bearish",
+          "likelihoodRatio": 0.7,
+          "description": "24h price change: -280.0%",
+          "probBefore": 0.5,
+          "probAfter": 0.4117647058823529
         },
         {
           "name": "buy_sell_ratio",
           "direction": "bearish",
           "likelihoodRatio": 0.8,
           "description": "Buy/Sell: 2/4 (33% buys)",
-          "probBefore": 0.5652173913043479,
-          "probAfter": 0.5098039215686275
-        },
-        {
-          "name": "positive_inflow",
-          "direction": "bullish",
-          "likelihoodRatio": 1.15,
-          "description": "Positive inflow: $7,815.75 volume with price increase",
-          "probBefore": 0.5098039215686275,
-          "probAfter": 0.5446265938069217
+          "probBefore": 0.4117647058823529,
+          "probAfter": 0.3589743589743589
         }
       ]
     },
     {
-      "symbol": "DOGSHIT",
-      "address": "0x70bf3e2b75d8832d7f790a87fffc1fa9d63dc5bb",
-      "price": 0.00007770993069171509,
+      "symbol": "OEOE",
+      "address": "0x4c225fb675c0c475b53381463782a7f741d59763",
+      "price": 0.000029450927501177,
       "change24h": -0.38,
-      "liquidity": 988577.2889618466,
-      "marketCap": 4247852.118844644,
-      "holders": 32574,
+      "liquidity": 309586.9174695391,
+      "marketCap": 2801578.1991684763,
+      "holders": 12648,
       "riskLevel": 2,
       "smartMoneyBuying": false,
       "signalWalletCount": 0,
@@ -100,133 +180,20 @@
           "name": "buy_sell_ratio",
           "direction": "bullish",
           "likelihoodRatio": 1.4,
-          "description": "Buy/Sell: 10/4 (71% buys)",
+          "description": "Buy/Sell: 18/0 (100% buys)",
           "probBefore": 0.4117647058823529,
           "probAfter": 0.494949494949495
         }
       ]
     },
     {
-      "symbol": "FDOG",
-      "address": "0x5839244eab49314bccc0fa76e3a081cb1a461111",
-      "price": 0.0001579959145000055,
-      "change24h": 7.13,
-      "liquidity": 61932.906741241284,
-      "marketCap": 157837.91858550548,
-      "holders": 10802,
-      "riskLevel": 1,
-      "smartMoneyBuying": true,
-      "signalWalletCount": 3,
-      "signalStrength": 0.7990636365463056,
-      "recommendation": "BUY",
-      "probabilityTrace": [
-        {
-          "name": "price_momentum",
-          "direction": "bullish",
-          "likelihoodRatio": 1.3,
-          "description": "24h price change: 713.0%",
-          "probBefore": 0.5,
-          "probAfter": 0.5652173913043479
-        },
-        {
-          "name": "buy_sell_ratio",
-          "direction": "bullish",
-          "likelihoodRatio": 1.4,
-          "description": "Buy/Sell: 23/9 (72% buys)",
-          "probBefore": 0.5652173913043479,
-          "probAfter": 0.6453900709219859
-        },
-        {
-          "name": "smart_money_consensus",
-          "direction": "bullish",
-          "likelihoodRatio": 1.9,
-          "description": "3 smart money wallets buying, $404.31 total",
-          "probBefore": 0.6453900709219859,
-          "probAfter": 0.775684163301929
-        },
-        {
-          "name": "positive_inflow",
-          "direction": "bullish",
-          "likelihoodRatio": 1.15,
-          "description": "Positive inflow: $175,098.34 volume with price increase",
-          "probBefore": 0.775684163301929,
-          "probAfter": 0.7990636365463056
-        }
-      ]
-    },
-    {
-      "symbol": "欧易人生",
-      "address": "0x00880ec7de7397e4e25ad5fbd69d97db91e90372",
-      "price": 0.00044089873560688645,
-      "change24h": 6.29,
-      "liquidity": 60394.09643660704,
-      "marketCap": 440898.73560688645,
-      "holders": 3154,
-      "riskLevel": 1,
-      "smartMoneyBuying": false,
-      "signalWalletCount": 0,
-      "signalStrength": 0.5991983967935871,
-      "recommendation": "BUY",
-      "probabilityTrace": [
-        {
-          "name": "price_momentum",
-          "direction": "bullish",
-          "likelihoodRatio": 1.3,
-          "description": "24h price change: 629.0%",
-          "probBefore": 0.5,
-          "probAfter": 0.5652173913043479
-        },
-        {
-          "name": "positive_inflow",
-          "direction": "bullish",
-          "likelihoodRatio": 1.15,
-          "description": "Positive inflow: $12,190.53 volume with price increase",
-          "probBefore": 0.5652173913043479,
-          "probAfter": 0.5991983967935871
-        }
-      ]
-    },
-    {
-      "symbol": "OEOE",
-      "address": "0x4c225fb675c0c475b53381463782a7f741d59763",
-      "price": 0.000029591280859868,
-      "change24h": -0.37,
-      "liquidity": 310343.77483804204,
-      "marketCap": 2814930.1128670033,
-      "holders": 12648,
-      "riskLevel": 2,
-      "smartMoneyBuying": false,
-      "signalWalletCount": 0,
-      "signalStrength": 0.494949494949495,
-      "recommendation": "SKIP",
-      "skipReason": "Signal strength 49.5% below threshold (55%)",
-      "probabilityTrace": [
-        {
-          "name": "price_momentum",
-          "direction": "bearish",
-          "likelihoodRatio": 0.7,
-          "description": "24h price change: -37.0%",
-          "probBefore": 0.5,
-          "probAfter": 0.4117647058823529
-        },
-        {
-          "name": "buy_sell_ratio",
-          "direction": "bullish",
-          "likelihoodRatio": 1.4,
-          "description": "Buy/Sell: 20/6 (77% buys)",
-          "probBefore": 0.4117647058823529,
-          "probAfter": 0.494949494949495
-        }
-      ]
-    },
-    {
-      "symbol": "SEED",
-      "address": "0x375da15dacce7a2a4f8075b5e39b8c2018057777",
-      "price": 0.001825402185818921,
-      "change24h": 0.71,
-      "liquidity": 107735.61073424121,
-      "marketCap": 1455079.108081417,
-      "holders": 6221,
+      "symbol": "AI",
+      "address": "0x256a55efa042a5e230078df730ffba53f5a77777",
+      "price": 0.000047027419195374,
+      "change24h": 1.72,
+      "liquidity": 15278.228528359256,
+      "marketCap": 46672.66515458668,
+      "holders": 1089,
       "riskLevel": 2,
       "smartMoneyBuying": false,
       "signalWalletCount": 0,
@@ -237,68 +204,53 @@
           "name": "price_momentum",
           "direction": "bullish",
           "likelihoodRatio": 1.3,
-          "description": "24h price change: 71.0%",
+          "description": "24h price change: 172.0%",
           "probBefore": 0.5,
           "probAfter": 0.5652173913043479
         }
       ]
     },
     {
-      "symbol": "AI",
-      "address": "0x256a55efa042a5e230078df730ffba53f5a77777",
-      "price": 0.000046030307108047,
-      "change24h": 0,
-      "liquidity": 15119.34023034082,
-      "marketCap": 45683.07483962449,
-      "holders": 1085,
+      "symbol": "SEED",
+      "address": "0x375da15dacce7a2a4f8075b5e39b8c2018057777",
+      "price": 0.001638241740482228,
+      "change24h": -8.19,
+      "liquidity": 101877.68143063848,
+      "marketCap": 1305888.285377071,
+      "holders": 6221,
       "riskLevel": 2,
       "smartMoneyBuying": false,
       "signalWalletCount": 0,
-      "signalStrength": 0.5,
+      "signalStrength": 0.45652173913043476,
       "recommendation": "SKIP",
-      "skipReason": "Signal strength 50.0% below threshold (55%)",
-      "probabilityTrace": []
-    },
-    {
-      "symbol": "DOG",
-      "address": "0x903358faf7c6304afbd560e9e29b12ab1b8fddc5",
-      "price": 0.000011592429430573,
-      "change24h": 1.94,
-      "liquidity": 80861.95045503194,
-      "marketCap": 539759.5588987838,
-      "holders": 10287,
-      "riskLevel": 2,
-      "smartMoneyBuying": false,
-      "signalWalletCount": 0,
-      "signalStrength": 0.6093750000000001,
-      "recommendation": "BUY",
+      "skipReason": "Signal strength 45.7% below threshold (55%)",
       "probabilityTrace": [
         {
           "name": "price_momentum",
-          "direction": "bullish",
-          "likelihoodRatio": 1.3,
-          "description": "24h price change: 194.0%",
+          "direction": "bearish",
+          "likelihoodRatio": 0.7,
+          "description": "24h price change: -819.0%",
           "probBefore": 0.5,
-          "probAfter": 0.5652173913043479
+          "probAfter": 0.4117647058823529
         },
         {
           "name": "buy_sell_ratio",
           "direction": "bullish",
           "likelihoodRatio": 1.2,
-          "description": "Buy/Sell: 7/3 (70% buys)",
-          "probBefore": 0.5652173913043479,
-          "probAfter": 0.6093750000000001
+          "description": "Buy/Sell: 5/3 (63% buys)",
+          "probBefore": 0.4117647058823529,
+          "probAfter": 0.45652173913043476
         }
       ]
     },
     {
       "symbol": "Xwizard",
       "address": "0xdcc83b32b6b4e95a61951bfcc9d71967515c0fca",
-      "price": 0.000116154421305683,
-      "change24h": -3.29,
-      "liquidity": 36488.57312635032,
-      "marketCap": 115689.22307783343,
-      "holders": 12944,
+      "price": 0.000118220009707797,
+      "change24h": -1.48,
+      "liquidity": 36855.406543299665,
+      "marketCap": 117746.53880247822,
+      "holders": 12941,
       "riskLevel": 1,
       "smartMoneyBuying": false,
       "signalWalletCount": 0,
@@ -310,21 +262,145 @@
           "name": "price_momentum",
           "direction": "bearish",
           "likelihoodRatio": 0.7,
-          "description": "24h price change: -329.0%",
+          "description": "24h price change: -148.0%",
           "probBefore": 0.5,
           "probAfter": 0.4117647058823529
         }
       ]
     },
     {
+      "symbol": "OKAY",
+      "address": "0x8854b281cdf5940ebd4a753f8d37f49775058e03",
+      "price": 0.000118653883286779,
+      "change24h": 0,
+      "liquidity": 27394.027407880185,
+      "marketCap": 118653.87333804864,
+      "holders": 9498,
+      "riskLevel": 2,
+      "smartMoneyBuying": false,
+      "signalWalletCount": 0,
+      "signalStrength": 0.4117647058823529,
+      "recommendation": "SKIP",
+      "skipReason": "Signal strength 41.2% below threshold (55%)",
+      "probabilityTrace": [
+        {
+          "name": "high_concentration",
+          "direction": "bearish",
+          "likelihoodRatio": 0.7,
+          "description": "Top 10 holders own 45.6% of supply",
+          "probBefore": 0.5,
+          "probAfter": 0.4117647058823529
+        }
+      ]
+    },
+    {
+      "symbol": "X Chat",
+      "address": "0x59ee065af1887a0a283d399d32a02cd098ed8f5e",
+      "price": 0.000002855973676185,
+      "change24h": 0,
+      "liquidity": 5308.755097874138,
+      "marketCap": 2855.9736761849654,
+      "holders": 8,
+      "riskLevel": 2,
+      "smartMoneyBuying": false,
+      "signalWalletCount": 0,
+      "signalStrength": 0.5,
+      "recommendation": "SKIP",
+      "skipReason": "Signal strength 50.0% below threshold (55%)",
+      "probabilityTrace": []
+    },
+    {
+      "symbol": "DOG",
+      "address": "0x903358faf7c6304afbd560e9e29b12ab1b8fddc5",
+      "price": 0.000011596109182877,
+      "change24h": -0.29,
+      "liquidity": 81033.00763126502,
+      "marketCap": 539928.865364306,
+      "holders": 10286,
+      "riskLevel": 2,
+      "smartMoneyBuying": false,
+      "signalWalletCount": 0,
+      "signalStrength": 0.45652173913043476,
+      "recommendation": "SKIP",
+      "skipReason": "Signal strength 45.7% below threshold (55%)",
+      "probabilityTrace": [
+        {
+          "name": "price_momentum",
+          "direction": "bearish",
+          "likelihoodRatio": 0.7,
+          "description": "24h price change: -29.0%",
+          "probBefore": 0.5,
+          "probAfter": 0.4117647058823529
+        },
+        {
+          "name": "buy_sell_ratio",
+          "direction": "bullish",
+          "likelihoodRatio": 1.2,
+          "description": "Buy/Sell: 9/5 (64% buys)",
+          "probBefore": 0.4117647058823529,
+          "probAfter": 0.45652173913043476
+        }
+      ]
+    },
+    {
       "symbol": "MAS",
       "address": "0xa49e20536132223d412b656dc3dfbf98303b1111",
-      "price": 0.000557799086662557,
-      "change24h": -0.62,
-      "liquidity": 58368.35628682507,
-      "marketCap": 549496.3886908807,
-      "holders": 4840,
+      "price": 0.000555188941930094,
+      "change24h": -1.1,
+      "liquidity": 58313.71935824013,
+      "marketCap": 546925.0953009421,
+      "holders": 4839,
       "riskLevel": 1,
+      "smartMoneyBuying": false,
+      "signalWalletCount": 0,
+      "signalStrength": 0.4117647058823529,
+      "recommendation": "SKIP",
+      "skipReason": "Signal strength 41.2% below threshold (55%)",
+      "probabilityTrace": [
+        {
+          "name": "price_momentum",
+          "direction": "bearish",
+          "likelihoodRatio": 0.7,
+          "description": "24h price change: -110.0%",
+          "probBefore": 0.5,
+          "probAfter": 0.4117647058823529
+        }
+      ]
+    },
+    {
+      "symbol": "X Chat",
+      "address": "0x4d55e22b27ef892bfa057a533332fb98eff06dd1",
+      "price": 0.000003050178289555,
+      "change24h": -9.86,
+      "liquidity": 5759.84567834534,
+      "marketCap": 3050.178289555333,
+      "holders": 15,
+      "riskLevel": 2,
+      "smartMoneyBuying": false,
+      "signalWalletCount": 0,
+      "signalStrength": 0.4117647058823529,
+      "recommendation": "SKIP",
+      "skipReason": "Signal strength 41.2% below threshold (55%)",
+      "probabilityTrace": [
+        {
+          "name": "price_momentum",
+          "direction": "bearish",
+          "likelihoodRatio": 0.7,
+          "description": "24h price change: -986.0%",
+          "probBefore": 0.5,
+          "probAfter": 0.4117647058823529
+        }
+      ]
+    },
+    {
+      "symbol": "TITAN",
+      "address": "0xfdc4a45a4bf53957b2c73b1ff323d8cbe39118dd",
+      "price": 2.703770405008681,
+      "change24h": -1.36,
+      "liquidity": 489412.12903336046,
+      "marketCap": 53774012.85311618,
+      "holders": 13601,
+      "riskLevel": 2,
       "smartMoneyBuying": false,
       "signalWalletCount": 0,
       "signalStrength": 0.3589743589743589,
@@ -335,7 +411,7 @@
           "name": "price_momentum",
           "direction": "bearish",
           "likelihoodRatio": 0.7,
-          "description": "24h price change: -62.0%",
+          "description": "24h price change: -136.0%",
           "probBefore": 0.5,
           "probAfter": 0.4117647058823529
         },
@@ -343,193 +419,112 @@
           "name": "buy_sell_ratio",
           "direction": "bearish",
           "likelihoodRatio": 0.8,
-          "description": "Buy/Sell: 2/4 (33% buys)",
+          "description": "Buy/Sell: 13/20 (39% buys)",
           "probBefore": 0.4117647058823529,
           "probAfter": 0.3589743589743589
         }
       ]
-    },
-    {
-      "symbol": "OKAY",
-      "address": "0x8854b281cdf5940ebd4a753f8d37f49775058e03",
-      "price": 0.000109630100158685,
-      "change24h": -7.56,
-      "liquidity": 27098.844827202633,
-      "marketCap": 109630.09096656796,
-      "holders": 9498,
-      "riskLevel": 2,
-      "smartMoneyBuying": false,
-      "signalWalletCount": 0,
-      "signalStrength": 0.32885906040268453,
-      "recommendation": "SKIP",
-      "skipReason": "Signal strength 32.9% below threshold (55%)",
-      "probabilityTrace": [
-        {
-          "name": "price_momentum",
-          "direction": "bearish",
-          "likelihoodRatio": 0.7,
-          "description": "24h price change: -756.0%",
-          "probBefore": 0.5,
-          "probAfter": 0.4117647058823529
-        },
-        {
-          "name": "high_concentration",
-          "direction": "bearish",
-          "likelihoodRatio": 0.7,
-          "description": "Top 10 holders own 45.6% of supply",
-          "probBefore": 0.4117647058823529,
-          "probAfter": 0.32885906040268453
-        }
-      ]
-    },
-    {
-      "symbol": "X Chat",
-      "address": "0x59ee065af1887a0a283d399d32a02cd098ed8f5e",
-      "price": 0.000002587616007067,
-      "change24h": 0,
-      "liquidity": 5059.904411260972,
-      "marketCap": 2587.616007067,
-      "holders": 6,
-      "riskLevel": 2,
-      "smartMoneyBuying": false,
-      "signalWalletCount": 0,
-      "signalStrength": 0.5,
-      "recommendation": "SKIP",
-      "skipReason": "Signal strength 50.0% below threshold (55%)",
-      "probabilityTrace": []
-    },
-    {
-      "symbol": "X Chat",
-      "address": "0x4d55e22b27ef892bfa057a533332fb98eff06dd1",
-      "price": 0.000003553897933185,
-      "change24h": 0,
-      "liquidity": 6034.510922257461,
-      "marketCap": 3553.897933185242,
-      "holders": 18,
-      "riskLevel": 2,
-      "smartMoneyBuying": false,
-      "signalWalletCount": 0,
-      "signalStrength": 0.5,
-      "recommendation": "SKIP",
-      "skipReason": "Signal strength 50.0% below threshold (55%)",
-      "probabilityTrace": []
-    },
-    {
-      "symbol": "XDOGE",
-      "address": "0x507a470edf1a0acdbcfbfdcedc54ff24b2b37777",
-      "price": 0.000003553447604184,
-      "change24h": 0.55,
-      "liquidity": 2642.5385583267002,
-      "marketCap": 3553.4476041842904,
-      "holders": 29,
-      "riskLevel": 1,
-      "smartMoneyBuying": false,
-      "signalWalletCount": 0,
-      "signalStrength": 0,
-      "recommendation": "SKIP",
-      "skipReason": "Liquidity too low: $2,642.54",
-      "probabilityTrace": []
     }
   ],
   "polymarkets": {
-    "totalMarkets": 245,
+    "totalMarkets": 249,
     "marketsWithEdge": 10,
-    "highEdgeCount": 7,
+    "highEdgeCount": 8,
     "markets": [
       {
         "title": "Will Bitcoin reach $150,000 in April?",
         "slug": "what-price-will-bitcoin-hit-in-april-2026",
         "endDate": "2026-05-01T04:00:00Z",
-        "volume": 5480276.640676978,
+        "volume": 5513113.464840972,
         "targetToken": "BTC",
         "strikePrice": 150000,
         "marketProb": 0.0025,
-        "ourProb": 0,
-        "edge": -0.0025,
+        "ourProb": 4.3578908814900785e-8,
+        "edge": -0.002499956421091185,
         "signals": [
-          "Current BTC price: $74,264.229",
-          "Strike: $150,000 (+102.0% away)",
-          "Time to expiry: 384h"
+          "Current BTC price: $73,792.529",
+          "Strike: $150,000 (+103.3% away)",
+          "Time to expiry: 382h (σ=65% ann.)"
         ]
       },
       {
         "title": "Will Bitcoin reach $250,000 by December 31, 2026?",
         "slug": "what-price-will-bitcoin-hit-before-2027",
         "endDate": "2027-01-01T05:00:00Z",
-        "volume": 4734624.614773973,
+        "volume": 4734845.395723973,
         "targetToken": "BTC",
         "strikePrice": 250000,
         "marketProb": 0.0365,
-        "ourProb": 0,
-        "edge": -0.0365,
+        "ourProb": 0.0046996408014878255,
+        "edge": -0.03180035919851217,
         "signals": [
-          "Current BTC price: $74,264.229",
-          "Strike: $250,000 (+236.6% away)",
-          "Time to expiry: 6265h"
+          "Current BTC price: $73,792.529",
+          "Strike: $250,000 (+238.8% away)",
+          "Time to expiry: 6263h (σ=65% ann.)"
         ]
       },
       {
         "title": "Will Bitcoin dip to $15,000 by December 31, 2026?",
         "slug": "what-price-will-bitcoin-hit-before-2027",
         "endDate": "2027-01-01T05:00:00Z",
-        "volume": 4554916.428266926,
+        "volume": 4555420.612423926,
         "targetToken": "BTC",
         "strikePrice": 15000,
-        "marketProb": 0.0635,
-        "ourProb": 1,
-        "edge": 0.9365,
+        "marketProb": 0.0615,
+        "ourProb": 0.0032303826993269613,
+        "edge": -0.05826961730067304,
         "signals": [
-          "Current BTC price: $74,264.229",
-          "Strike: $15,000 (-79.8% away)",
-          "Time to expiry: 6265h"
+          "Current BTC price: $73,792.529",
+          "Strike: $15,000 (-79.7% away)",
+          "Time to expiry: 6263h (σ=65% ann.)"
         ]
       },
       {
         "title": "Will bitcoin hit $1m before GTA VI?",
         "slug": "what-will-happen-before-gta-vi",
         "endDate": "2026-07-31T12:00:00Z",
-        "volume": 3982151.367777566,
+        "volume": 3982163.694563566,
         "targetToken": "BTC",
         "strikePrice": 1000000,
         "marketProb": 0.4885,
-        "ourProb": 0,
-        "edge": -0.4885,
+        "ourProb": 1.326716514427062e-14,
+        "edge": -0.4884999999999867,
         "signals": [
-          "Current BTC price: $74,264.229",
-          "Strike: $1,000,000 (+1246.5% away)",
-          "Time to expiry: 2576h"
+          "Current BTC price: $73,792.529",
+          "Strike: $1,000,000 (+1255.2% away)",
+          "Time to expiry: 2574h (σ=65% ann.)"
         ]
       },
       {
         "title": "Will Bitcoin reach $80,000 in April?",
         "slug": "what-price-will-bitcoin-hit-in-april-2026",
         "endDate": "2026-05-01T04:00:00Z",
-        "volume": 2288984.0523529314,
+        "volume": 2302706.1223649327,
         "targetToken": "BTC",
         "strikePrice": 80000,
-        "marketProb": 0.315,
-        "ourProb": 0.00004098148034814564,
-        "edge": -0.31495901851965186,
+        "marketProb": 0.275,
+        "ourProb": 0.21710227105730462,
+        "edge": -0.0578977289426954,
         "signals": [
-          "Current BTC price: $74,264.229",
-          "Strike: $80,000 (+7.7% away)",
-          "Time to expiry: 384h"
+          "Current BTC price: $73,792.529",
+          "Strike: $80,000 (+8.4% away)",
+          "Time to expiry: 382h (σ=65% ann.)"
         ]
       },
       {
         "title": "Will Bitcoin dip to $55,000 by December 31, 2026?",
         "slug": "what-price-will-bitcoin-hit-before-2027",
         "endDate": "2027-01-01T05:00:00Z",
-        "volume": 2221638.8795919986,
+        "volume": 2222185.95287,
         "targetToken": "BTC",
         "strikePrice": 55000,
-        "marketProb": 0.635,
-        "ourProb": 0.9995156661106657,
-        "edge": 0.36451566611066566,
+        "marketProb": 0.63,
+        "ourProb": 0.36881836814275004,
+        "edge": -0.26118163185724996,
         "signals": [
-          "Current BTC price: $74,269.954",
-          "Strike: $55,000 (-25.9% away)",
-          "Time to expiry: 6265h"
+          "Current BTC price: $73,792.529",
+          "Strike: $55,000 (-25.5% away)",
+          "Time to expiry: 6263h (σ=65% ann.)"
         ]
       },
       {
@@ -540,60 +535,60 @@
         "targetToken": "BTC",
         "strikePrice": 75000,
         "marketProb": 1,
-        "ourProb": 0.27476229022745857,
-        "edge": -0.7252377097725414,
+        "ourProb": 0.40248599006862856,
+        "edge": -0.5975140099313714,
         "signals": [
-          "Current BTC price: $74,269.954",
-          "Strike: $75,000 (+1.0% away)",
-          "Time to expiry: 384h"
+          "Current BTC price: $73,792.529",
+          "Strike: $75,000 (+1.6% away)",
+          "Time to expiry: 382h (σ=65% ann.)"
         ]
       },
       {
         "title": "Will Bitcoin dip to $45,000 by December 31, 2026?",
         "slug": "what-price-will-bitcoin-hit-before-2027",
         "endDate": "2027-01-01T05:00:00Z",
-        "volume": 1837738.645154994,
+        "volume": 1837806.751819994,
         "targetToken": "BTC",
         "strikePrice": 45000,
-        "marketProb": 0.415,
-        "ourProb": 0.9999996126806654,
-        "edge": 0.5849996126806654,
+        "marketProb": 0.41,
+        "ourProb": 0.2289829883267216,
+        "edge": -0.18101701167327838,
         "signals": [
-          "Current BTC price: $74,269.954",
-          "Strike: $45,000 (-39.4% away)",
-          "Time to expiry: 6265h"
+          "Current BTC price: $73,792.529",
+          "Strike: $45,000 (-39.0% away)",
+          "Time to expiry: 6263h (σ=65% ann.)"
         ]
       },
       {
         "title": "Will Bitcoin dip to $35,000 by December 31, 2026?",
         "slug": "what-price-will-bitcoin-hit-before-2027",
         "endDate": "2027-01-01T05:00:00Z",
-        "volume": 1744193.4894070013,
+        "volume": 1744321.6945340014,
         "targetToken": "BTC",
         "strikePrice": 35000,
         "marketProb": 0.225,
-        "ourProb": 0.9999999999784281,
-        "edge": 0.7749999999784282,
+        "ourProb": 0.11303460270303956,
+        "edge": -0.11196539729696045,
         "signals": [
-          "Current BTC price: $74,269.954",
-          "Strike: $35,000 (-52.9% away)",
-          "Time to expiry: 6265h"
+          "Current BTC price: $73,792.529",
+          "Strike: $35,000 (-52.6% away)",
+          "Time to expiry: 6263h (σ=65% ann.)"
         ]
       },
       {
-        "title": "Will Bitcoin hit $150k by December 31?",
-        "slug": "when-will-bitcoin-hit-150k",
-        "endDate": "2026-01-01T04:00:00Z",
-        "volume": 1555669.585882,
+        "title": "Will Bitcoin dip to $65,000 in April?",
+        "slug": "what-price-will-bitcoin-hit-in-april-2026",
+        "endDate": "2026-05-01T04:00:00Z",
+        "volume": 1564627.3970320073,
         "targetToken": "BTC",
-        "strikePrice": 150000,
-        "marketProb": 0,
-        "ourProb": 0,
-        "edge": 0,
+        "strikePrice": 65000,
+        "marketProb": 0.225,
+        "ourProb": 0.1603895953182094,
+        "edge": -0.0646104046817906,
         "signals": [
-          "Current BTC price: $74,269.954",
-          "Strike: $150,000 (+102.0% away)",
-          "Time to expiry: 1h"
+          "Current BTC price: $73,792.529",
+          "Strike: $65,000 (-11.9% away)",
+          "Time to expiry: 382h (σ=65% ann.)"
         ]
       }
     ],
@@ -602,7 +597,7 @@
         "title": "Will Bitcoin reach $150,000 in April?",
         "slug": "what-price-will-bitcoin-hit-in-april-2026",
         "endDate": "2026-05-01T04:00:00Z",
-        "volume": 5480276.640676978,
+        "volume": 5513113.464840972,
         "targetToken": "BTC",
         "strikePrice": 150000,
         "yesPrice": 0.0025
@@ -611,7 +606,7 @@
         "title": "Will Bitcoin reach $250,000 by December 31, 2026?",
         "slug": "what-price-will-bitcoin-hit-before-2027",
         "endDate": "2027-01-01T05:00:00Z",
-        "volume": 4734624.614773973,
+        "volume": 4734845.395723973,
         "targetToken": "BTC",
         "strikePrice": 250000,
         "yesPrice": 0.0365
@@ -620,16 +615,16 @@
         "title": "Will Bitcoin dip to $15,000 by December 31, 2026?",
         "slug": "what-price-will-bitcoin-hit-before-2027",
         "endDate": "2027-01-01T05:00:00Z",
-        "volume": 4554916.428266926,
+        "volume": 4555420.612423926,
         "targetToken": "BTC",
         "strikePrice": 15000,
-        "yesPrice": 0.0635
+        "yesPrice": 0.0615
       },
       {
         "title": "Will bitcoin hit $1m before GTA VI?",
         "slug": "what-will-happen-before-gta-vi",
         "endDate": "2026-07-31T12:00:00Z",
-        "volume": 3982151.367777566,
+        "volume": 3982163.694563566,
         "targetToken": "BTC",
         "strikePrice": 1000000,
         "yesPrice": 0.4885
@@ -638,19 +633,19 @@
         "title": "Will Bitcoin reach $80,000 in April?",
         "slug": "what-price-will-bitcoin-hit-in-april-2026",
         "endDate": "2026-05-01T04:00:00Z",
-        "volume": 2288984.0523529314,
+        "volume": 2302706.1223649327,
         "targetToken": "BTC",
         "strikePrice": 80000,
-        "yesPrice": 0.315
+        "yesPrice": 0.275
       },
       {
         "title": "Will Bitcoin dip to $55,000 by December 31, 2026?",
         "slug": "what-price-will-bitcoin-hit-before-2027",
         "endDate": "2027-01-01T05:00:00Z",
-        "volume": 2221638.8795919986,
+        "volume": 2222185.95287,
         "targetToken": "BTC",
         "strikePrice": 55000,
-        "yesPrice": 0.635
+        "yesPrice": 0.63
       },
       {
         "title": "Will Bitcoin reach $75,000 in April?",
@@ -665,18 +660,27 @@
         "title": "Will Bitcoin dip to $45,000 by December 31, 2026?",
         "slug": "what-price-will-bitcoin-hit-before-2027",
         "endDate": "2027-01-01T05:00:00Z",
-        "volume": 1837738.645154994,
+        "volume": 1837806.751819994,
         "targetToken": "BTC",
         "strikePrice": 45000,
-        "yesPrice": 0.415
+        "yesPrice": 0.41
       },
       {
         "title": "Will Bitcoin dip to $35,000 by December 31, 2026?",
         "slug": "what-price-will-bitcoin-hit-before-2027",
         "endDate": "2027-01-01T05:00:00Z",
-        "volume": 1744193.4894070013,
+        "volume": 1744321.6945340014,
         "targetToken": "BTC",
         "strikePrice": 35000,
+        "yesPrice": 0.225
+      },
+      {
+        "title": "Will Bitcoin dip to $65,000 in April?",
+        "slug": "what-price-will-bitcoin-hit-in-april-2026",
+        "endDate": "2026-05-01T04:00:00Z",
+        "volume": 1564627.3970320073,
+        "targetToken": "BTC",
+        "strikePrice": 65000,
         "yesPrice": 0.225
       },
       {
@@ -687,15 +691,6 @@
         "targetToken": "BTC",
         "strikePrice": 150000,
         "yesPrice": 0
-      },
-      {
-        "title": "Will Bitcoin dip to $65,000 in April?",
-        "slug": "what-price-will-bitcoin-hit-in-april-2026",
-        "endDate": "2026-05-01T04:00:00Z",
-        "volume": 1545730.6086950072,
-        "targetToken": "BTC",
-        "strikePrice": 65000,
-        "yesPrice": 0.215
       },
       {
         "title": "Will Bitcoin dip to $65,000 by December 31, 2026?",
@@ -710,7 +705,7 @@
         "title": "Will Bitcoin dip to $50,000 in April?",
         "slug": "what-price-will-bitcoin-hit-in-april-2026",
         "endDate": "2026-05-01T04:00:00Z",
-        "volume": 1397684.8071179993,
+        "volume": 1398060.3626719993,
         "targetToken": "BTC",
         "strikePrice": 50000,
         "yesPrice": 0.0175
@@ -719,148 +714,148 @@
         "title": "Will Bitcoin reach $200,000 by December 31, 2026?",
         "slug": "what-price-will-bitcoin-hit-before-2027",
         "endDate": "2027-01-01T05:00:00Z",
-        "volume": 1387794.5643259974,
+        "volume": 1388314.3301789972,
         "targetToken": "BTC",
         "strikePrice": 200000,
-        "yesPrice": 0.0425
+        "yesPrice": 0.042
       },
       {
         "title": "Will Bitcoin hit $60k or $80k first?",
         "slug": "will-bitcoin-hit-60k-or-80k-first-965",
         "endDate": "2027-01-01T05:00:00Z",
-        "volume": 1309418.1153120021,
+        "volume": 1309797.326739002,
         "targetToken": "BTC",
         "strikePrice": 60000,
-        "yesPrice": 0.345
+        "yesPrice": 0.355
       }
     ]
   },
   "onchainosCallLog": [
     {
       "command": "onchainos token hot-tokens --chain 196 --ranking-type 4",
-      "timestamp": "2026-04-15T04:01:21.732Z",
+      "timestamp": "2026-04-15T05:50:24.368Z",
       "success": true,
-      "resultPreview": "{\"ok\":true,\"data\":[{\"bundleHoldPercent\":\"0.00007\",\"chainIndex\":\"196\",\"change\":\"-2.05\",\"cursor\":\"0\",\"devHoldPercent\":\"0\",\"firstTradeTime\":\"1755117386000\",\"holders\":\"35606\",\"inflowUsd\":\"-2748.7073179287"
+      "resultPreview": "{\"ok\":true,\"data\":[{\"bundleHoldPercent\":\"0.00007\",\"chainIndex\":\"196\",\"change\":\"0\",\"cursor\":\"0\",\"devHoldPercent\":\"0\",\"firstTradeTime\":\"1755117386000\",\"holders\":\"35609\",\"inflowUsd\":\"560.3721729899044603"
     },
     {
       "command": "onchainos signal list --chain 196 --wallet-type 1,2,3",
-      "timestamp": "2026-04-15T04:01:23.649Z",
+      "timestamp": "2026-04-15T05:50:26.542Z",
       "success": true,
-      "resultPreview": "{\"ok\":true,\"data\":[{\"amountUsd\":\"404.311371828855064737\",\"chainIndex\":\"196\",\"cursor\":\"1776151825350!@#145995\",\"price\":\"0.000539301922616712\",\"soldRatioPercent\":\"76.62\",\"timestamp\":\"1776151825350\",\"tok"
+      "resultPreview": "{\"ok\":true,\"data\":[{\"amountUsd\":\"404.311371828855064737\",\"chainIndex\":\"196\",\"cursor\":\"1776151825350!@#145995\",\"price\":\"0.000539301922616712\",\"soldRatioPercent\":\"74.05\",\"timestamp\":\"1776151825350\",\"tok"
     },
     {
       "command": "onchainos market price --address 0x2260fac5e5542a773aa44fbcfedf7c193bc2c599 --chain 1",
-      "timestamp": "2026-04-15T04:01:30.430Z",
+      "timestamp": "2026-04-15T05:50:34.168Z",
       "success": true,
-      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"1\",\"price\":\"74264.22911084408668681303963696682\",\"time\":\"1776225690180\",\"tokenContractAddress\":\"0x2260fac5e5542a773aa44fbcfedf7c193bc2c599\"}]}"
+      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"1\",\"price\":\"73792.5287836499008667421397209893\",\"time\":\"1776232233848\",\"tokenContractAddress\":\"0x2260fac5e5542a773aa44fbcfedf7c193bc2c599\"}]}"
     },
     {
       "command": "onchainos market price --address 0x2260fac5e5542a773aa44fbcfedf7c193bc2c599 --chain 1",
-      "timestamp": "2026-04-15T04:01:32.573Z",
+      "timestamp": "2026-04-15T05:50:36.127Z",
       "success": true,
-      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"1\",\"price\":\"74264.22911084408668681303963696682\",\"time\":\"1776225692349\",\"tokenContractAddress\":\"0x2260fac5e5542a773aa44fbcfedf7c193bc2c599\"}]}"
+      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"1\",\"price\":\"73792.5287836499008667421397209893\",\"time\":\"1776232235868\",\"tokenContractAddress\":\"0x2260fac5e5542a773aa44fbcfedf7c193bc2c599\"}]}"
     },
     {
       "command": "onchainos market price --address 0x2260fac5e5542a773aa44fbcfedf7c193bc2c599 --chain 1",
-      "timestamp": "2026-04-15T04:01:34.775Z",
+      "timestamp": "2026-04-15T05:50:37.999Z",
       "success": true,
-      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"1\",\"price\":\"74264.22911084408668681303963696682\",\"time\":\"1776225694478\",\"tokenContractAddress\":\"0x2260fac5e5542a773aa44fbcfedf7c193bc2c599\"}]}"
+      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"1\",\"price\":\"73792.5287836499008667421397209893\",\"time\":\"1776232237768\",\"tokenContractAddress\":\"0x2260fac5e5542a773aa44fbcfedf7c193bc2c599\"}]}"
     },
     {
       "command": "onchainos market price --address 0x2260fac5e5542a773aa44fbcfedf7c193bc2c599 --chain 1",
-      "timestamp": "2026-04-15T04:01:36.778Z",
+      "timestamp": "2026-04-15T05:50:39.834Z",
       "success": true,
-      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"1\",\"price\":\"74264.22911084408668681303963696682\",\"time\":\"1776225696557\",\"tokenContractAddress\":\"0x2260fac5e5542a773aa44fbcfedf7c193bc2c599\"}]}"
+      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"1\",\"price\":\"73792.5287836499008667421397209893\",\"time\":\"1776232239556\",\"tokenContractAddress\":\"0x2260fac5e5542a773aa44fbcfedf7c193bc2c599\"}]}"
     },
     {
       "command": "onchainos market price --address 0x2260fac5e5542a773aa44fbcfedf7c193bc2c599 --chain 1",
-      "timestamp": "2026-04-15T04:01:38.818Z",
+      "timestamp": "2026-04-15T05:50:41.747Z",
       "success": true,
-      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"1\",\"price\":\"74264.22911084408668681303963696682\",\"time\":\"1776225698568\",\"tokenContractAddress\":\"0x2260fac5e5542a773aa44fbcfedf7c193bc2c599\"}]}"
+      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"1\",\"price\":\"73792.5287836499008667421397209893\",\"time\":\"1776232241537\",\"tokenContractAddress\":\"0x2260fac5e5542a773aa44fbcfedf7c193bc2c599\"}]}"
     },
     {
       "command": "onchainos market price --address 0x2260fac5e5542a773aa44fbcfedf7c193bc2c599 --chain 1",
-      "timestamp": "2026-04-15T04:01:40.717Z",
+      "timestamp": "2026-04-15T05:50:43.760Z",
       "success": true,
-      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"1\",\"price\":\"74269.95427278544449073051535035605\",\"time\":\"1776225700497\",\"tokenContractAddress\":\"0x2260fac5e5542a773aa44fbcfedf7c193bc2c599\"}]}"
+      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"1\",\"price\":\"73792.5287836499008667421397209893\",\"time\":\"1776232243529\",\"tokenContractAddress\":\"0x2260fac5e5542a773aa44fbcfedf7c193bc2c599\"}]}"
     },
     {
       "command": "onchainos market price --address 0x2260fac5e5542a773aa44fbcfedf7c193bc2c599 --chain 1",
-      "timestamp": "2026-04-15T04:01:43.185Z",
+      "timestamp": "2026-04-15T05:50:45.860Z",
       "success": true,
-      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"1\",\"price\":\"74269.95427278544449073051535035605\",\"time\":\"1776225702962\",\"tokenContractAddress\":\"0x2260fac5e5542a773aa44fbcfedf7c193bc2c599\"}]}"
+      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"1\",\"price\":\"73792.5287836499008667421397209893\",\"time\":\"1776232245645\",\"tokenContractAddress\":\"0x2260fac5e5542a773aa44fbcfedf7c193bc2c599\"}]}"
     },
     {
       "command": "onchainos market price --address 0x2260fac5e5542a773aa44fbcfedf7c193bc2c599 --chain 1",
-      "timestamp": "2026-04-15T04:01:45.187Z",
+      "timestamp": "2026-04-15T05:50:47.743Z",
       "success": true,
-      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"1\",\"price\":\"74269.95427278544449073051535035605\",\"time\":\"1776225704945\",\"tokenContractAddress\":\"0x2260fac5e5542a773aa44fbcfedf7c193bc2c599\"}]}"
+      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"1\",\"price\":\"73792.5287836499008667421397209893\",\"time\":\"1776232247533\",\"tokenContractAddress\":\"0x2260fac5e5542a773aa44fbcfedf7c193bc2c599\"}]}"
     },
     {
       "command": "onchainos market price --address 0x2260fac5e5542a773aa44fbcfedf7c193bc2c599 --chain 1",
-      "timestamp": "2026-04-15T04:01:47.083Z",
+      "timestamp": "2026-04-15T05:50:49.535Z",
       "success": true,
-      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"1\",\"price\":\"74269.95427278544449073051535035605\",\"time\":\"1776225706861\",\"tokenContractAddress\":\"0x2260fac5e5542a773aa44fbcfedf7c193bc2c599\"}]}"
+      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"1\",\"price\":\"73792.5287836499008667421397209893\",\"time\":\"1776232249329\",\"tokenContractAddress\":\"0x2260fac5e5542a773aa44fbcfedf7c193bc2c599\"}]}"
     },
     {
       "command": "onchainos market price --address 0x2260fac5e5542a773aa44fbcfedf7c193bc2c599 --chain 1",
-      "timestamp": "2026-04-15T04:01:49.138Z",
+      "timestamp": "2026-04-15T05:50:51.416Z",
       "success": true,
-      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"1\",\"price\":\"74269.95427278544449073051535035605\",\"time\":\"1776225708922\",\"tokenContractAddress\":\"0x2260fac5e5542a773aa44fbcfedf7c193bc2c599\"}]}"
+      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"1\",\"price\":\"73792.5287836499008667421397209893\",\"time\":\"1776232251199\",\"tokenContractAddress\":\"0x2260fac5e5542a773aa44fbcfedf7c193bc2c599\"}]}"
     },
     {
-      "command": "onchainos security token-scan --tokens 196:0x0cc24c51bf89c00c5affbfcf5e856c25ecbdb48e,196:0x87669801a1fad6dad9db70d27ac752f452989667,196:0x70bf3e2b75d8832d7f790a87fffc1fa9d63dc5bb,196:0x5839244eab49314bccc0fa76e3a081cb1a461111,196:0x00880ec7de7397e4e25ad5fbd69d97db91e90372,196:0x4c225fb675c0c475b53381463782a7f741d59763,196:0x375da15dacce7a2a4f8075b5e39b8c2018057777,196:0x256a55efa042a5e230078df730ffba53f5a77777,196:0x903358faf7c6304afbd560e9e29b12ab1b8fddc5,196:0xdcc83b32b6b4e95a61951bfcc9d71967515c0fca,196:0xa49e20536132223d412b656dc3dfbf98303b1111,196:0x8854b281cdf5940ebd4a753f8d37f49775058e03,196:0x59ee065af1887a0a283d399d32a02cd098ed8f5e,196:0x4d55e22b27ef892bfa057a533332fb98eff06dd1,196:0x507a470edf1a0acdbcfbfdcedc54ff24b2b37777",
-      "timestamp": "2026-04-15T04:01:51.147Z",
+      "command": "onchainos security token-scan --tokens 196:0x0cc24c51bf89c00c5affbfcf5e856c25ecbdb48e,196:0x70bf3e2b75d8832d7f790a87fffc1fa9d63dc5bb,196:0x5839244eab49314bccc0fa76e3a081cb1a461111,196:0x87669801a1fad6dad9db70d27ac752f452989667,196:0x00880ec7de7397e4e25ad5fbd69d97db91e90372,196:0x4c225fb675c0c475b53381463782a7f741d59763,196:0x256a55efa042a5e230078df730ffba53f5a77777,196:0x375da15dacce7a2a4f8075b5e39b8c2018057777,196:0xdcc83b32b6b4e95a61951bfcc9d71967515c0fca,196:0x8854b281cdf5940ebd4a753f8d37f49775058e03,196:0x59ee065af1887a0a283d399d32a02cd098ed8f5e,196:0x903358faf7c6304afbd560e9e29b12ab1b8fddc5,196:0xa49e20536132223d412b656dc3dfbf98303b1111,196:0x4d55e22b27ef892bfa057a533332fb98eff06dd1,196:0xfdc4a45a4bf53957b2c73b1ff323d8cbe39118dd",
+      "timestamp": "2026-04-15T05:50:53.386Z",
       "success": true,
       "resultPreview": "{\"ok\":true,\"data\":[{\"buyTaxes\":\"0.04\",\"chainId\":\"196\",\"isAirdropScam\":false,\"isChainSupported\":true,\"isCounterfeit\":false,\"isDumping\":false,\"isFakeLiquidity\":false,\"isFundLinkage\":false,\"isHasAssetEdi"
     },
     {
       "command": "onchainos token price-info --address 0x0cc24c51bf89c00c5affbfcf5e856c25ecbdb48e --chain 196",
-      "timestamp": "2026-04-15T04:01:53.110Z",
+      "timestamp": "2026-04-15T05:50:55.149Z",
       "success": true,
-      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"196\",\"circSupply\":\"997777184.183486599000000000\",\"holders\":\"35606\",\"liquidity\":\"493132.54572256719359104522173010756550329435276713104\",\"marketCap\":\"4102530.278496095"
-    },
-    {
-      "command": "onchainos token price-info --address 0x87669801a1fad6dad9db70d27ac752f452989667 --chain 196",
-      "timestamp": "2026-04-15T04:01:56.654Z",
-      "success": true,
-      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"196\",\"circSupply\":\"973244751.477732200000000\",\"holders\":\"88102\",\"liquidity\":\"129119.5568522172082393006121070636796162117054290075\",\"marketCap\":\"937465.22848373626004"
+      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"196\",\"circSupply\":\"997777184.183486599000000000\",\"holders\":\"35609\",\"liquidity\":\"495457.103952689468876746174403051973057931937209418500\",\"marketCap\":\"4134404.70052875"
     },
     {
       "command": "onchainos token price-info --address 0x70bf3e2b75d8832d7f790a87fffc1fa9d63dc5bb --chain 196",
-      "timestamp": "2026-04-15T04:01:58.932Z",
+      "timestamp": "2026-04-15T05:50:57.026Z",
       "success": true,
-      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"196\",\"circSupply\":\"55132781908.533840000000000000\",\"holders\":\"32574\",\"liquidity\":\"988577.288961846625589862715214446473397490915466350\",\"marketCap\":\"4284364.660953607"
+      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"196\",\"circSupply\":\"55132704045.872900000000000000\",\"holders\":\"32578\",\"liquidity\":\"981192.035768664647704431505640219380879089681163408\",\"marketCap\":\"4220632.363422079"
     },
     {
       "command": "onchainos token price-info --address 0x5839244eab49314bccc0fa76e3a081cb1a461111 --chain 196",
-      "timestamp": "2026-04-15T04:02:01.086Z",
+      "timestamp": "2026-04-15T05:50:59.252Z",
       "success": true,
-      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"196\",\"circSupply\":\"999000000.000000000000000000\",\"holders\":\"10802\",\"liquidity\":\"61932.9067412412859391247105376177825314206469160860\",\"marketCap\":\"157837.918585505494"
+      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"196\",\"circSupply\":\"999000000.000000000000000000\",\"holders\":\"10802\",\"liquidity\":\"62499.122157208398939393055545518149581181920396317\",\"marketCap\":\"160536.5332229307789"
+    },
+    {
+      "command": "onchainos token price-info --address 0x87669801a1fad6dad9db70d27ac752f452989667 --chain 196",
+      "timestamp": "2026-04-15T05:51:01.106Z",
+      "success": true,
+      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"196\",\"circSupply\":\"973244751.477732200000000\",\"holders\":\"88104\",\"liquidity\":\"129626.4974180970554819865200562692470828303067924969\",\"marketCap\":\"943506.75382970446459"
     },
     {
       "command": "onchainos token price-info --address 0x00880ec7de7397e4e25ad5fbd69d97db91e90372 --chain 196",
-      "timestamp": "2026-04-15T04:02:02.991Z",
+      "timestamp": "2026-04-15T05:51:02.917Z",
       "success": true,
-      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"196\",\"circSupply\":\"1000000000.000000000000000000\",\"holders\":\"3154\",\"liquidity\":\"60394.096436607042957843963635719782829863542404112\",\"marketCap\":\"440898.7356068864656"
+      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"196\",\"circSupply\":\"1000000000.000000000000000000\",\"holders\":\"3149\",\"liquidity\":\"59364.943396877330444617430150888115227026615982161\",\"marketCap\":\"400728.2330171654953"
     },
     {
       "command": "onchainos wallet balance --chain 196",
-      "timestamp": "2026-04-15T04:02:05.113Z",
+      "timestamp": "2026-04-15T05:51:04.831Z",
       "success": true,
       "resultPreview": "{\"ok\":true,\"data\":{\"details\":[{\"tokenAssets\":[]}],\"totalValueUsd\":\"0.00\"}}"
     }
   ],
   "recommendation": {
-    "symbol": "FDOG",
-    "address": "0x5839244eab49314bccc0fa76e3a081cb1a461111",
-    "finalProbability": 0.7990636365463056,
+    "symbol": "DOGSHIT",
+    "address": "0x70bf3e2b75d8832d7f790a87fffc1fa9d63dc5bb",
+    "finalProbability": 0.6766892984157776,
     "trace": [
       {
         "name": "price_momentum",
         "direction": "bullish",
         "likelihoodRatio": 1.3,
-        "description": "24h price change: 713.0%",
+        "description": "24h price change: 49.0%",
         "probBefore": 0.5,
         "probAfter": 0.5652173913043479
       },
@@ -868,25 +863,17 @@
         "name": "buy_sell_ratio",
         "direction": "bullish",
         "likelihoodRatio": 1.4,
-        "description": "Buy/Sell: 23/9 (72% buys)",
+        "description": "Buy/Sell: 15/6 (71% buys)",
         "probBefore": 0.5652173913043479,
         "probAfter": 0.6453900709219859
-      },
-      {
-        "name": "smart_money_consensus",
-        "direction": "bullish",
-        "likelihoodRatio": 1.9,
-        "description": "3 smart money wallets buying, $404.31 total",
-        "probBefore": 0.6453900709219859,
-        "probAfter": 0.775684163301929
       },
       {
         "name": "positive_inflow",
         "direction": "bullish",
         "likelihoodRatio": 1.15,
-        "description": "Positive inflow: $175,098.34 volume with price increase",
-        "probBefore": 0.775684163301929,
-        "probAfter": 0.7990636365463056
+        "description": "Positive inflow: $59,625.67 volume with price increase",
+        "probBefore": 0.6453900709219859,
+        "probAfter": 0.6766892984157776
       }
     ]
   },
@@ -894,30 +881,30 @@
     "executed": false,
     "error": "Insufficient balance",
     "recommendation": {
-      "address": "0x5839244eab49314bccc0fa76e3a081cb1a461111",
-      "symbol": "FDOG",
-      "price": 0.0001579959145000055,
-      "change24h": 7.13,
-      "volume": 175098.3383119805,
-      "liquidity": 61932.906741241284,
-      "marketCap": 157837.91858550548,
-      "holders": 10802,
-      "riskLevel": 1,
-      "top10HoldPct": 9.4406,
-      "txsBuy": 23,
-      "txsSell": 9,
-      "smartMoneyBuying": true,
-      "signalWalletCount": 3,
-      "signalAmountUsd": 404.31137182885504,
-      "soldRatioPct": 76.62,
+      "address": "0x70bf3e2b75d8832d7f790a87fffc1fa9d63dc5bb",
+      "symbol": "DOGSHIT",
+      "price": 0.00007655406054290976,
+      "change24h": 0.49,
+      "volume": 59625.665088362635,
+      "liquidity": 981192.0357686647,
+      "marketCap": 4220632.36342208,
+      "holders": 32578,
+      "riskLevel": 2,
+      "top10HoldPct": 2.781,
+      "txsBuy": 15,
+      "txsSell": 6,
+      "smartMoneyBuying": false,
+      "signalWalletCount": 0,
+      "signalAmountUsd": 0,
+      "soldRatioPct": 100,
       "isHoneypot": false,
-      "signalStrength": 0.7990636365463056,
+      "signalStrength": 0.6766892984157776,
       "probabilityTrace": [
         {
           "name": "price_momentum",
           "direction": "bullish",
           "likelihoodRatio": 1.3,
-          "description": "24h price change: 713.0%",
+          "description": "24h price change: 49.0%",
           "probBefore": 0.5,
           "probAfter": 0.5652173913043479
         },
@@ -925,28 +912,20 @@
           "name": "buy_sell_ratio",
           "direction": "bullish",
           "likelihoodRatio": 1.4,
-          "description": "Buy/Sell: 23/9 (72% buys)",
+          "description": "Buy/Sell: 15/6 (71% buys)",
           "probBefore": 0.5652173913043479,
           "probAfter": 0.6453900709219859
-        },
-        {
-          "name": "smart_money_consensus",
-          "direction": "bullish",
-          "likelihoodRatio": 1.9,
-          "description": "3 smart money wallets buying, $404.31 total",
-          "probBefore": 0.6453900709219859,
-          "probAfter": 0.775684163301929
         },
         {
           "name": "positive_inflow",
           "direction": "bullish",
           "likelihoodRatio": 1.15,
-          "description": "Positive inflow: $175,098.34 volume with price increase",
-          "probBefore": 0.775684163301929,
-          "probAfter": 0.7990636365463056
+          "description": "Positive inflow: $59,625.67 volume with price increase",
+          "probBefore": 0.6453900709219859,
+          "probAfter": 0.6766892984157776
         }
       ],
-      "finalProbability": 0.7990636365463056,
+      "finalProbability": 0.6766892984157776,
       "recommendation": "BUY"
     }
   }

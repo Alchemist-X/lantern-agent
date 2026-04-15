@@ -200,16 +200,16 @@ export function ShowcaseOnchainProof() {
             transition: "all 0.2s",
           }}>
             <div style={{ fontSize: 12, color: "#EFC851", fontWeight: 600, textTransform: "uppercase", letterSpacing: 2, marginBottom: 8 }}>
-              Polymarket 实盘交易
+              Polymarket 实盘交易 (示例)
             </div>
             <div style={{ fontSize: 14, color: "#FFF6E2", fontWeight: 600, marginBottom: 8 }}>
-              $1 → 1.49 股 &quot;$80k&quot;
+              历史真实成交 TxHash
             </div>
             <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 11, color: "#8B949E", wordBreak: "break-all", marginBottom: 12 }}>
               {polyTxHash.slice(0, 22)}...
             </div>
             <div style={{ fontSize: 12, color: "#484F58" }}>
-              BTC $60k/$80k 市场 · Polygon · 点击查看 ↗
+              Polygon · 示例真实交易 · 点击查看 ↗
             </div>
           </div>
         </a>
