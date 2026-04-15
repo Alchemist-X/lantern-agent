@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-15T05:51:04.831Z",
+  "timestamp": "2026-04-15T06:16:58.066Z",
   "cycle": "demo",
   "scan": {
     "chain": "X Layer (196)",
@@ -10,124 +10,11 @@
     {
       "symbol": "XDOG",
       "address": "0x0cc24c51bf89c00c5affbfcf5e856c25ecbdb48e",
-      "price": 0.004143615193919342,
-      "change24h": 0,
-      "liquidity": 495457.10395268945,
-      "marketCap": 4134404.700528753,
-      "holders": 35609,
-      "riskLevel": 1,
-      "smartMoneyBuying": false,
-      "signalWalletCount": 0,
-      "signalStrength": 0.5,
-      "recommendation": "SKIP",
-      "skipReason": "Signal strength 50.0% below threshold (55%)",
-      "probabilityTrace": []
-    },
-    {
-      "symbol": "DOGSHIT",
-      "address": "0x70bf3e2b75d8832d7f790a87fffc1fa9d63dc5bb",
-      "price": 0.00007655406054290976,
-      "change24h": 0.49,
-      "liquidity": 981192.0357686647,
-      "marketCap": 4220632.36342208,
-      "holders": 32578,
-      "riskLevel": 2,
-      "smartMoneyBuying": false,
-      "signalWalletCount": 0,
-      "signalStrength": 0.6766892984157776,
-      "recommendation": "BUY",
-      "probabilityTrace": [
-        {
-          "name": "price_momentum",
-          "direction": "bullish",
-          "likelihoodRatio": 1.3,
-          "description": "24h price change: 49.0%",
-          "probBefore": 0.5,
-          "probAfter": 0.5652173913043479
-        },
-        {
-          "name": "buy_sell_ratio",
-          "direction": "bullish",
-          "likelihoodRatio": 1.4,
-          "description": "Buy/Sell: 15/6 (71% buys)",
-          "probBefore": 0.5652173913043479,
-          "probAfter": 0.6453900709219859
-        },
-        {
-          "name": "positive_inflow",
-          "direction": "bullish",
-          "likelihoodRatio": 1.15,
-          "description": "Positive inflow: $59,625.67 volume with price increase",
-          "probBefore": 0.6453900709219859,
-          "probAfter": 0.6766892984157776
-        }
-      ]
-    },
-    {
-      "symbol": "FDOG",
-      "address": "0x5839244eab49314bccc0fa76e3a081cb1a461111",
-      "price": 0.00016069723045338417,
-      "change24h": -0.05,
-      "liquidity": 62499.122157208396,
-      "marketCap": 160536.53322293077,
-      "holders": 10802,
-      "riskLevel": 1,
-      "smartMoneyBuying": true,
-      "signalWalletCount": 3,
-      "signalStrength": 0.6175908221797322,
-      "recommendation": "BUY",
-      "probabilityTrace": [
-        {
-          "name": "price_momentum",
-          "direction": "bearish",
-          "likelihoodRatio": 0.85,
-          "description": "24h price change: -5.0%",
-          "probBefore": 0.5,
-          "probAfter": 0.45945945945945943
-        },
-        {
-          "name": "smart_money_consensus",
-          "direction": "bullish",
-          "likelihoodRatio": 1.9,
-          "description": "3 smart money wallets buying, $404.31 total",
-          "probBefore": 0.45945945945945943,
-          "probAfter": 0.6175908221797322
-        }
-      ]
-    },
-    {
-      "symbol": "NIUMA",
-      "address": "0x87669801a1fad6dad9db70d27ac752f452989667",
-      "price": 0.0009694444818706961,
-      "change24h": -0.04,
-      "liquidity": 129626.49741809706,
-      "marketCap": 943506.7538297045,
-      "holders": 88104,
-      "riskLevel": 1,
-      "smartMoneyBuying": false,
-      "signalWalletCount": 0,
-      "signalStrength": 0.45945945945945943,
-      "recommendation": "SKIP",
-      "skipReason": "Signal strength 45.9% below threshold (55%)",
-      "probabilityTrace": [
-        {
-          "name": "price_momentum",
-          "direction": "bearish",
-          "likelihoodRatio": 0.85,
-          "description": "24h price change: -4.0%",
-          "probBefore": 0.5,
-          "probAfter": 0.45945945945945943
-        }
-      ]
-    },
-    {
-      "symbol": "欧易人生",
-      "address": "0x00880ec7de7397e4e25ad5fbd69d97db91e90372",
-      "price": 0.0004007282330171655,
-      "change24h": -2.8,
-      "liquidity": 59364.94339687733,
-      "marketCap": 400728.2330171655,
-      "holders": 3149,
+      "price": 0.004136571050149652,
+      "change24h": -0.56,
+      "liquidity": 494202.9049358046,
+      "marketCap": 4127376.214593248,
+      "holders": 35608,
       "riskLevel": 1,
       "smartMoneyBuying": false,
       "signalWalletCount": 0,
@@ -139,7 +26,7 @@
           "name": "price_momentum",
           "direction": "bearish",
           "likelihoodRatio": 0.7,
-          "description": "24h price change: -280.0%",
+          "description": "24h price change: -56.0%",
           "probBefore": 0.5,
           "probAfter": 0.4117647058823529
         },
@@ -147,19 +34,150 @@
           "name": "buy_sell_ratio",
           "direction": "bearish",
           "likelihoodRatio": 0.8,
-          "description": "Buy/Sell: 2/4 (33% buys)",
+          "description": "Buy/Sell: 3/7 (30% buys)",
           "probBefore": 0.4117647058823529,
           "probAfter": 0.3589743589743589
         }
       ]
     },
     {
+      "symbol": "DOGSHIT",
+      "address": "0x70bf3e2b75d8832d7f790a87fffc1fa9d63dc5bb",
+      "price": 0.00007647025501934145,
+      "change24h": -1.09,
+      "liquidity": 981201.6121409307,
+      "marketCap": 4216011.938293778,
+      "holders": 32578,
+      "riskLevel": 2,
+      "smartMoneyBuying": false,
+      "signalWalletCount": 0,
+      "signalStrength": 0.494949494949495,
+      "recommendation": "SKIP",
+      "skipReason": "Signal strength 49.5% below threshold (55%)",
+      "probabilityTrace": [
+        {
+          "name": "price_momentum",
+          "direction": "bearish",
+          "likelihoodRatio": 0.7,
+          "description": "24h price change: -109.0%",
+          "probBefore": 0.5,
+          "probAfter": 0.4117647058823529
+        },
+        {
+          "name": "buy_sell_ratio",
+          "direction": "bullish",
+          "likelihoodRatio": 1.4,
+          "description": "Buy/Sell: 13/5 (72% buys)",
+          "probBefore": 0.4117647058823529,
+          "probAfter": 0.494949494949495
+        }
+      ]
+    },
+    {
+      "symbol": "FDOG",
+      "address": "0x5839244eab49314bccc0fa76e3a081cb1a461111",
+      "price": 0.00016046115842705908,
+      "change24h": 0.16,
+      "liquidity": 62497.61680969979,
+      "marketCap": 160300.69726863204,
+      "holders": 10805,
+      "riskLevel": 1,
+      "smartMoneyBuying": true,
+      "signalWalletCount": 3,
+      "signalStrength": 0.7990636365463056,
+      "recommendation": "BUY",
+      "probabilityTrace": [
+        {
+          "name": "price_momentum",
+          "direction": "bullish",
+          "likelihoodRatio": 1.3,
+          "description": "24h price change: 16.0%",
+          "probBefore": 0.5,
+          "probAfter": 0.5652173913043479
+        },
+        {
+          "name": "buy_sell_ratio",
+          "direction": "bullish",
+          "likelihoodRatio": 1.4,
+          "description": "Buy/Sell: 6/1 (86% buys)",
+          "probBefore": 0.5652173913043479,
+          "probAfter": 0.6453900709219859
+        },
+        {
+          "name": "smart_money_consensus",
+          "direction": "bullish",
+          "likelihoodRatio": 1.9,
+          "description": "3 smart money wallets buying, $404.31 total",
+          "probBefore": 0.6453900709219859,
+          "probAfter": 0.775684163301929
+        },
+        {
+          "name": "positive_inflow",
+          "direction": "bullish",
+          "likelihoodRatio": 1.15,
+          "description": "Positive inflow: $140,984.71 volume with price increase",
+          "probBefore": 0.775684163301929,
+          "probAfter": 0.7990636365463056
+        }
+      ]
+    },
+    {
+      "symbol": "欧易人生",
+      "address": "0x00880ec7de7397e4e25ad5fbd69d97db91e90372",
+      "price": 0.0003916271075411448,
+      "change24h": -5.01,
+      "liquidity": 59084.81796217145,
+      "marketCap": 391627.1075411448,
+      "holders": 3149,
+      "riskLevel": 1,
+      "smartMoneyBuying": false,
+      "signalWalletCount": 0,
+      "signalStrength": 0.4117647058823529,
+      "recommendation": "SKIP",
+      "skipReason": "Signal strength 41.2% below threshold (55%)",
+      "probabilityTrace": [
+        {
+          "name": "price_momentum",
+          "direction": "bearish",
+          "likelihoodRatio": 0.7,
+          "description": "24h price change: -501.0%",
+          "probBefore": 0.5,
+          "probAfter": 0.4117647058823529
+        }
+      ]
+    },
+    {
+      "symbol": "NIUMA",
+      "address": "0x87669801a1fad6dad9db70d27ac752f452989667",
+      "price": 0.0009685876287629633,
+      "change24h": -0.31,
+      "liquidity": 129650.5906781988,
+      "marketCap": 942672.8260398161,
+      "holders": 88103,
+      "riskLevel": 1,
+      "smartMoneyBuying": false,
+      "signalWalletCount": 0,
+      "signalStrength": 0.4117647058823529,
+      "recommendation": "SKIP",
+      "skipReason": "Signal strength 41.2% below threshold (55%)",
+      "probabilityTrace": [
+        {
+          "name": "price_momentum",
+          "direction": "bearish",
+          "likelihoodRatio": 0.7,
+          "description": "24h price change: -31.0%",
+          "probBefore": 0.5,
+          "probAfter": 0.4117647058823529
+        }
+      ]
+    },
+    {
       "symbol": "OEOE",
       "address": "0x4c225fb675c0c475b53381463782a7f741d59763",
-      "price": 0.000029450927501177,
-      "change24h": -0.38,
-      "liquidity": 309586.9174695391,
-      "marketCap": 2801578.1991684763,
+      "price": 0.000029434591038834,
+      "change24h": -0.4,
+      "liquidity": 309227.583953781,
+      "marketCap": 2800024.1606157124,
       "holders": 12648,
       "riskLevel": 2,
       "smartMoneyBuying": false,
@@ -172,7 +190,7 @@
           "name": "price_momentum",
           "direction": "bearish",
           "likelihoodRatio": 0.7,
-          "description": "24h price change: -38.0%",
+          "description": "24h price change: -40.0%",
           "probBefore": 0.5,
           "probAfter": 0.4117647058823529
         },
@@ -180,7 +198,7 @@
           "name": "buy_sell_ratio",
           "direction": "bullish",
           "likelihoodRatio": 1.4,
-          "description": "Buy/Sell: 18/0 (100% buys)",
+          "description": "Buy/Sell: 10/0 (100% buys)",
           "probBefore": 0.4117647058823529,
           "probAfter": 0.494949494949495
         }
@@ -213,33 +231,58 @@
     {
       "symbol": "SEED",
       "address": "0x375da15dacce7a2a4f8075b5e39b8c2018057777",
-      "price": 0.001638241740482228,
-      "change24h": -8.19,
-      "liquidity": 101877.68143063848,
-      "marketCap": 1305888.285377071,
+      "price": 0.001628716714366425,
+      "change24h": -8.72,
+      "liquidity": 101430.96735893408,
+      "marketCap": 1298295.6208055548,
       "holders": 6221,
       "riskLevel": 2,
       "smartMoneyBuying": false,
       "signalWalletCount": 0,
-      "signalStrength": 0.45652173913043476,
+      "signalStrength": 0.4117647058823529,
       "recommendation": "SKIP",
-      "skipReason": "Signal strength 45.7% below threshold (55%)",
+      "skipReason": "Signal strength 41.2% below threshold (55%)",
       "probabilityTrace": [
         {
           "name": "price_momentum",
           "direction": "bearish",
           "likelihoodRatio": 0.7,
-          "description": "24h price change: -819.0%",
+          "description": "24h price change: -872.0%",
+          "probBefore": 0.5,
+          "probAfter": 0.4117647058823529
+        }
+      ]
+    },
+    {
+      "symbol": "DOG",
+      "address": "0x903358faf7c6304afbd560e9e29b12ab1b8fddc5",
+      "price": 0.0000115238377066,
+      "change24h": -0.61,
+      "liquidity": 80823.49086886799,
+      "marketCap": 536563.8180394819,
+      "holders": 10284,
+      "riskLevel": 2,
+      "smartMoneyBuying": false,
+      "signalWalletCount": 0,
+      "signalStrength": 0.494949494949495,
+      "recommendation": "SKIP",
+      "skipReason": "Signal strength 49.5% below threshold (55%)",
+      "probabilityTrace": [
+        {
+          "name": "price_momentum",
+          "direction": "bearish",
+          "likelihoodRatio": 0.7,
+          "description": "24h price change: -61.0%",
           "probBefore": 0.5,
           "probAfter": 0.4117647058823529
         },
         {
           "name": "buy_sell_ratio",
           "direction": "bullish",
-          "likelihoodRatio": 1.2,
-          "description": "Buy/Sell: 5/3 (63% buys)",
+          "likelihoodRatio": 1.4,
+          "description": "Buy/Sell: 146/15 (91% buys)",
           "probBefore": 0.4117647058823529,
-          "probAfter": 0.45652173913043476
+          "probAfter": 0.494949494949495
         }
       ]
     },
@@ -263,6 +306,72 @@
           "direction": "bearish",
           "likelihoodRatio": 0.7,
           "description": "24h price change: -148.0%",
+          "probBefore": 0.5,
+          "probAfter": 0.4117647058823529
+        }
+      ]
+    },
+    {
+      "symbol": "MAS",
+      "address": "0xa49e20536132223d412b656dc3dfbf98303b1111",
+      "price": 0.000551051682980853,
+      "change24h": -1.52,
+      "liquidity": 58041.99625509584,
+      "marketCap": 542849.4184021342,
+      "holders": 4839,
+      "riskLevel": 1,
+      "smartMoneyBuying": false,
+      "signalWalletCount": 0,
+      "signalStrength": 0.4117647058823529,
+      "recommendation": "SKIP",
+      "skipReason": "Signal strength 41.2% below threshold (55%)",
+      "probabilityTrace": [
+        {
+          "name": "price_momentum",
+          "direction": "bearish",
+          "likelihoodRatio": 0.7,
+          "description": "24h price change: -152.0%",
+          "probBefore": 0.5,
+          "probAfter": 0.4117647058823529
+        }
+      ]
+    },
+    {
+      "symbol": "X Chat",
+      "address": "0x59ee065af1887a0a283d399d32a02cd098ed8f5e",
+      "price": 0.000002855973676185,
+      "change24h": 0,
+      "liquidity": 5308.755097874138,
+      "marketCap": 2855.9736761849654,
+      "holders": 8,
+      "riskLevel": 2,
+      "smartMoneyBuying": false,
+      "signalWalletCount": 0,
+      "signalStrength": 0.5,
+      "recommendation": "SKIP",
+      "skipReason": "Signal strength 50.0% below threshold (55%)",
+      "probabilityTrace": []
+    },
+    {
+      "symbol": "TITAN",
+      "address": "0xfdc4a45a4bf53957b2c73b1ff323d8cbe39118dd",
+      "price": 2.7318511926774742,
+      "change24h": -0.21,
+      "liquidity": 489016.3247560327,
+      "marketCap": 54332498.37919119,
+      "holders": 13601,
+      "riskLevel": 2,
+      "smartMoneyBuying": false,
+      "signalWalletCount": 0,
+      "signalStrength": 0.4117647058823529,
+      "recommendation": "SKIP",
+      "skipReason": "Signal strength 41.2% below threshold (55%)",
+      "probabilityTrace": [
+        {
+          "name": "price_momentum",
+          "direction": "bearish",
+          "likelihoodRatio": 0.7,
+          "description": "24h price change: -21.0%",
           "probBefore": 0.5,
           "probAfter": 0.4117647058823529
         }
@@ -295,80 +404,6 @@
     },
     {
       "symbol": "X Chat",
-      "address": "0x59ee065af1887a0a283d399d32a02cd098ed8f5e",
-      "price": 0.000002855973676185,
-      "change24h": 0,
-      "liquidity": 5308.755097874138,
-      "marketCap": 2855.9736761849654,
-      "holders": 8,
-      "riskLevel": 2,
-      "smartMoneyBuying": false,
-      "signalWalletCount": 0,
-      "signalStrength": 0.5,
-      "recommendation": "SKIP",
-      "skipReason": "Signal strength 50.0% below threshold (55%)",
-      "probabilityTrace": []
-    },
-    {
-      "symbol": "DOG",
-      "address": "0x903358faf7c6304afbd560e9e29b12ab1b8fddc5",
-      "price": 0.000011596109182877,
-      "change24h": -0.29,
-      "liquidity": 81033.00763126502,
-      "marketCap": 539928.865364306,
-      "holders": 10286,
-      "riskLevel": 2,
-      "smartMoneyBuying": false,
-      "signalWalletCount": 0,
-      "signalStrength": 0.45652173913043476,
-      "recommendation": "SKIP",
-      "skipReason": "Signal strength 45.7% below threshold (55%)",
-      "probabilityTrace": [
-        {
-          "name": "price_momentum",
-          "direction": "bearish",
-          "likelihoodRatio": 0.7,
-          "description": "24h price change: -29.0%",
-          "probBefore": 0.5,
-          "probAfter": 0.4117647058823529
-        },
-        {
-          "name": "buy_sell_ratio",
-          "direction": "bullish",
-          "likelihoodRatio": 1.2,
-          "description": "Buy/Sell: 9/5 (64% buys)",
-          "probBefore": 0.4117647058823529,
-          "probAfter": 0.45652173913043476
-        }
-      ]
-    },
-    {
-      "symbol": "MAS",
-      "address": "0xa49e20536132223d412b656dc3dfbf98303b1111",
-      "price": 0.000555188941930094,
-      "change24h": -1.1,
-      "liquidity": 58313.71935824013,
-      "marketCap": 546925.0953009421,
-      "holders": 4839,
-      "riskLevel": 1,
-      "smartMoneyBuying": false,
-      "signalWalletCount": 0,
-      "signalStrength": 0.4117647058823529,
-      "recommendation": "SKIP",
-      "skipReason": "Signal strength 41.2% below threshold (55%)",
-      "probabilityTrace": [
-        {
-          "name": "price_momentum",
-          "direction": "bearish",
-          "likelihoodRatio": 0.7,
-          "description": "24h price change: -110.0%",
-          "probBefore": 0.5,
-          "probAfter": 0.4117647058823529
-        }
-      ]
-    },
-    {
-      "symbol": "X Chat",
       "address": "0x4d55e22b27ef892bfa057a533332fb98eff06dd1",
       "price": 0.000003050178289555,
       "change24h": -9.86,
@@ -391,124 +426,111 @@
           "probAfter": 0.4117647058823529
         }
       ]
-    },
-    {
-      "symbol": "TITAN",
-      "address": "0xfdc4a45a4bf53957b2c73b1ff323d8cbe39118dd",
-      "price": 2.703770405008681,
-      "change24h": -1.36,
-      "liquidity": 489412.12903336046,
-      "marketCap": 53774012.85311618,
-      "holders": 13601,
-      "riskLevel": 2,
-      "smartMoneyBuying": false,
-      "signalWalletCount": 0,
-      "signalStrength": 0.3589743589743589,
-      "recommendation": "SKIP",
-      "skipReason": "Signal strength 35.9% below threshold (55%)",
-      "probabilityTrace": [
-        {
-          "name": "price_momentum",
-          "direction": "bearish",
-          "likelihoodRatio": 0.7,
-          "description": "24h price change: -136.0%",
-          "probBefore": 0.5,
-          "probAfter": 0.4117647058823529
-        },
-        {
-          "name": "buy_sell_ratio",
-          "direction": "bearish",
-          "likelihoodRatio": 0.8,
-          "description": "Buy/Sell: 13/20 (39% buys)",
-          "probBefore": 0.4117647058823529,
-          "probAfter": 0.3589743589743589
-        }
-      ]
     }
   ],
   "polymarkets": {
     "totalMarkets": 249,
-    "marketsWithEdge": 10,
-    "highEdgeCount": 8,
+    "marketsWithEdge": 25,
+    "highEdgeCount": 10,
     "markets": [
       {
         "title": "Will Bitcoin reach $150,000 in April?",
         "slug": "what-price-will-bitcoin-hit-in-april-2026",
         "endDate": "2026-05-01T04:00:00Z",
-        "volume": 5513113.464840972,
+        "volume": 5513880.925840972,
         "targetToken": "BTC",
         "strikePrice": 150000,
+        "isRange": false,
         "marketProb": 0.0025,
-        "ourProb": 4.3578908814900785e-8,
-        "edge": -0.002499956421091185,
+        "ourProb": 0,
+        "edge": -0.0025,
         "signals": [
-          "Current BTC price: $73,792.529",
-          "Strike: $150,000 (+103.3% away)",
-          "Time to expiry: 382h (σ=65% ann.)"
+          "Current BTC price: $73,917.42",
+          "Strike: $150,000 (+102.9% away)",
+          "Time to expiry: 382h (σ=65% ann.)",
+          "Smart-money net flow: $-919,240",
+          "24h price: -0.42% · turnover: 2.37%",
+          "Drift applied: -2.22% (BS base=0.0%)"
         ]
       },
       {
         "title": "Will Bitcoin reach $250,000 by December 31, 2026?",
         "slug": "what-price-will-bitcoin-hit-before-2027",
         "endDate": "2027-01-01T05:00:00Z",
-        "volume": 4734845.395723973,
+        "volume": 4734963.837132974,
         "targetToken": "BTC",
         "strikePrice": 250000,
+        "isRange": false,
         "marketProb": 0.0365,
-        "ourProb": 0.0046996408014878255,
-        "edge": -0.03180035919851217,
+        "ourProb": 0,
+        "edge": -0.0365,
         "signals": [
-          "Current BTC price: $73,792.529",
-          "Strike: $250,000 (+238.8% away)",
-          "Time to expiry: 6263h (σ=65% ann.)"
+          "Current BTC price: $73,917.42",
+          "Strike: $250,000 (+238.2% away)",
+          "Time to expiry: 6263h (σ=65% ann.)",
+          "Smart-money net flow: $-919,240",
+          "24h price: -0.42% · turnover: 2.37%",
+          "Drift applied: -2.22% (BS base=0.5%)"
         ]
       },
       {
         "title": "Will Bitcoin dip to $15,000 by December 31, 2026?",
         "slug": "what-price-will-bitcoin-hit-before-2027",
         "endDate": "2027-01-01T05:00:00Z",
-        "volume": 4555420.612423926,
+        "volume": 4555851.822423926,
         "targetToken": "BTC",
         "strikePrice": 15000,
-        "marketProb": 0.0615,
-        "ourProb": 0.0032303826993269613,
-        "edge": -0.05826961730067304,
+        "isRange": false,
+        "marketProb": 0.062,
+        "ourProb": 0.0254257312317031,
+        "edge": -0.0365742687682969,
         "signals": [
-          "Current BTC price: $73,792.529",
+          "Current BTC price: $73,917.42",
           "Strike: $15,000 (-79.7% away)",
-          "Time to expiry: 6263h (σ=65% ann.)"
+          "Time to expiry: 6263h (σ=65% ann.)",
+          "Smart-money net flow: $-919,240",
+          "24h price: -0.42% · turnover: 2.37%",
+          "Drift applied: -2.22% (BS base=0.3%)"
         ]
       },
       {
         "title": "Will bitcoin hit $1m before GTA VI?",
         "slug": "what-will-happen-before-gta-vi",
         "endDate": "2026-07-31T12:00:00Z",
-        "volume": 3982163.694563566,
+        "volume": 3982163.894563566,
         "targetToken": "BTC",
         "strikePrice": 1000000,
+        "isRange": false,
         "marketProb": 0.4885,
-        "ourProb": 1.326716514427062e-14,
-        "edge": -0.4884999999999867,
+        "ourProb": 0,
+        "edge": -0.4885,
         "signals": [
-          "Current BTC price: $73,792.529",
-          "Strike: $1,000,000 (+1255.2% away)",
-          "Time to expiry: 2574h (σ=65% ann.)"
+          "Current BTC price: $73,917.42",
+          "Strike: $1,000,000 (+1252.9% away)",
+          "Time to expiry: 2574h (σ=65% ann.)",
+          "Smart-money net flow: $-919,240",
+          "24h price: -0.42% · turnover: 2.37%",
+          "Drift applied: -2.22% (BS base=0.0%)"
         ]
       },
       {
         "title": "Will Bitcoin reach $80,000 in April?",
         "slug": "what-price-will-bitcoin-hit-in-april-2026",
         "endDate": "2026-05-01T04:00:00Z",
-        "volume": 2302706.1223649327,
+        "volume": 2328053.3591699325,
         "targetToken": "BTC",
         "strikePrice": 80000,
-        "marketProb": 0.275,
-        "ourProb": 0.21710227105730462,
-        "edge": -0.0578977289426954,
+        "isRange": false,
+        "marketProb": 0.255,
+        "ourProb": 0.19865890940944403,
+        "edge": -0.056341090590555976,
         "signals": [
-          "Current BTC price: $73,792.529",
-          "Strike: $80,000 (+8.4% away)",
-          "Time to expiry: 382h (σ=65% ann.)"
+          "Current BTC price: $73,917.42",
+          "Strike: $80,000 (+8.2% away)",
+          "Time to expiry: 382h (σ=65% ann.)",
+          "Smart-money net flow: $-919,240",
+          "24h price: -0.42% · turnover: 2.37%",
+          "Drift applied: -2.22% (BS base=22.1%)"
         ]
       },
       {
@@ -518,13 +540,17 @@
         "volume": 2222185.95287,
         "targetToken": "BTC",
         "strikePrice": 55000,
-        "marketProb": 0.63,
-        "ourProb": 0.36881836814275004,
-        "edge": -0.26118163185724996,
+        "isRange": false,
+        "marketProb": 0.635,
+        "ourProb": 0.3896501963748098,
+        "edge": -0.2453498036251902,
         "signals": [
-          "Current BTC price: $73,792.529",
-          "Strike: $55,000 (-25.5% away)",
-          "Time to expiry: 6263h (σ=65% ann.)"
+          "Current BTC price: $73,917.42",
+          "Strike: $55,000 (-25.6% away)",
+          "Time to expiry: 6263h (σ=65% ann.)",
+          "Smart-money net flow: $-919,240",
+          "24h price: -0.42% · turnover: 2.37%",
+          "Drift applied: -2.22% (BS base=36.7%)"
         ]
       },
       {
@@ -534,13 +560,17 @@
         "volume": 1861729.2343380046,
         "targetToken": "BTC",
         "strikePrice": 75000,
+        "isRange": false,
         "marketProb": 1,
-        "ourProb": 0.40248599006862856,
-        "edge": -0.5975140099313714,
+        "ourProb": 0.3862474078023134,
+        "edge": -0.6137525921976865,
         "signals": [
-          "Current BTC price: $73,792.529",
-          "Strike: $75,000 (+1.6% away)",
-          "Time to expiry: 382h (σ=65% ann.)"
+          "Current BTC price: $73,917.42",
+          "Strike: $75,000 (+1.5% away)",
+          "Time to expiry: 382h (σ=65% ann.)",
+          "Smart-money net flow: $-919,240",
+          "24h price: -0.42% · turnover: 2.37%",
+          "Drift applied: -2.22% (BS base=40.8%)"
         ]
       },
       {
@@ -550,13 +580,17 @@
         "volume": 1837806.751819994,
         "targetToken": "BTC",
         "strikePrice": 45000,
+        "isRange": false,
         "marketProb": 0.41,
-        "ourProb": 0.2289829883267216,
-        "edge": -0.18101701167327838,
+        "ourProb": 0.25020982860129626,
+        "edge": -0.15979017139870372,
         "signals": [
-          "Current BTC price: $73,792.529",
-          "Strike: $45,000 (-39.0% away)",
-          "Time to expiry: 6263h (σ=65% ann.)"
+          "Current BTC price: $73,917.42",
+          "Strike: $45,000 (-39.1% away)",
+          "Time to expiry: 6263h (σ=65% ann.)",
+          "Smart-money net flow: $-919,240",
+          "24h price: -0.42% · turnover: 2.37%",
+          "Drift applied: -2.22% (BS base=22.8%)"
         ]
       },
       {
@@ -566,29 +600,337 @@
         "volume": 1744321.6945340014,
         "targetToken": "BTC",
         "strikePrice": 35000,
+        "isRange": false,
         "marketProb": 0.225,
-        "ourProb": 0.11303460270303956,
-        "edge": -0.11196539729696045,
+        "ourProb": 0.13466081233934746,
+        "edge": -0.09033918766065255,
         "signals": [
-          "Current BTC price: $73,792.529",
+          "Current BTC price: $73,917.42",
           "Strike: $35,000 (-52.6% away)",
-          "Time to expiry: 6263h (σ=65% ann.)"
+          "Time to expiry: 6263h (σ=65% ann.)",
+          "Smart-money net flow: $-919,240",
+          "24h price: -0.42% · turnover: 2.37%",
+          "Drift applied: -2.22% (BS base=11.2%)"
         ]
       },
       {
         "title": "Will Bitcoin dip to $65,000 in April?",
         "slug": "what-price-will-bitcoin-hit-in-april-2026",
         "endDate": "2026-05-01T04:00:00Z",
-        "volume": 1564627.3970320073,
+        "volume": 1564841.6840950074,
         "targetToken": "BTC",
         "strikePrice": 65000,
+        "isRange": false,
         "marketProb": 0.225,
-        "ourProb": 0.1603895953182094,
-        "edge": -0.0646104046817906,
+        "ourProb": 0.17940108519208797,
+        "edge": -0.04559891480791203,
         "signals": [
-          "Current BTC price: $73,792.529",
-          "Strike: $65,000 (-11.9% away)",
-          "Time to expiry: 382h (σ=65% ann.)"
+          "Current BTC price: $73,917.42",
+          "Strike: $65,000 (-12.1% away)",
+          "Time to expiry: 382h (σ=65% ann.)",
+          "Smart-money net flow: $-919,240",
+          "24h price: -0.42% · turnover: 2.37%",
+          "Drift applied: -2.22% (BS base=15.7%)"
+        ]
+      },
+      {
+        "title": "Will Bitcoin hit $150k by December 31?",
+        "slug": "when-will-bitcoin-hit-150k",
+        "endDate": "2026-01-01T04:00:00Z",
+        "volume": 1555669.585882,
+        "targetToken": "BTC",
+        "strikePrice": 150000,
+        "isRange": false,
+        "marketProb": 0,
+        "ourProb": 0,
+        "edge": 0,
+        "signals": [
+          "Current BTC price: $73,917.42",
+          "Strike: $150,000 (+102.9% away)",
+          "Time to expiry: 1h (σ=65% ann.)",
+          "Smart-money net flow: $-919,240",
+          "24h price: -0.42% · turnover: 2.37%",
+          "Drift applied: -2.22% (BS base=0.0%)"
+        ]
+      },
+      {
+        "title": "Will Bitcoin dip to $65,000 by December 31, 2026?",
+        "slug": "what-price-will-bitcoin-hit-before-2027",
+        "endDate": "2027-01-01T05:00:00Z",
+        "volume": 1535035.016154,
+        "targetToken": "BTC",
+        "strikePrice": 65000,
+        "isRange": false,
+        "marketProb": 1,
+        "ourProb": 0.5448770356052423,
+        "edge": -0.45512296439475775,
+        "signals": [
+          "Current BTC price: $73,917.42",
+          "Strike: $65,000 (-12.1% away)",
+          "Time to expiry: 6263h (σ=65% ann.)",
+          "Smart-money net flow: $-919,240",
+          "24h price: -0.42% · turnover: 2.37%",
+          "Drift applied: -2.22% (BS base=52.3%)"
+        ]
+      },
+      {
+        "title": "Will Bitcoin dip to $50,000 in April?",
+        "slug": "what-price-will-bitcoin-hit-in-april-2026",
+        "endDate": "2026-05-01T04:00:00Z",
+        "volume": 1398178.3426719992,
+        "targetToken": "BTC",
+        "strikePrice": 50000,
+        "isRange": false,
+        "marketProb": 0.0175,
+        "ourProb": 0.024040091767112297,
+        "edge": 0.006540091767112295,
+        "signals": [
+          "Current BTC price: $73,917.42",
+          "Strike: $50,000 (-32.4% away)",
+          "Time to expiry: 382h (σ=65% ann.)",
+          "Smart-money net flow: $-919,240",
+          "24h price: -0.42% · turnover: 2.37%",
+          "Drift applied: -2.22% (BS base=0.2%)"
+        ]
+      },
+      {
+        "title": "Will Bitcoin reach $200,000 by December 31, 2026?",
+        "slug": "what-price-will-bitcoin-hit-before-2027",
+        "endDate": "2027-01-01T05:00:00Z",
+        "volume": 1388314.3301789972,
+        "targetToken": "BTC",
+        "strikePrice": 200000,
+        "isRange": false,
+        "marketProb": 0.042,
+        "ourProb": 0,
+        "edge": -0.042,
+        "signals": [
+          "Current BTC price: $73,917.42",
+          "Strike: $200,000 (+170.6% away)",
+          "Time to expiry: 6263h (σ=65% ann.)",
+          "Smart-money net flow: $-919,240",
+          "24h price: -0.42% · turnover: 2.37%",
+          "Drift applied: -2.22% (BS base=1.4%)"
+        ]
+      },
+      {
+        "title": "Will Ethereum reach $4,000 in April?",
+        "slug": "what-price-will-ethereum-hit-in-april-2026",
+        "endDate": "2026-05-01T04:00:00Z",
+        "volume": 1315096.0585590038,
+        "targetToken": "ETH",
+        "strikePrice": 4000,
+        "isRange": false,
+        "marketProb": 0.0035,
+        "ourProb": 0,
+        "edge": -0.0035,
+        "signals": [
+          "Current ETH price: $2,318.945",
+          "Strike: $4,000 (+72.5% away)",
+          "Time to expiry: 382h (σ=65% ann.)",
+          "Smart-money net flow: $-1,481,682",
+          "24h price: +5.73% · turnover: 0.03%",
+          "Drift applied: -2.38% (BS base=0.0%)"
+        ]
+      },
+      {
+        "title": "Will Bitcoin hit $60k or $80k first?",
+        "slug": "will-bitcoin-hit-60k-or-80k-first-965",
+        "endDate": "2027-01-01T05:00:00Z",
+        "volume": 1309797.326739002,
+        "targetToken": "BTC",
+        "strikePrice": 60000,
+        "isRange": false,
+        "marketProb": 0.355,
+        "ourProb": 0.5342370551142713,
+        "edge": 0.17923705511427135,
+        "signals": [
+          "Current BTC price: $73,917.42",
+          "Strike: $60,000 (-18.8% away)",
+          "Time to expiry: 6263h (σ=65% ann.)",
+          "Smart-money net flow: $-919,240",
+          "24h price: -0.42% · turnover: 2.37%",
+          "Drift applied: -2.22% (BS base=55.6%)"
+        ]
+      },
+      {
+        "title": "Will Bitcoin dip to $60,000 in April?",
+        "slug": "what-price-will-bitcoin-hit-in-april-2026",
+        "endDate": "2026-05-01T04:00:00Z",
+        "volume": 1263070.9932740072,
+        "targetToken": "BTC",
+        "strikePrice": 60000,
+        "isRange": false,
+        "marketProb": 0.065,
+        "ourProb": 0.07769868243645561,
+        "edge": 0.01269868243645561,
+        "signals": [
+          "Current BTC price: $73,917.42",
+          "Strike: $60,000 (-18.8% away)",
+          "Time to expiry: 382h (σ=65% ann.)",
+          "Smart-money net flow: $-919,240",
+          "24h price: -0.42% · turnover: 2.37%",
+          "Drift applied: -2.22% (BS base=5.5%)"
+        ]
+      },
+      {
+        "title": "Will Bitcoin reach $100,000 by December 31, 2026?",
+        "slug": "what-price-will-bitcoin-hit-before-2027",
+        "endDate": "2027-01-01T05:00:00Z",
+        "volume": 1256327.124812001,
+        "targetToken": "BTC",
+        "strikePrice": 100000,
+        "isRange": false,
+        "marketProb": 0.365,
+        "ourProb": 0.14883348655160866,
+        "edge": -0.21616651344839133,
+        "signals": [
+          "Current BTC price: $73,917.42",
+          "Strike: $100,000 (+35.3% away)",
+          "Time to expiry: 6263h (σ=65% ann.)",
+          "Smart-money net flow: $-919,240",
+          "24h price: -0.42% · turnover: 2.37%",
+          "Drift applied: -2.22% (BS base=17.1%)"
+        ]
+      },
+      {
+        "title": "Will Bitcoin dip to $45,000 in April?",
+        "slug": "what-price-will-bitcoin-hit-in-april-2026",
+        "endDate": "2026-05-01T04:00:00Z",
+        "volume": 1246442.1960840034,
+        "targetToken": "BTC",
+        "strikePrice": 45000,
+        "isRange": false,
+        "marketProb": 0.0115,
+        "ourProb": 0.022346594852657324,
+        "edge": 0.010846594852657324,
+        "signals": [
+          "Current BTC price: $73,917.42",
+          "Strike: $45,000 (-39.1% away)",
+          "Time to expiry: 382h (σ=65% ann.)",
+          "Smart-money net flow: $-919,240",
+          "24h price: -0.42% · turnover: 2.37%",
+          "Drift applied: -2.22% (BS base=0.0%)"
+        ]
+      },
+      {
+        "title": "Will Bitcoin reach $90,000 in April?",
+        "slug": "what-price-will-bitcoin-hit-in-april-2026",
+        "endDate": "2026-05-01T04:00:00Z",
+        "volume": 1220200.5560970039,
+        "targetToken": "BTC",
+        "strikePrice": 90000,
+        "isRange": false,
+        "marketProb": 0.0195,
+        "ourProb": 0.028044131739927876,
+        "edge": 0.008544131739927876,
+        "signals": [
+          "Current BTC price: $73,917.42",
+          "Strike: $90,000 (+21.8% away)",
+          "Time to expiry: 382h (σ=65% ann.)",
+          "Smart-money net flow: $-919,240",
+          "24h price: -0.42% · turnover: 2.37%",
+          "Drift applied: -2.22% (BS base=5.0%)"
+        ]
+      },
+      {
+        "title": "Will Bitcoin reach $85,000 in April?",
+        "slug": "what-price-will-bitcoin-hit-in-april-2026",
+        "endDate": "2026-05-01T04:00:00Z",
+        "volume": 1143632.430822999,
+        "targetToken": "BTC",
+        "strikePrice": 85000,
+        "isRange": false,
+        "marketProb": 0.0595,
+        "ourProb": 0.08794098358136065,
+        "edge": 0.028440983581360657,
+        "signals": [
+          "Current BTC price: $73,917.42",
+          "Strike: $85,000 (+15.0% away)",
+          "Time to expiry: 382h (σ=65% ann.)",
+          "Smart-money net flow: $-919,240",
+          "24h price: -0.42% · turnover: 2.37%",
+          "Drift applied: -2.22% (BS base=11.0%)"
+        ]
+      },
+      {
+        "title": "Will Bitcoin dip to $20,000 in April?",
+        "slug": "what-price-will-bitcoin-hit-in-april-2026",
+        "endDate": "2026-05-01T04:00:00Z",
+        "volume": 1123409.7310290148,
+        "targetToken": "BTC",
+        "strikePrice": 20000,
+        "isRange": false,
+        "marketProb": 0.0035,
+        "ourProb": 0.022225715892483337,
+        "edge": 0.018725715892483338,
+        "signals": [
+          "Current BTC price: $73,917.42",
+          "Strike: $20,000 (-72.9% away)",
+          "Time to expiry: 382h (σ=65% ann.)",
+          "Smart-money net flow: $-919,240",
+          "24h price: -0.42% · turnover: 2.37%",
+          "Drift applied: -2.22% (BS base=0.0%)"
+        ]
+      },
+      {
+        "title": "Will Bitcoin dip to $75,000 by December 31, 2026?",
+        "slug": "what-price-will-bitcoin-hit-before-2027",
+        "endDate": "2027-01-01T05:00:00Z",
+        "volume": 1115325.716063,
+        "targetToken": "BTC",
+        "strikePrice": 75000,
+        "isRange": false,
+        "marketProb": 1,
+        "ourProb": 0.6716314906225328,
+        "edge": -0.3283685093774672,
+        "signals": [
+          "Current BTC price: $73,917.42",
+          "Strike: $75,000 (+1.5% away)",
+          "Time to expiry: 6263h (σ=65% ann.)",
+          "Smart-money net flow: $-919,240",
+          "24h price: -0.42% · turnover: 2.37%",
+          "Drift applied: -2.22% (BS base=64.9%)"
+        ]
+      },
+      {
+        "title": "Will Bitcoin dip to $55,000 in April?",
+        "slug": "what-price-will-bitcoin-hit-in-april-2026",
+        "endDate": "2026-05-01T04:00:00Z",
+        "volume": 1049945.2780939995,
+        "targetToken": "BTC",
+        "strikePrice": 55000,
+        "isRange": false,
+        "marketProb": 0.0325,
+        "ourProb": 0.035376483453835476,
+        "edge": 0.0028764834538354753,
+        "signals": [
+          "Current BTC price: $73,917.42",
+          "Strike: $55,000 (-25.6% away)",
+          "Time to expiry: 382h (σ=65% ann.)",
+          "Smart-money net flow: $-919,240",
+          "24h price: -0.42% · turnover: 2.37%",
+          "Drift applied: -2.22% (BS base=1.3%)"
+        ]
+      },
+      {
+        "title": "Will Bitcoin reach $500,000 by December 31, 2026?",
+        "slug": "what-price-will-bitcoin-hit-before-2027",
+        "endDate": "2027-01-01T05:00:00Z",
+        "volume": 921354.3120550009,
+        "targetToken": "BTC",
+        "strikePrice": 500000,
+        "isRange": false,
+        "marketProb": 0.0215,
+        "ourProb": 0,
+        "edge": -0.0215,
+        "signals": [
+          "Current BTC price: $73,917.42",
+          "Strike: $500,000 (+576.4% away)",
+          "Time to expiry: 6263h (σ=65% ann.)",
+          "Smart-money net flow: $-919,240",
+          "24h price: -0.42% · turnover: 2.37%",
+          "Drift applied: -2.22% (BS base=0.0%)"
         ]
       }
     ],
@@ -597,7 +939,7 @@
         "title": "Will Bitcoin reach $150,000 in April?",
         "slug": "what-price-will-bitcoin-hit-in-april-2026",
         "endDate": "2026-05-01T04:00:00Z",
-        "volume": 5513113.464840972,
+        "volume": 5513880.925840972,
         "targetToken": "BTC",
         "strikePrice": 150000,
         "yesPrice": 0.0025
@@ -606,7 +948,7 @@
         "title": "Will Bitcoin reach $250,000 by December 31, 2026?",
         "slug": "what-price-will-bitcoin-hit-before-2027",
         "endDate": "2027-01-01T05:00:00Z",
-        "volume": 4734845.395723973,
+        "volume": 4734963.837132974,
         "targetToken": "BTC",
         "strikePrice": 250000,
         "yesPrice": 0.0365
@@ -615,16 +957,16 @@
         "title": "Will Bitcoin dip to $15,000 by December 31, 2026?",
         "slug": "what-price-will-bitcoin-hit-before-2027",
         "endDate": "2027-01-01T05:00:00Z",
-        "volume": 4555420.612423926,
+        "volume": 4555851.822423926,
         "targetToken": "BTC",
         "strikePrice": 15000,
-        "yesPrice": 0.0615
+        "yesPrice": 0.062
       },
       {
         "title": "Will bitcoin hit $1m before GTA VI?",
         "slug": "what-will-happen-before-gta-vi",
         "endDate": "2026-07-31T12:00:00Z",
-        "volume": 3982163.694563566,
+        "volume": 3982163.894563566,
         "targetToken": "BTC",
         "strikePrice": 1000000,
         "yesPrice": 0.4885
@@ -633,10 +975,10 @@
         "title": "Will Bitcoin reach $80,000 in April?",
         "slug": "what-price-will-bitcoin-hit-in-april-2026",
         "endDate": "2026-05-01T04:00:00Z",
-        "volume": 2302706.1223649327,
+        "volume": 2328053.3591699325,
         "targetToken": "BTC",
         "strikePrice": 80000,
-        "yesPrice": 0.275
+        "yesPrice": 0.255
       },
       {
         "title": "Will Bitcoin dip to $55,000 by December 31, 2026?",
@@ -645,7 +987,7 @@
         "volume": 2222185.95287,
         "targetToken": "BTC",
         "strikePrice": 55000,
-        "yesPrice": 0.63
+        "yesPrice": 0.635
       },
       {
         "title": "Will Bitcoin reach $75,000 in April?",
@@ -678,7 +1020,7 @@
         "title": "Will Bitcoin dip to $65,000 in April?",
         "slug": "what-price-will-bitcoin-hit-in-april-2026",
         "endDate": "2026-05-01T04:00:00Z",
-        "volume": 1564627.3970320073,
+        "volume": 1564841.6840950074,
         "targetToken": "BTC",
         "strikePrice": 65000,
         "yesPrice": 0.225
@@ -705,7 +1047,7 @@
         "title": "Will Bitcoin dip to $50,000 in April?",
         "slug": "what-price-will-bitcoin-hit-in-april-2026",
         "endDate": "2026-05-01T04:00:00Z",
-        "volume": 1398060.3626719993,
+        "volume": 1398178.3426719992,
         "targetToken": "BTC",
         "strikePrice": 50000,
         "yesPrice": 0.0175
@@ -720,142 +1062,106 @@
         "yesPrice": 0.042
       },
       {
-        "title": "Will Bitcoin hit $60k or $80k first?",
-        "slug": "will-bitcoin-hit-60k-or-80k-first-965",
-        "endDate": "2027-01-01T05:00:00Z",
-        "volume": 1309797.326739002,
-        "targetToken": "BTC",
-        "strikePrice": 60000,
-        "yesPrice": 0.355
+        "title": "Will Ethereum reach $4,000 in April?",
+        "slug": "what-price-will-ethereum-hit-in-april-2026",
+        "endDate": "2026-05-01T04:00:00Z",
+        "volume": 1315096.0585590038,
+        "targetToken": "ETH",
+        "strikePrice": 4000,
+        "yesPrice": 0.0035
       }
     ]
   },
   "onchainosCallLog": [
     {
       "command": "onchainos token hot-tokens --chain 196 --ranking-type 4",
-      "timestamp": "2026-04-15T05:50:24.368Z",
+      "timestamp": "2026-04-15T06:16:27.003Z",
       "success": true,
-      "resultPreview": "{\"ok\":true,\"data\":[{\"bundleHoldPercent\":\"0.00007\",\"chainIndex\":\"196\",\"change\":\"0\",\"cursor\":\"0\",\"devHoldPercent\":\"0\",\"firstTradeTime\":\"1755117386000\",\"holders\":\"35609\",\"inflowUsd\":\"560.3721729899044603"
+      "resultPreview": "{\"ok\":true,\"data\":[{\"bundleHoldPercent\":\"0.00007\",\"chainIndex\":\"196\",\"change\":\"-0.56\",\"cursor\":\"0\",\"devHoldPercent\":\"0\",\"firstTradeTime\":\"1755117386000\",\"holders\":\"35608\",\"inflowUsd\":\"-300.92170174614"
     },
     {
       "command": "onchainos signal list --chain 196 --wallet-type 1,2,3",
-      "timestamp": "2026-04-15T05:50:26.542Z",
+      "timestamp": "2026-04-15T06:16:28.900Z",
       "success": true,
       "resultPreview": "{\"ok\":true,\"data\":[{\"amountUsd\":\"404.311371828855064737\",\"chainIndex\":\"196\",\"cursor\":\"1776151825350!@#145995\",\"price\":\"0.000539301922616712\",\"soldRatioPercent\":\"74.05\",\"timestamp\":\"1776151825350\",\"tok"
     },
     {
-      "command": "onchainos market price --address 0x2260fac5e5542a773aa44fbcfedf7c193bc2c599 --chain 1",
-      "timestamp": "2026-04-15T05:50:34.168Z",
+      "command": "onchainos token price-info --address 0x2260fac5e5542a773aa44fbcfedf7c193bc2c599 --chain 1",
+      "timestamp": "2026-04-15T06:16:35.920Z",
       "success": true,
-      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"1\",\"price\":\"73792.5287836499008667421397209893\",\"time\":\"1776232233848\",\"tokenContractAddress\":\"0x2260fac5e5542a773aa44fbcfedf7c193bc2c599\"}]}"
+      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"1\",\"circSupply\":\"119003.64241312\",\"holders\":\"178008\",\"liquidity\":\"777884102.58173459686488777715220847656674545\",\"marketCap\":\"8796442269.709029003151319784\",\"maxPrice"
     },
     {
-      "command": "onchainos market price --address 0x2260fac5e5542a773aa44fbcfedf7c193bc2c599 --chain 1",
-      "timestamp": "2026-04-15T05:50:36.127Z",
+      "command": "onchainos signal list --chain 1 --wallet-type 1,2,3 --min-amount-usd 5000",
+      "timestamp": "2026-04-15T06:16:38.049Z",
       "success": true,
-      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"1\",\"price\":\"73792.5287836499008667421397209893\",\"time\":\"1776232235868\",\"tokenContractAddress\":\"0x2260fac5e5542a773aa44fbcfedf7c193bc2c599\"}]}"
+      "resultPreview": "{\"ok\":true,\"data\":[{\"amountUsd\":\"8279.474159074979994445\",\"chainIndex\":\"1\",\"cursor\":\"1776208767882!@#146153\",\"price\":\"0.012402298409017896\",\"soldRatioPercent\":\"94.56\",\"timestamp\":\"1776208767882\",\"toke"
     },
     {
-      "command": "onchainos market price --address 0x2260fac5e5542a773aa44fbcfedf7c193bc2c599 --chain 1",
-      "timestamp": "2026-04-15T05:50:37.999Z",
+      "command": "onchainos token price-info --address 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee --chain 1",
+      "timestamp": "2026-04-15T06:16:40.180Z",
       "success": true,
-      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"1\",\"price\":\"73792.5287836499008667421397209893\",\"time\":\"1776232237768\",\"tokenContractAddress\":\"0x2260fac5e5542a773aa44fbcfedf7c193bc2c599\"}]}"
+      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"1\",\"circSupply\":\"120690991.77\",\"holders\":\"\",\"liquidity\":\"456198539.21629888207531905810128711364\",\"marketCap\":\"280383277530.48\",\"maxPrice\":\"2374.318485313138545199647"
     },
     {
-      "command": "onchainos market price --address 0x2260fac5e5542a773aa44fbcfedf7c193bc2c599 --chain 1",
-      "timestamp": "2026-04-15T05:50:39.834Z",
+      "command": "onchainos signal list --chain 1 --wallet-type 1,2,3 --min-amount-usd 5000",
+      "timestamp": "2026-04-15T06:16:42.476Z",
       "success": true,
-      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"1\",\"price\":\"73792.5287836499008667421397209893\",\"time\":\"1776232239556\",\"tokenContractAddress\":\"0x2260fac5e5542a773aa44fbcfedf7c193bc2c599\"}]}"
+      "resultPreview": "{\"ok\":true,\"data\":[{\"amountUsd\":\"8279.474159074979994445\",\"chainIndex\":\"1\",\"cursor\":\"1776208767882!@#146153\",\"price\":\"0.012402298409017896\",\"soldRatioPercent\":\"94.56\",\"timestamp\":\"1776208767882\",\"toke"
     },
     {
-      "command": "onchainos market price --address 0x2260fac5e5542a773aa44fbcfedf7c193bc2c599 --chain 1",
-      "timestamp": "2026-04-15T05:50:41.747Z",
-      "success": true,
-      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"1\",\"price\":\"73792.5287836499008667421397209893\",\"time\":\"1776232241537\",\"tokenContractAddress\":\"0x2260fac5e5542a773aa44fbcfedf7c193bc2c599\"}]}"
-    },
-    {
-      "command": "onchainos market price --address 0x2260fac5e5542a773aa44fbcfedf7c193bc2c599 --chain 1",
-      "timestamp": "2026-04-15T05:50:43.760Z",
-      "success": true,
-      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"1\",\"price\":\"73792.5287836499008667421397209893\",\"time\":\"1776232243529\",\"tokenContractAddress\":\"0x2260fac5e5542a773aa44fbcfedf7c193bc2c599\"}]}"
-    },
-    {
-      "command": "onchainos market price --address 0x2260fac5e5542a773aa44fbcfedf7c193bc2c599 --chain 1",
-      "timestamp": "2026-04-15T05:50:45.860Z",
-      "success": true,
-      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"1\",\"price\":\"73792.5287836499008667421397209893\",\"time\":\"1776232245645\",\"tokenContractAddress\":\"0x2260fac5e5542a773aa44fbcfedf7c193bc2c599\"}]}"
-    },
-    {
-      "command": "onchainos market price --address 0x2260fac5e5542a773aa44fbcfedf7c193bc2c599 --chain 1",
-      "timestamp": "2026-04-15T05:50:47.743Z",
-      "success": true,
-      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"1\",\"price\":\"73792.5287836499008667421397209893\",\"time\":\"1776232247533\",\"tokenContractAddress\":\"0x2260fac5e5542a773aa44fbcfedf7c193bc2c599\"}]}"
-    },
-    {
-      "command": "onchainos market price --address 0x2260fac5e5542a773aa44fbcfedf7c193bc2c599 --chain 1",
-      "timestamp": "2026-04-15T05:50:49.535Z",
-      "success": true,
-      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"1\",\"price\":\"73792.5287836499008667421397209893\",\"time\":\"1776232249329\",\"tokenContractAddress\":\"0x2260fac5e5542a773aa44fbcfedf7c193bc2c599\"}]}"
-    },
-    {
-      "command": "onchainos market price --address 0x2260fac5e5542a773aa44fbcfedf7c193bc2c599 --chain 1",
-      "timestamp": "2026-04-15T05:50:51.416Z",
-      "success": true,
-      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"1\",\"price\":\"73792.5287836499008667421397209893\",\"time\":\"1776232251199\",\"tokenContractAddress\":\"0x2260fac5e5542a773aa44fbcfedf7c193bc2c599\"}]}"
-    },
-    {
-      "command": "onchainos security token-scan --tokens 196:0x0cc24c51bf89c00c5affbfcf5e856c25ecbdb48e,196:0x70bf3e2b75d8832d7f790a87fffc1fa9d63dc5bb,196:0x5839244eab49314bccc0fa76e3a081cb1a461111,196:0x87669801a1fad6dad9db70d27ac752f452989667,196:0x00880ec7de7397e4e25ad5fbd69d97db91e90372,196:0x4c225fb675c0c475b53381463782a7f741d59763,196:0x256a55efa042a5e230078df730ffba53f5a77777,196:0x375da15dacce7a2a4f8075b5e39b8c2018057777,196:0xdcc83b32b6b4e95a61951bfcc9d71967515c0fca,196:0x8854b281cdf5940ebd4a753f8d37f49775058e03,196:0x59ee065af1887a0a283d399d32a02cd098ed8f5e,196:0x903358faf7c6304afbd560e9e29b12ab1b8fddc5,196:0xa49e20536132223d412b656dc3dfbf98303b1111,196:0x4d55e22b27ef892bfa057a533332fb98eff06dd1,196:0xfdc4a45a4bf53957b2c73b1ff323d8cbe39118dd",
-      "timestamp": "2026-04-15T05:50:53.386Z",
+      "command": "onchainos security token-scan --tokens 196:0x0cc24c51bf89c00c5affbfcf5e856c25ecbdb48e,196:0x70bf3e2b75d8832d7f790a87fffc1fa9d63dc5bb,196:0x5839244eab49314bccc0fa76e3a081cb1a461111,196:0x00880ec7de7397e4e25ad5fbd69d97db91e90372,196:0x87669801a1fad6dad9db70d27ac752f452989667,196:0x4c225fb675c0c475b53381463782a7f741d59763,196:0x256a55efa042a5e230078df730ffba53f5a77777,196:0x375da15dacce7a2a4f8075b5e39b8c2018057777,196:0x903358faf7c6304afbd560e9e29b12ab1b8fddc5,196:0xdcc83b32b6b4e95a61951bfcc9d71967515c0fca,196:0xa49e20536132223d412b656dc3dfbf98303b1111,196:0x59ee065af1887a0a283d399d32a02cd098ed8f5e,196:0xfdc4a45a4bf53957b2c73b1ff323d8cbe39118dd,196:0x8854b281cdf5940ebd4a753f8d37f49775058e03,196:0x4d55e22b27ef892bfa057a533332fb98eff06dd1",
+      "timestamp": "2026-04-15T06:16:44.408Z",
       "success": true,
       "resultPreview": "{\"ok\":true,\"data\":[{\"buyTaxes\":\"0.04\",\"chainId\":\"196\",\"isAirdropScam\":false,\"isChainSupported\":true,\"isCounterfeit\":false,\"isDumping\":false,\"isFakeLiquidity\":false,\"isFundLinkage\":false,\"isHasAssetEdi"
     },
     {
       "command": "onchainos token price-info --address 0x0cc24c51bf89c00c5affbfcf5e856c25ecbdb48e --chain 196",
-      "timestamp": "2026-04-15T05:50:55.149Z",
+      "timestamp": "2026-04-15T06:16:46.394Z",
       "success": true,
-      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"196\",\"circSupply\":\"997777184.183486599000000000\",\"holders\":\"35609\",\"liquidity\":\"495457.103952689468876746174403051973057931937209418500\",\"marketCap\":\"4134404.70052875"
+      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"196\",\"circSupply\":\"997777184.183486599000000000\",\"holders\":\"35608\",\"liquidity\":\"494202.904935804599781818745839837592502228328906928500\",\"marketCap\":\"4127376.21459324"
     },
     {
       "command": "onchainos token price-info --address 0x70bf3e2b75d8832d7f790a87fffc1fa9d63dc5bb --chain 196",
-      "timestamp": "2026-04-15T05:50:57.026Z",
+      "timestamp": "2026-04-15T06:16:48.301Z",
       "success": true,
-      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"196\",\"circSupply\":\"55132704045.872900000000000000\",\"holders\":\"32578\",\"liquidity\":\"981192.035768664647704431505640219380879089681163408\",\"marketCap\":\"4220632.363422079"
+      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"196\",\"circSupply\":\"55132704045.872900000000000000\",\"holders\":\"32578\",\"liquidity\":\"981201.612140930693154847830906382270730940397806254\",\"marketCap\":\"4216011.938293778"
     },
     {
       "command": "onchainos token price-info --address 0x5839244eab49314bccc0fa76e3a081cb1a461111 --chain 196",
-      "timestamp": "2026-04-15T05:50:59.252Z",
+      "timestamp": "2026-04-15T06:16:50.159Z",
       "success": true,
-      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"196\",\"circSupply\":\"999000000.000000000000000000\",\"holders\":\"10802\",\"liquidity\":\"62499.122157208398939393055545518149581181920396317\",\"marketCap\":\"160536.5332229307789"
-    },
-    {
-      "command": "onchainos token price-info --address 0x87669801a1fad6dad9db70d27ac752f452989667 --chain 196",
-      "timestamp": "2026-04-15T05:51:01.106Z",
-      "success": true,
-      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"196\",\"circSupply\":\"973244751.477732200000000\",\"holders\":\"88104\",\"liquidity\":\"129626.4974180970554819865200562692470828303067924969\",\"marketCap\":\"943506.75382970446459"
+      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"196\",\"circSupply\":\"999000000.000000000000000000\",\"holders\":\"10805\",\"liquidity\":\"62497.6168096997942228473353272724648527864659010322\",\"marketCap\":\"160300.697268632024"
     },
     {
       "command": "onchainos token price-info --address 0x00880ec7de7397e4e25ad5fbd69d97db91e90372 --chain 196",
-      "timestamp": "2026-04-15T05:51:02.917Z",
+      "timestamp": "2026-04-15T06:16:52.163Z",
       "success": true,
-      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"196\",\"circSupply\":\"1000000000.000000000000000000\",\"holders\":\"3149\",\"liquidity\":\"59364.943396877330444617430150888115227026615982161\",\"marketCap\":\"400728.2330171654953"
+      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"196\",\"circSupply\":\"1000000000.000000000000000000\",\"holders\":\"3149\",\"liquidity\":\"59084.817962171450628640706982808281338514044523919\",\"marketCap\":\"391627.1075411448128"
+    },
+    {
+      "command": "onchainos token price-info --address 0x87669801a1fad6dad9db70d27ac752f452989667 --chain 196",
+      "timestamp": "2026-04-15T06:16:54.050Z",
+      "success": true,
+      "resultPreview": "{\"ok\":true,\"data\":[{\"chainIndex\":\"196\",\"circSupply\":\"973244751.477732200000000\",\"holders\":\"88103\",\"liquidity\":\"129650.5906781988037749801124722654193436513766084426069\",\"marketCap\":\"942672.82603981612"
     },
     {
       "command": "onchainos wallet balance --chain 196",
-      "timestamp": "2026-04-15T05:51:04.831Z",
+      "timestamp": "2026-04-15T06:16:58.064Z",
       "success": true,
       "resultPreview": "{\"ok\":true,\"data\":{\"details\":[{\"tokenAssets\":[]}],\"totalValueUsd\":\"0.00\"}}"
     }
   ],
   "recommendation": {
-    "symbol": "DOGSHIT",
-    "address": "0x70bf3e2b75d8832d7f790a87fffc1fa9d63dc5bb",
-    "finalProbability": 0.6766892984157776,
+    "symbol": "FDOG",
+    "address": "0x5839244eab49314bccc0fa76e3a081cb1a461111",
+    "finalProbability": 0.7990636365463056,
     "trace": [
       {
         "name": "price_momentum",
         "direction": "bullish",
         "likelihoodRatio": 1.3,
-        "description": "24h price change: 49.0%",
+        "description": "24h price change: 16.0%",
         "probBefore": 0.5,
         "probAfter": 0.5652173913043479
       },
@@ -863,17 +1169,25 @@
         "name": "buy_sell_ratio",
         "direction": "bullish",
         "likelihoodRatio": 1.4,
-        "description": "Buy/Sell: 15/6 (71% buys)",
+        "description": "Buy/Sell: 6/1 (86% buys)",
         "probBefore": 0.5652173913043479,
         "probAfter": 0.6453900709219859
+      },
+      {
+        "name": "smart_money_consensus",
+        "direction": "bullish",
+        "likelihoodRatio": 1.9,
+        "description": "3 smart money wallets buying, $404.31 total",
+        "probBefore": 0.6453900709219859,
+        "probAfter": 0.775684163301929
       },
       {
         "name": "positive_inflow",
         "direction": "bullish",
         "likelihoodRatio": 1.15,
-        "description": "Positive inflow: $59,625.67 volume with price increase",
-        "probBefore": 0.6453900709219859,
-        "probAfter": 0.6766892984157776
+        "description": "Positive inflow: $140,984.71 volume with price increase",
+        "probBefore": 0.775684163301929,
+        "probAfter": 0.7990636365463056
       }
     ]
   },
@@ -881,30 +1195,30 @@
     "executed": false,
     "error": "Insufficient balance",
     "recommendation": {
-      "address": "0x70bf3e2b75d8832d7f790a87fffc1fa9d63dc5bb",
-      "symbol": "DOGSHIT",
-      "price": 0.00007655406054290976,
-      "change24h": 0.49,
-      "volume": 59625.665088362635,
-      "liquidity": 981192.0357686647,
-      "marketCap": 4220632.36342208,
-      "holders": 32578,
-      "riskLevel": 2,
-      "top10HoldPct": 2.781,
-      "txsBuy": 15,
-      "txsSell": 6,
-      "smartMoneyBuying": false,
-      "signalWalletCount": 0,
-      "signalAmountUsd": 0,
-      "soldRatioPct": 100,
+      "address": "0x5839244eab49314bccc0fa76e3a081cb1a461111",
+      "symbol": "FDOG",
+      "price": 0.00016046115842705908,
+      "change24h": 0.16,
+      "volume": 140984.7113060709,
+      "liquidity": 62497.61680969979,
+      "marketCap": 160300.69726863204,
+      "holders": 10805,
+      "riskLevel": 1,
+      "top10HoldPct": 9.4406,
+      "txsBuy": 6,
+      "txsSell": 1,
+      "smartMoneyBuying": true,
+      "signalWalletCount": 3,
+      "signalAmountUsd": 404.31137182885504,
+      "soldRatioPct": 74.05,
       "isHoneypot": false,
-      "signalStrength": 0.6766892984157776,
+      "signalStrength": 0.7990636365463056,
       "probabilityTrace": [
         {
           "name": "price_momentum",
           "direction": "bullish",
           "likelihoodRatio": 1.3,
-          "description": "24h price change: 49.0%",
+          "description": "24h price change: 16.0%",
           "probBefore": 0.5,
           "probAfter": 0.5652173913043479
         },
@@ -912,20 +1226,28 @@
           "name": "buy_sell_ratio",
           "direction": "bullish",
           "likelihoodRatio": 1.4,
-          "description": "Buy/Sell: 15/6 (71% buys)",
+          "description": "Buy/Sell: 6/1 (86% buys)",
           "probBefore": 0.5652173913043479,
           "probAfter": 0.6453900709219859
+        },
+        {
+          "name": "smart_money_consensus",
+          "direction": "bullish",
+          "likelihoodRatio": 1.9,
+          "description": "3 smart money wallets buying, $404.31 total",
+          "probBefore": 0.6453900709219859,
+          "probAfter": 0.775684163301929
         },
         {
           "name": "positive_inflow",
           "direction": "bullish",
           "likelihoodRatio": 1.15,
-          "description": "Positive inflow: $59,625.67 volume with price increase",
-          "probBefore": 0.6453900709219859,
-          "probAfter": 0.6766892984157776
+          "description": "Positive inflow: $140,984.71 volume with price increase",
+          "probBefore": 0.775684163301929,
+          "probAfter": 0.7990636365463056
         }
       ],
-      "finalProbability": 0.6766892984157776,
+      "finalProbability": 0.7990636365463056,
       "recommendation": "BUY"
     }
   }

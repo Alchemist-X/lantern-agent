@@ -20,6 +20,8 @@ interface PolymarketEntry {
   readonly liquidity: number;
   readonly targetToken?: string;
   readonly strikePrice?: number;
+  readonly strikeHigh?: number;
+  readonly isRange?: boolean;
   readonly outcomes: readonly MarketOutcome[];
   readonly edge: MarketEdge | null;
 }
@@ -32,6 +34,8 @@ interface PolymarketMarketRaw {
   readonly volume?: number;
   readonly targetToken?: string;
   readonly strikePrice?: number;
+  readonly strikeHigh?: number;
+  readonly isRange?: boolean;
   readonly marketProb?: number;
   readonly ourProb?: number;
   readonly edge?: number;
@@ -114,6 +118,42 @@ function normalizeRelated(data: PolymarketDataRaw | undefined): readonly Polymar
     return data.withEdge.slice();
   }
   return [];
+}
+
+interface BuyEdgeEntry {
+  readonly title: string;
+  readonly slug: string;
+  readonly volume: number;
+  readonly marketProb: number;
+  readonly ourProb: number;
+  readonly edge: number;
+  readonly targetToken?: string;
+  readonly strikePrice?: number;
+  readonly strikeHigh?: number;
+  readonly isRange?: boolean;
+}
+
+function normalizeBuyEdges(
+  data: PolymarketDataRaw | undefined,
+  minEdge = 0.005,
+): readonly BuyEdgeEntry[] {
+  if (!data || !Array.isArray(data.markets)) return [];
+  return data.markets
+    .filter((m) => (m.edge ?? 0) >= minEdge && (m.title ?? "").length > 0)
+    .map((m) => ({
+      title: m.title ?? "",
+      slug: m.slug ?? "",
+      volume: m.volume ?? 0,
+      marketProb: m.marketProb ?? 0,
+      ourProb: m.ourProb ?? 0,
+      edge: m.edge ?? 0,
+      targetToken: m.targetToken,
+      strikePrice: m.strikePrice,
+      strikeHigh: m.strikeHigh,
+      isRange: m.isRange,
+    }))
+    .sort((a, b) => b.edge - a.edge)
+    .slice(0, 5);
 }
 
 function formatVolume(vol: number): string {
@@ -688,6 +728,251 @@ function FocusMarketCard() {
   );
 }
 
+function BuyEdgeCard({ market }: { readonly market: BuyEdgeEntry }) {
+  const marketPct = (market.marketProb * 100).toFixed(1);
+  const oursPct = (market.ourProb * 100).toFixed(1);
+  const edgePct = (market.edge * 100).toFixed(1);
+  const isStrong = market.edge >= 0.03;
+  const badgeLabel = isStrong ? `BUY · Edge +${edgePct}%` : `WEAK BUY · +${edgePct}%`;
+  const strikeLabel =
+    market.isRange && market.strikeHigh && market.strikePrice
+      ? `${market.targetToken ?? ""} · $${market.strikePrice.toLocaleString()} – $${market.strikeHigh.toLocaleString()}`
+      : market.targetToken && market.strikePrice
+      ? `${market.targetToken} · $${market.strikePrice.toLocaleString()}`
+      : market.targetToken ?? "";
+  const polymarketUrl =
+    market.slug && !market.slug.startsWith("0x") && !market.slug.startsWith("market-")
+      ? `https://polymarket.com/event/${market.slug}`
+      : `https://polymarket.com/markets?q=${encodeURIComponent(market.title.slice(0, 40))}`;
+
+  return (
+    <a
+      href={polymarketUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{
+        textDecoration: "none",
+        color: "inherit",
+        flex: "0 0 260px",
+      }}
+    >
+      <div
+        className="buy-edge-card"
+        style={{
+          width: 260,
+          minHeight: 180,
+          background: isStrong
+            ? "linear-gradient(180deg, rgba(42,157,143,0.12) 0%, rgba(22,27,34,0.95) 100%)"
+            : "linear-gradient(180deg, rgba(42,157,143,0.05) 0%, rgba(22,27,34,0.95) 100%)",
+          border: isStrong
+            ? "1px solid var(--signal-green)"
+            : "1px solid rgba(42,157,143,0.35)",
+          borderRadius: 12,
+          padding: "14px 16px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          gap: 10,
+          boxShadow: isStrong
+            ? "0 0 20px rgba(42,157,143,0.25)"
+            : "0 0 8px rgba(42,157,143,0.08)",
+          cursor: "pointer",
+          transition:
+            "transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease",
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = "translateY(-3px)";
+          e.currentTarget.style.boxShadow = "0 0 22px rgba(42,157,143,0.35)";
+          e.currentTarget.style.borderColor = "var(--lantern-gold)";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = "translateY(0)";
+          e.currentTarget.style.boxShadow = isStrong
+            ? "0 0 20px rgba(42,157,143,0.25)"
+            : "0 0 8px rgba(42,157,143,0.08)";
+          e.currentTarget.style.borderColor = isStrong
+            ? "var(--signal-green)"
+            : "rgba(42,157,143,0.35)";
+        }}
+      >
+        {/* Edge badge */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <span
+            style={{
+              fontSize: 10,
+              fontWeight: 700,
+              textTransform: "uppercase",
+              letterSpacing: 1.5,
+              color: "var(--signal-green)",
+              padding: "2px 8px",
+              background: isStrong
+                ? "rgba(42,157,143,0.2)"
+                : "rgba(42,157,143,0.1)",
+              border: isStrong
+                ? "1px solid rgba(42,157,143,0.5)"
+                : "1px solid rgba(42,157,143,0.3)",
+              borderRadius: 4,
+            }}
+          >
+            {badgeLabel}
+          </span>
+          <span
+            style={{
+              fontSize: 10,
+              color: "var(--text-dim)",
+              fontFamily: "JetBrains Mono, monospace",
+            }}
+          >
+            {formatVolume(market.volume)}
+          </span>
+        </div>
+
+        {/* Question */}
+        <div
+          style={{
+            fontSize: 13,
+            fontWeight: 700,
+            color: "var(--text-bright)",
+            lineHeight: 1.35,
+            display: "-webkit-box",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+            minHeight: 36,
+          }}
+        >
+          {market.title}
+        </div>
+
+        {/* Strike label */}
+        {strikeLabel ? (
+          <div
+            style={{
+              fontSize: 11,
+              color: "var(--lantern-gold)",
+              fontFamily: "JetBrains Mono, monospace",
+            }}
+          >
+            {strikeLabel}
+          </div>
+        ) : null}
+
+        {/* Probs row */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "baseline",
+            fontFamily: "JetBrains Mono, monospace",
+            fontSize: 12,
+            paddingTop: 6,
+            borderTop: "1px dashed var(--bg-border)",
+          }}
+        >
+          <div>
+            <div style={{ fontSize: 9, color: "var(--text-dim)" }}>市场</div>
+            <div style={{ fontWeight: 700, color: "var(--text-main)" }}>
+              {marketPct}%
+            </div>
+          </div>
+          <div>
+            <div style={{ fontSize: 9, color: "var(--text-dim)" }}>Ours</div>
+            <div style={{ fontWeight: 700, color: "var(--lantern-gold)" }}>
+              {oursPct}%
+            </div>
+          </div>
+          <div>
+            <div style={{ fontSize: 9, color: "var(--text-dim)" }}>查看</div>
+            <div style={{ fontWeight: 700, color: "var(--signal-green)" }}>
+              Poly ↗
+            </div>
+          </div>
+        </div>
+      </div>
+    </a>
+  );
+}
+
+function BuyEdgeRow({ markets }: { readonly markets: readonly BuyEdgeEntry[] }) {
+  return (
+    <div style={{ marginBottom: 40 }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "baseline",
+          justifyContent: "space-between",
+          marginBottom: 16,
+          gap: 12,
+          flexWrap: "wrap",
+        }}
+      >
+        <h3
+          style={{
+            fontSize: 18,
+            fontWeight: 700,
+            color: "var(--text-bright)",
+            margin: 0,
+          }}
+        >
+          <span style={{ color: "var(--lantern-gold)" }}>★</span> 推荐买入市场 ·{" "}
+          <span
+            style={{
+              color: "var(--signal-green)",
+              fontFamily: "JetBrains Mono, monospace",
+            }}
+          >
+            Top Edge (强信号 &gt; +3%)
+          </span>
+        </h3>
+        <span
+          style={{
+            fontSize: 12,
+            color: "var(--text-muted)",
+          }}
+        >
+          Lantern 概率高于 Polymarket → 被低估, 建议买入 Yes
+        </span>
+      </div>
+
+      {markets.length === 0 ? (
+        <div
+          style={{
+            padding: "24px",
+            textAlign: "center",
+            background: "var(--bg-card)",
+            border: "1px dashed var(--bg-border)",
+            borderRadius: 10,
+            color: "var(--text-muted)",
+            fontSize: 13,
+          }}
+        >
+          暂无高 edge 市场, 继续扫描中…
+        </div>
+      ) : (
+        <div
+          style={{
+            display: "flex",
+            gap: 14,
+            overflowX: "auto",
+            paddingBottom: 8,
+            scrollbarWidth: "thin",
+          }}
+        >
+          {markets.map((m) => (
+            <BuyEdgeCard key={m.slug || m.title} market={m} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function MarketMarquee({
   markets,
   totalScanned,
@@ -770,6 +1055,8 @@ export function ShowcaseMarketCards({
   const watchlist: readonly PolymarketEntry[] =
     normalized.length > 0 ? normalized : RELATED_MARKETS;
 
+  const buyEdges = normalizeBuyEdges(polyData, 0.03);
+
   const totalScanned = polyData?.totalMarkets ?? watchlist.length;
 
   return (
@@ -798,6 +1085,9 @@ export function ShowcaseMarketCards({
 
       {/* Focus hero */}
       <FocusMarketCard />
+
+      {/* BUY recommendations — Top Edge markets where Lantern > Polymarket */}
+      <BuyEdgeRow markets={buyEdges} />
 
       {/* Continuous left-to-right marquee watchlist */}
       <MarketMarquee markets={watchlist} totalScanned={totalScanned} />

@@ -237,6 +237,8 @@ interface PolyMarket {
   }>;
   tokenAddress?: string; // If it's a crypto price market
   strikePrice?: number; // e.g., 76000 for "BTC above $76K"
+  strikeHigh?: number; // for range markets "between $X and $Y" — upper bound; strikePrice holds the lower bound
+  isRange?: boolean; // true for "between X and Y" markets
   targetToken?: string; // e.g., "BTC"
   onchainsEdge?: {
     ourProbability: number;
@@ -345,18 +347,41 @@ async function scanPolymarkets(): Promise<PolyMarket[]> {
     // Must look like a PRICE market, not a political/corporate event
     if (!PRICE_KEYWORD_RE.test(title)) continue;
 
-    // Extract strike price from the title. Handles "$80,000", "$150k", "80K".
-    let strikePrice: number | undefined;
-    const priceMatch = title.match(/\$?\s*([\d,]+(?:\.\d+)?)\s*([KkMm])?/);
-    if (priceMatch && priceMatch[1]) {
-      let p = parseFloat(priceMatch[1].replace(/,/g, ""));
-      const suffix = (priceMatch[2] || "").toLowerCase();
-      if (suffix === "k") p *= 1_000;
-      else if (suffix === "m") p *= 1_000_000;
+    // Extract strike price(s) from the title. Handles "$80,000", "$150k", "80K".
+    // For range markets "between $X and $Y", extract BOTH bounds.
+    const parseStrike = (raw: string, suffix: string): number => {
+      let p = parseFloat(raw.replace(/,/g, ""));
+      const s = suffix.toLowerCase();
+      if (s === "k") p *= 1_000;
+      else if (s === "m") p *= 1_000_000;
       // Heuristic: BTC strikes are typically > $10k; treat bare small numbers
       // with K-ish title hints as thousands.
       if (targetToken === "BTC" && p < 1000 && /k/i.test(title)) p *= 1000;
-      if (p > 0) strikePrice = p;
+      return p;
+    };
+
+    let strikePrice: number | undefined;
+    let strikeHigh: number | undefined;
+    let isRange = false;
+
+    const rangeMatch = title.match(
+      /between\s+\$?\s*([\d,]+(?:\.\d+)?)\s*([KkMm])?\s+and\s+\$?\s*([\d,]+(?:\.\d+)?)\s*([KkMm])?/i,
+    );
+    if (rangeMatch) {
+      const lo = parseStrike(rangeMatch[1] || "0", rangeMatch[2] || "");
+      const hi = parseStrike(rangeMatch[3] || "0", rangeMatch[4] || "");
+      if (lo > 0 && hi > 0) {
+        strikePrice = Math.min(lo, hi);
+        strikeHigh = Math.max(lo, hi);
+        isRange = true;
+      }
+    }
+    if (!isRange) {
+      const priceMatch = title.match(/\$?\s*([\d,]+(?:\.\d+)?)\s*([KkMm])?/);
+      if (priceMatch && priceMatch[1]) {
+        const p = parseStrike(priceMatch[1], priceMatch[2] || "");
+        if (p > 0) strikePrice = p;
+      }
     }
 
     const outcomePrices = (
@@ -379,6 +404,8 @@ async function scanPolymarkets(): Promise<PolyMarket[]> {
           : [],
       targetToken,
       strikePrice,
+      strikeHigh,
+      isRange,
     });
   }
 
@@ -390,34 +417,117 @@ async function scanPolymarkets(): Promise<PolyMarket[]> {
 
   const priceMarkets = markets.filter((m) => m.targetToken && m.strikePrice);
 
-  for (const m of priceMarkets.slice(0, 10)) {
-    // Get current price from onchainos
-    // Use well-known token addresses
-    const tokenAddresses: Record<string, string> = {
-      BTC: "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599", // WBTC on Ethereum
-      ETH: "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-      SOL: "0xd31a59c85ae9d8edefec411d448f90841571b89c", // SOL on Ethereum
-    };
+  // Well-known token addresses on Ethereum mainnet
+  const tokenAddresses: Record<string, string> = {
+    BTC: "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599", // WBTC on Ethereum
+    ETH: "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    SOL: "0xd31a59c85ae9d8edefec411d448f90841571b89c", // SOL on Ethereum
+  };
 
-    const addr = tokenAddresses[m.targetToken!];
-    if (!addr) continue;
+  // Cache token-level signal-drift inputs so we only query onchainos once per token.
+  interface TokenContext {
+    currentPrice: number;
+    priceChange24h: number; // as decimal (0.01 = +1%)
+    volumeChange24h: number; // proxy: volume24h / marketCap activity
+    smartMoneyNetBuyUsd: number; // aggregated signal flow, +buy / -sell
+  }
+  const tokenContextCache = new Map<string, TokenContext | null>();
 
+  async function getTokenContext(token: string): Promise<TokenContext | null> {
+    if (tokenContextCache.has(token)) return tokenContextCache.get(token) ?? null;
+    const addr = tokenAddresses[token];
+    if (!addr) {
+      tokenContextCache.set(token, null);
+      return null;
+    }
     const priceResult = (await run([
-      "market",
-      "price",
+      "token",
+      "price-info",
       "--address",
       addr,
       "--chain",
       "1",
     ])) as { ok: boolean; data: any[] } | null;
-    const currentPrice =
-      priceResult?.ok && priceResult.data?.[0]
-        ? parseFloat(priceResult.data[0].price || "0")
-        : 0;
+    const row = priceResult?.ok ? priceResult.data?.[0] : null;
+    if (!row) {
+      tokenContextCache.set(token, null);
+      return null;
+    }
+    const currentPrice = parseFloat(row.price || "0");
+    const priceChange24h = parseFloat(row.priceChange24H || "0") / 100;
+    const volume24h = parseFloat(row.volume24H || "0");
+    const marketCap = parseFloat(row.marketCap || "0");
+    // Volume-vs-marketcap turnover as a "momentum / activity" proxy.
+    // For BTC typical daily turnover ~2%; treat >3% as elevated.
+    const volumeChange24h = marketCap > 0 ? volume24h / marketCap : 0;
 
+    // Smart money aggregate (Ethereum mainnet signal list, no token filter;
+    // we then sum over tokens whose symbol matches the target)
+    let smartMoneyNetBuyUsd = 0;
+    const sigResult = (await run([
+      "signal",
+      "list",
+      "--chain",
+      "1",
+      "--wallet-type",
+      "1,2,3",
+      "--min-amount-usd",
+      "5000",
+    ])) as { ok: boolean; data: any[] } | null;
+    if (sigResult?.ok && Array.isArray(sigResult.data)) {
+      for (const sig of sigResult.data) {
+        const sym = (sig?.token?.symbol || "").toUpperCase();
+        // match BTC family (WBTC / cbBTC / tBTC / BTC), ETH family (WETH / stETH / ETH), SOL
+        const matches =
+          (token === "BTC" && /BTC/.test(sym)) ||
+          (token === "ETH" && /ETH/.test(sym)) ||
+          (token === "SOL" && /SOL/.test(sym));
+        if (!matches) continue;
+        const amt = parseFloat(sig.amountUsd || "0");
+        const soldRatio = parseFloat(sig.soldRatioPercent || "0");
+        // soldRatioPercent near 100 => sellers closing positions; near 0 => accumulation.
+        // Net = amountUsd * (buy - sell) where buy = 1 - soldRatio/100.
+        const buyFraction = 1 - soldRatio / 100;
+        const sellFraction = soldRatio / 100;
+        smartMoneyNetBuyUsd += amt * (buyFraction - sellFraction);
+      }
+    }
+
+    const ctx: TokenContext = {
+      currentPrice,
+      priceChange24h,
+      volumeChange24h,
+      smartMoneyNetBuyUsd,
+    };
+    tokenContextCache.set(token, ctx);
+    return ctx;
+  }
+
+  // Signal-based drift shift in probability-space, bounded to [-0.05, +0.05].
+  function computeDriftAdjustment(s: {
+    smartMoneyNetBuyUsd: number;
+    volumeChange24h: number;
+    priceChange24h: number;
+  }): number {
+    let shift = 0;
+    if (Math.abs(s.smartMoneyNetBuyUsd) > 1000) {
+      // log10($1k)=0 → 0, log10($10M)=4 → 1; scaled to ±0.03
+      const sizeFactor = Math.log10(Math.abs(s.smartMoneyNetBuyUsd) / 1000) / 4;
+      shift += Math.sign(s.smartMoneyNetBuyUsd) * Math.min(sizeFactor, 1) * 0.03;
+    }
+    // Volume turnover elevated (>3% daily) + directional price = momentum confirm.
+    if (s.volumeChange24h > 0.03 && s.priceChange24h > 0.01) shift += 0.02;
+    else if (s.volumeChange24h > 0.03 && s.priceChange24h < -0.01) shift -= 0.02;
+    return Math.max(-0.05, Math.min(0.05, shift));
+  }
+
+  for (const m of priceMarkets.slice(0, 25)) {
+    const ctx = await getTokenContext(m.targetToken!);
+    if (!ctx) continue;
+    const { currentPrice, priceChange24h, volumeChange24h, smartMoneyNetBuyUsd } = ctx;
     if (currentPrice <= 0 || !m.strikePrice) continue;
 
-    // Distance (strike relative to current price) — used for signals display
+    // Distance (lower strike relative to current price) — used for signals display
     const distance = (m.strikePrice - currentPrice) / currentPrice;
 
     // Calculate hours to expiry
@@ -425,43 +535,75 @@ async function scanPolymarkets(): Promise<PolyMarket[]> {
     const hoursToExpiry = Math.max(1, (endMs - Date.now()) / (1000 * 3600));
 
     // --- Black-Scholes probability model ---
-    // Risk-neutral drift = 0 (no directional bias from Lantern here);
+    // Risk-neutral drift = 0 (directional view applied later via signal overlay);
     // realistic BTC annualized volatility ~60-70%.
     const ANNUALIZED_VOLATILITY = 0.65;
     const T = hoursToExpiry / HOURS_PER_YEAR;
     const sqrtT = Math.sqrt(T);
     const vol = ANNUALIZED_VOLATILITY * sqrtT;
 
-    let probAbove: number;
-    if (vol < 1e-10) {
-      probAbove = currentPrice > m.strikePrice ? 1 : 0;
-    } else {
+    const probAboveStrike = (strike: number): number => {
+      if (vol < 1e-10) return currentPrice > strike ? 1 : 0;
       const d2 =
-        (Math.log(currentPrice / m.strikePrice) -
+        (Math.log(currentPrice / strike) -
           0.5 * ANNUALIZED_VOLATILITY * ANNUALIZED_VOLATILITY * T) /
         vol;
-      probAbove = normalCdf(d2);
+      return normalCdf(d2);
+    };
+
+    let baseProb: number;
+    let isBelowMarket = false;
+    if (m.isRange && m.strikeHigh) {
+      // "Between $X and $Y" = P(low < price < high) = Φ(d2_high) - Φ(d2_low)
+      // With d2 of "above strike", P(between) = P(>low) - P(>high).
+      const pAboveLow = probAboveStrike(m.strikePrice);
+      const pAboveHigh = probAboveStrike(m.strikeHigh);
+      baseProb = Math.max(0, pAboveLow - pAboveHigh);
+    } else {
+      const probAbove = probAboveStrike(m.strikePrice);
+      isBelowMarket = /dip|below|under/i.test(m.title);
+      baseProb = isBelowMarket ? 1 - probAbove : probAbove;
     }
 
-    // "Reach X / hit X / above X / over X" markets = P(price > strike)
-    // "Dip to X / below X / under X" markets = P(price < strike) = 1 - P(price > strike)
-    const isBelowMarket = /dip|below|under/i.test(m.title);
-    const baseProb = isBelowMarket ? 1 - probAbove : probAbove;
+    // --- Signal-based drift overlay ---
+    const drift = computeDriftAdjustment({
+      smartMoneyNetBuyUsd,
+      volumeChange24h,
+      priceChange24h,
+    });
+    // For "dip to X" markets, positive drift = LOWER prob of dipping;
+    // for "reach X" markets, positive drift = HIGHER prob of reaching.
+    // Range markets: drift is direction-agnostic (leave baseProb untouched).
+    let ourProb: number;
+    if (m.isRange) {
+      ourProb = baseProb;
+    } else if (isBelowMarket) {
+      ourProb = Math.max(0, Math.min(1, baseProb - drift));
+    } else {
+      ourProb = Math.max(0, Math.min(1, baseProb + drift));
+    }
 
     const marketProb = m.outcomes[0]?.price ?? 0.5;
-    // For now the Lantern edge = BS prob itself (no directional overlay yet).
-    const ourProb = baseProb;
     const edge = ourProb - marketProb;
+
+    const strikeLabel = m.isRange && m.strikeHigh
+      ? `$${m.strikePrice.toLocaleString()} – $${m.strikeHigh.toLocaleString()}`
+      : `$${m.strikePrice.toLocaleString()}`;
+
+    const signalsList: string[] = [
+      `Current ${m.targetToken} price: $${currentPrice.toLocaleString()}`,
+      `Strike: ${strikeLabel}${m.isRange ? " (range)" : ""} (${distance > 0 ? "+" : ""}${(distance * 100).toFixed(1)}% away)`,
+      `Time to expiry: ${hoursToExpiry.toFixed(0)}h (σ=${(ANNUALIZED_VOLATILITY * 100).toFixed(0)}% ann.)`,
+      `Smart-money net flow: ${smartMoneyNetBuyUsd >= 0 ? "+" : ""}$${Math.round(smartMoneyNetBuyUsd).toLocaleString()}`,
+      `24h price: ${priceChange24h >= 0 ? "+" : ""}${(priceChange24h * 100).toFixed(2)}% · turnover: ${(volumeChange24h * 100).toFixed(2)}%`,
+      `Drift applied: ${drift >= 0 ? "+" : ""}${(drift * 100).toFixed(2)}% (BS base=${(baseProb * 100).toFixed(1)}%)`,
+    ];
 
     m.onchainsEdge = {
       ourProbability: ourProb,
       marketProbability: marketProb,
       edge,
-      signals: [
-        `Current ${m.targetToken} price: $${currentPrice.toLocaleString()}`,
-        `Strike: $${m.strikePrice.toLocaleString()} (${distance > 0 ? "+" : ""}${(distance * 100).toFixed(1)}% away)`,
-        `Time to expiry: ${hoursToExpiry.toFixed(0)}h (σ=${(ANNUALIZED_VOLATILITY * 100).toFixed(0)}% ann.)`,
-      ],
+      signals: signalsList,
     };
   }
 
@@ -925,6 +1067,8 @@ function outputTrace(
         volume: m.volume,
         targetToken: m.targetToken,
         strikePrice: m.strikePrice,
+        strikeHigh: m.strikeHigh,
+        isRange: m.isRange ?? false,
         marketProb: m.onchainsEdge?.marketProbability ?? 0,
         ourProb: m.onchainsEdge?.ourProbability ?? 0,
         edge: m.onchainsEdge?.edge ?? 0,
